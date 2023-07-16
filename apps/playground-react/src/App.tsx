@@ -1,4 +1,3 @@
-import React from "react";
 import { ModalProvider, openModal } from "@react-libs/modal";
 import logo from "./logo.svg";
 import "./App.css";
@@ -33,7 +32,7 @@ function App() {
                 callback: () => {
                   openModal("default");
                 },
-                duration: 300
+                duration: 300,
               }
             )
           }
