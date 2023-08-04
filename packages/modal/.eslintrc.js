@@ -18,6 +18,7 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "prettier",
+    "plugin:prettier/recommended",
     "react-app",
   ],
   plugins: ["@typescript-eslint", "import", "react", "react-hooks"],
@@ -106,5 +107,11 @@ module.exports = {
     "react-hooks/exhaustive-deps": "error",
     "react/react-in-jsx-scope": "off",
     "react/no-unknown-property": ["error", { ignore: ["css"] }],
+    "prettier/prettier": [
+      "error",
+      {
+        endOfLine: "auto",
+      },
+    ],
   },
 };
