@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export type ModalLifecycleState = "initial" | "active" | "final";
+export type ModalLifecycleState = "open" | "active" | "close";
 
 export type ModalActionState = "initial" | "pending" | "success" | "error";
 
@@ -22,6 +22,8 @@ export interface StateController {
     isAwaitingConfirm?: boolean
   ) => void;
   final: () => void;
+  confirm?: ModalConfirmType;
+  callback?: ModalCallback;
   stateManager: ModalStateManager;
 }
 
@@ -67,9 +69,9 @@ export const MODAL_ACTION_STATE: {
 export const MODAL_LIFECYCLE_STATE: {
   [key in ModalLifecycleState]: key;
 } = {
-  initial: "initial",
+  open: "open",
   active: "active",
-  final: "final",
+  close: "close",
 };
 
 export const MODAL_LIFECYCLE_STATE_LIST: string[] = Object.values(
@@ -78,7 +80,7 @@ export const MODAL_LIFECYCLE_STATE_LIST: string[] = Object.values(
 
 export class ModalStateManager {
   private _id = 0;
-  private _lifecycleState: ModalLifecycleState = MODAL_LIFECYCLE_STATE.initial;
+  private _lifecycleState: ModalLifecycleState = MODAL_LIFECYCLE_STATE.open;
   private _actionState: ModalActionState = MODAL_ACTION_STATE.initial;
   private _isAwaitingConfirm = false;
   private _isCloseDelay = false;
@@ -381,7 +383,7 @@ export class ModalStateManager {
   }
 
   final() {
-    this._lifecycleState = MODAL_LIFECYCLE_STATE.final;
+    this._lifecycleState = MODAL_LIFECYCLE_STATE.close;
 
     this.notify();
 

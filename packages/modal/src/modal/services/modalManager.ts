@@ -213,17 +213,17 @@ class ModalManager<T extends string = string> {
     }
 
     const {
-      initial: defaultInitial,
+      open: defaultInitial,
       active: defaultActive,
-      final: defautFinal,
+      close: defautFinal,
     } = this.getModalPosition(MODAL_POSITION.default);
 
-    const { initial, active, final } = this.getModalPosition(key);
+    const { open, active, close } = this.getModalPosition(key);
 
-    if (state === MODAL_LIFECYCLE_STATE.initial) {
+    if (state === MODAL_LIFECYCLE_STATE.open) {
       return {
         ...defaultInitial,
-        ...initial,
+        ...open,
       };
     }
 
@@ -236,7 +236,7 @@ class ModalManager<T extends string = string> {
 
     return {
       ...defautFinal,
-      ...final,
+      ...close,
     };
   }
 
@@ -287,16 +287,6 @@ class ModalManager<T extends string = string> {
     });
 
     return this;
-  }
-
-  setCallCount(command: "add" | "remove") {
-    if (command === "add") {
-      this.callCount += 1;
-    } else {
-      this.callCount -= 1;
-    }
-
-    return this.callCount;
   }
 
   setTransactionState(transactionState: ModalTransactionState) {
@@ -432,24 +422,36 @@ class ModalManager<T extends string = string> {
     return this;
   }
 
+  clearModalFiberStack() {
+    this.modalFiberStack = [];
+    this.currentId = 0;
+
+    return this;
+  }
+
   popModalFiber(removedName?: ModalRemovedName) {
     if (this.modalFiberStack.length === 0) {
       this.currentId = 0;
-      this.notify();
-
-      return;
+      return this;
     }
 
     if (removedName === undefined) {
       this.modalFiberStack = this.modalFiberStack.slice(0, -1);
-    } else if (removedName === MODAL_NAME.clear) {
-      this.modalFiberStack = [];
-      this.currentId = 0;
-    } else {
-      this.filterModalFiberByType(removedName);
+
+
+      return this;
     }
 
-    this.notify();
+    if (removedName === MODAL_NAME.clear) {
+      this.clearModalFiberStack();
+
+      return this;
+    }
+
+
+    this.filterModalFiberByType(removedName);
+
+    return this;
   }
 
   async call<F = any, P = any>(
@@ -481,6 +483,12 @@ class ModalManager<T extends string = string> {
     }
   }
 
+  action(targetModalId: number) {
+    /**
+     * 이것을 개발하려면 먼저 modalState
+     */
+  }
+
   /**
    * @param name
    * @param options
@@ -490,6 +498,19 @@ class ModalManager<T extends string = string> {
     name: string | ModalComponent,
     options: ModalDispatchOptions<TPayload> = {}
   ) {
+    const modalKey = options.modalKey || null;
+
+    if (modalKey) {
+      const modalFiber = this.modalFiberStack.find(
+        (fiber) => fiber.modalKey === modalKey
+      );
+
+      if (modalFiber) {
+        return 0;
+      }
+    }
+
+
     if (typeof name === "string") {
       const componentFiber = this.modalComponentFiberMap.get(name);
 
@@ -503,6 +524,7 @@ class ModalManager<T extends string = string> {
 
       const modalFiber: ModalFiber<ModalDispatchOptions<TPayload>> = {
         id: this.currentId,
+        modalKey,
         name,
         component,
         options: {
@@ -524,6 +546,7 @@ class ModalManager<T extends string = string> {
 
     this.pushModalFiber({
       id: this.currentId,
+      modalKey,
       name: "unknown",
       component: name,
       options,
@@ -557,6 +580,7 @@ class ModalManager<T extends string = string> {
     }
 
     this.popModalFiber(removedName);
+    this.notify();
 
     return this.getCurrentModalFiberId();
   }

@@ -6,9 +6,9 @@ import {
 } from "../services/modalStateManager";
 
 const POSITION_STATE_VALUE = {
-  [MODAL_LIFECYCLE_STATE.initial]: 0,
+  [MODAL_LIFECYCLE_STATE.open]: 0,
   [MODAL_LIFECYCLE_STATE.active]: 1,
-  [MODAL_LIFECYCLE_STATE.final]: 2,
+  [MODAL_LIFECYCLE_STATE.close]: 2,
 };
 
 export function getPositionKeyByState(

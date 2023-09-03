@@ -6,6 +6,9 @@ import {
   ModalConfirmType,
   ModalCallback,
 } from "../services/modalStateManager";
+import {
+  ModalMiddlewareProps
+} from "../services/ModalFiber";
 
 export interface ModalListenerProps {
   modalFiberStack: ModalFiber<ModalOptions>[];
@@ -85,19 +88,20 @@ export type ModalAsyncCall<T = any, P = any> = (
   asyncCallbackProps: P
 ) => Promise<T>;
 
-export interface ModalMiddlewareProps {
-  transactionState: ModalTransactionState;
-  standbyTransaction: () => void;
-  startTransaction: () => void;
-  endTransaction: () => void;
-  stateController: StateController;
-}
+// export interface ModalMiddlewareProps {
+//   transactionState: ModalTransactionState;
+//   standbyTransaction: () => void;
+//   startTransaction: () => void;
+//   endTransaction: () => void;
+//   stateController: StateController;
+// }
 
 export type ModalMiddleware = (
   props: ModalMiddlewareProps
 ) => void | Promise<void>;
 
 export interface ModalDispatchOptions<T = any> {
+  modalKey?: string;
   callback?: ModalCallback;
   middleware?: ModalMiddleware;
   backCoverConfirm?: ModalConfirmType;
@@ -162,6 +166,7 @@ export interface ModalComponentFiber {
 
 export interface ModalFiber<T extends ModalDispatchOptions = ModalOptions> {
   id: number;
+  modalKey: string | null;
   name: string;
   component: ModalComponent<any>;
   options: T;

@@ -1,10 +1,12 @@
 import { MODAL_TRANSACTION_STATE } from "../contants/constants";
-import { ModalMiddlewareProps } from "../types";
+import { ModalMiddlewareProps } from "../services/ModalFiber";
 
 export async function defaultMiddleware({
-  transactionState,
-  standbyTransaction,
-  stateController,
+  transactionController: {
+    transactionState,
+    standbyTransaction,
+  },
+  modalState,
 }: ModalMiddlewareProps) {
   if (transactionState !== MODAL_TRANSACTION_STATE.idle) {
     return;
@@ -12,33 +14,27 @@ export async function defaultMiddleware({
 
   standbyTransaction();
 
-  const { final, stateManager } = stateController;
 
-  const { confirm, callback } = stateManager.getStartActionState();
-
-  if (stateManager.isAwaitingConfirm) {
-    final();
+  if (modalState.isAwaitingConfirm) {
+    modalState.close();
     return;
   }
 
-  await callback(confirm, stateController);
+  await modalState.callback(modalState.confirm, modalState.getStateController());
 
-  const { isAwaitingConfirm, isCloseDelay, closeDelayDuration } =
-    stateManager.getEndActionState();
-
-  if (isCloseDelay && closeDelayDuration > 0 && setTimeout) {
+  if (modalState.isCloseDelay && modalState.closeDelayDuration > 0 && setTimeout) {
     setTimeout(() => {
-      final();
-    }, closeDelayDuration);
+      modalState.close();
+    }, modalState.closeDelayDuration);
 
     return;
   }
 
-  if (isAwaitingConfirm) {
+  if (modalState.isAwaitingConfirm) {
     standbyTransaction();
-    
+
     return;
   }
 
-  final();
+  modalState.close();
 }
