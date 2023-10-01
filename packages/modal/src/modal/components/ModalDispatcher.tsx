@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { MODAL_TRANSACTION_STATE } from "../contants/constants";
 import ModalManager from "../services/modalManager";
 import {
   ModalComponentFiber,
-  ModalFiber,
   ModalListener,
   ModalManagerOptionsProps,
   ModalTransactionState,
 } from "../types";
-import disableBodyScroll from "../utils/disableBodyScroll";
-import Modal from "./Modal";
+import { Modal } from "../services/ModalFiber";
+import { setDisableBodyScroll } from "../utils/disableBodyScroll";
+import ModalComponent from "./Modal";
 
 import "./modal.css";
 
@@ -27,11 +27,12 @@ function setModalDispatcher(defaultModalManager: ModalManager) {
     options,
     disableScroll = true,
   }: ModalDispatcherProps) {
-    const [modalFiberList, setModalFiberList] = useState<ModalFiber[]>([]);
+    const [modalFiberList, setModalFiberList] = useState<Modal[]>([]);
     const [breakPoint, setBreakPoint] = useState(window?.innerWidth ?? 0);
     const [isOpen, setIsOpen] = useState(false);
     const [transactionState, setTransactionState] =
       useState<ModalTransactionState>(MODAL_TRANSACTION_STATE.idle);
+    const disableBodyScroll = useMemo(() => setDisableBodyScroll(), []);
 
     const onClearModal = () => {
       if (
@@ -119,12 +120,11 @@ function setModalDispatcher(defaultModalManager: ModalManager) {
           {" "}
         </button>
         {modalFiberList.map((modalFiber) => (
-          <Modal
+          <ModalComponent
             key={modalFiber.id}
             breakPoint={breakPoint}
-            modalManager={modalManager}
             transactionState={transactionState}
-            {...modalFiber}
+            modal={modalFiber}
           />
         ))}
       </div>
