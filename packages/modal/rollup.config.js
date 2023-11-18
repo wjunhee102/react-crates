@@ -4,7 +4,8 @@ import typescript from "@rollup/plugin-typescript";
 import dts from "rollup-plugin-dts";
 import PeerDepsExternalPlugin from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
-import terser from '@rollup/plugin-terser';
+import terser from "@rollup/plugin-terser";
+import babel from "@rollup/plugin-babel";
 
 const packageJson = require("./package.json");
 
@@ -12,7 +13,7 @@ export default [
   {
     watch: {
       include: "src/**",
-      exclude: ["node_modules/**", "src/new-modal/**"],
+      exclude: ["node_modules/**"],
     },
     input: "src/index.ts",
     output: [
@@ -34,8 +35,14 @@ export default [
       typescript({ tsconfig: "./tsconfig.json" }),
       postcss(),
       terser(),
+      babel({
+        presets: [
+          "@babel/preset-env",
+          "@babel/preset-react",
+          "@babel/preset-typescript",
+        ],
+      }),
     ],
-    exclude: ["./src/new-modal/*"]
   },
   {
     input: "dist/esm/types/index.d.ts",
