@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes, MouseEvent } from "react";
+import { ButtonHTMLAttributes, MouseEvent } from "react";
 import useModalOptions from "../hooks/useModalOptions";
 import { ModalConfirmType } from "../services/ModalFiber";
 

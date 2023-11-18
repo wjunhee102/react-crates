@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ModalManager from "../services/modalManager";
 import { ModalCallback } from "../services/modalStateManager";
 import { ModalDispatchOptions } from "../types";

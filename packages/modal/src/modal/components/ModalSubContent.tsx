@@ -1,4 +1,4 @@
-import React, { ElementType, HTMLAttributes } from "react";
+import { ElementType, HTMLAttributes } from "react";
 import useModalOptions from "../hooks/useModalOptions";
 
 export interface ModalSubContentProps extends HTMLAttributes<HTMLDivElement> {

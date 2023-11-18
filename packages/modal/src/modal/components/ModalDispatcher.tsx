@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MODAL_TRANSACTION_STATE } from "../contants/constants";
 import ModalManager from "../services/modalManager";
 import {
