@@ -1,12 +1,11 @@
-import React from "react";
+import { ReactNode } from "react";
 import { ButtonHTMLAttributes, MouseEvent } from "react";
 import useModalOptions from "../hooks/useModalOptions";
-import { ModalConfirmType } from "../services/modalStateManager";
-import { ModalComponentProps } from "../types";
+import { ModalConfirmType, ModalComponentProps } from "../services/ModalFiber";
 
 function getContent(
-  children: React.ReactNode,
-  { confirmContent, cancelContent, subBtnContent }: ModalComponentProps,
+  children: ReactNode,
+  { confirmContent, cancelContent, customContent }: ModalComponentProps,
   confirmType?: ModalConfirmType
 ) {
   if (children) {
@@ -21,7 +20,7 @@ function getContent(
     return confirmContent;
   }
 
-  return subBtnContent;
+  return customContent;
 }
 
 export interface ModalButtonProps

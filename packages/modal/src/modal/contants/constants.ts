@@ -50,18 +50,18 @@ export const MODAL_POSITION: {
 
 export const DEFAULT_POSITION: ModalPositionTable = {
   [MODAL_POSITION.default]: {
-    [MODAL_LIFECYCLE_STATE.initial]: {
+    [MODAL_LIFECYCLE_STATE.open]: {
       opacity: 0,
     },
     [MODAL_LIFECYCLE_STATE.active]: {
       opacity: 1,
     },
-    [MODAL_LIFECYCLE_STATE.final]: {
+    [MODAL_LIFECYCLE_STATE.close]: {
       opacity: 0,
     },
   },
   [MODAL_POSITION.backCover]: {
-    [MODAL_LIFECYCLE_STATE.initial]: {
+    [MODAL_LIFECYCLE_STATE.open]: {
       top: "0",
       left: "0",
       background: "rgb(0, 0, 0)",
@@ -73,7 +73,7 @@ export const DEFAULT_POSITION: ModalPositionTable = {
       background: "rgb(0, 0, 0)",
       opacity: 0.5,
     },
-    [MODAL_LIFECYCLE_STATE.final]: {
+    [MODAL_LIFECYCLE_STATE.close]: {
       top: "0",
       left: "0",
       background: "rgb(0, 0, 0)",
@@ -81,7 +81,7 @@ export const DEFAULT_POSITION: ModalPositionTable = {
     },
   },
   [MODAL_POSITION.center]: {
-    [MODAL_LIFECYCLE_STATE.initial]: {
+    [MODAL_LIFECYCLE_STATE.open]: {
       left: "50%",
       top: "50%",
       transform: "translate(-50%, -50%) scale(0)",
@@ -91,14 +91,14 @@ export const DEFAULT_POSITION: ModalPositionTable = {
       top: "50%",
       transform: "translate(-50%, -50%) scale(1)",
     },
-    [MODAL_LIFECYCLE_STATE.final]: {
+    [MODAL_LIFECYCLE_STATE.close]: {
       left: "50%",
       top: "50%",
       transform: "translate(-50%, -50%) scale(0)",
     },
   },
   [MODAL_POSITION.bottom]: {
-    [MODAL_LIFECYCLE_STATE.initial]: {
+    [MODAL_LIFECYCLE_STATE.open]: {
       left: "50%",
       top: "100%",
       transform: "translate(-50%, 0)",
@@ -108,14 +108,14 @@ export const DEFAULT_POSITION: ModalPositionTable = {
       top: "100%",
       transform: "translate(-50%, -100%)",
     },
-    [MODAL_LIFECYCLE_STATE.final]: {
+    [MODAL_LIFECYCLE_STATE.close]: {
       left: "50%",
       top: "100%",
       transform: "translate(-50%, 0)",
     },
   },
   [MODAL_POSITION.top]: {
-    [MODAL_LIFECYCLE_STATE.initial]: {
+    [MODAL_LIFECYCLE_STATE.open]: {
       left: "50%",
       top: "0",
       transform: "translate(-50%, -100%)",
@@ -125,14 +125,14 @@ export const DEFAULT_POSITION: ModalPositionTable = {
       top: "0",
       transform: "translate(-50%, 0)",
     },
-    [MODAL_LIFECYCLE_STATE.final]: {
+    [MODAL_LIFECYCLE_STATE.close]: {
       left: "50%",
       top: "0",
       transform: "translate(-50%, -100%)",
     },
   },
   [MODAL_POSITION.left]: {
-    [MODAL_LIFECYCLE_STATE.initial]: {
+    [MODAL_LIFECYCLE_STATE.open]: {
       left: "0",
       top: "50%",
       transform: "translate(-100%, -50%)",
@@ -142,14 +142,14 @@ export const DEFAULT_POSITION: ModalPositionTable = {
       top: "50%",
       transform: "translate(0, -50%)",
     },
-    [MODAL_LIFECYCLE_STATE.final]: {
+    [MODAL_LIFECYCLE_STATE.close]: {
       left: "0",
       top: "50%",
       transform: "translate(-100%, -50%)",
     },
   },
   [MODAL_POSITION.right]: {
-    [MODAL_LIFECYCLE_STATE.initial]: {
+    [MODAL_LIFECYCLE_STATE.open]: {
       left: "100%",
       top: "50%",
       transform: "translate(0, -50%)",
@@ -159,14 +159,14 @@ export const DEFAULT_POSITION: ModalPositionTable = {
       top: "50%",
       transform: "translate(-100%, -50%)",
     },
-    [MODAL_LIFECYCLE_STATE.final]: {
+    [MODAL_LIFECYCLE_STATE.close]: {
       left: "100%",
       top: "50%",
       transform: "translate(0, -50%)",
     },
   },
   [MODAL_POSITION.leftTop]: {
-    [MODAL_LIFECYCLE_STATE.initial]: {
+    [MODAL_LIFECYCLE_STATE.open]: {
       left: "0",
       top: "0",
       transform: "translate(-100%, -100%) scale(0)",
@@ -176,14 +176,14 @@ export const DEFAULT_POSITION: ModalPositionTable = {
       top: "0",
       transform: "translate(0, 0) scale(1)",
     },
-    [MODAL_LIFECYCLE_STATE.final]: {
+    [MODAL_LIFECYCLE_STATE.close]: {
       left: "0",
       top: "0",
       transform: "translate(-100%, -100%) scale(0)",
     },
   },
   [MODAL_POSITION.leftBottom]: {
-    [MODAL_LIFECYCLE_STATE.initial]: {
+    [MODAL_LIFECYCLE_STATE.open]: {
       left: "0",
       top: "100%",
       transform: "translate(-100%, 0) scale(0)",
@@ -193,14 +193,14 @@ export const DEFAULT_POSITION: ModalPositionTable = {
       top: "100%",
       transform: "translate(0, -100%) scale(1)",
     },
-    [MODAL_LIFECYCLE_STATE.final]: {
+    [MODAL_LIFECYCLE_STATE.close]: {
       left: "0",
       top: "100%",
       transform: "translate(-100%, 0) scale(0)",
     },
   },
   [MODAL_POSITION.rightTop]: {
-    [MODAL_LIFECYCLE_STATE.initial]: {
+    [MODAL_LIFECYCLE_STATE.open]: {
       left: "100%",
       top: "0",
       transform: "translate(0, -100%) scale(0)",
@@ -210,14 +210,14 @@ export const DEFAULT_POSITION: ModalPositionTable = {
       top: "0",
       transform: "translate(-100%, 0) scale(1)",
     },
-    [MODAL_LIFECYCLE_STATE.final]: {
+    [MODAL_LIFECYCLE_STATE.close]: {
       left: "100%",
       top: "0",
       transform: "translate(0, -100%) scale(0)",
     },
   },
   [MODAL_POSITION.rightBottom]: {
-    [MODAL_LIFECYCLE_STATE.initial]: {
+    [MODAL_LIFECYCLE_STATE.open]: {
       left: "100%",
       top: "100%",
       transform: "translate(0, 0) scale(0)",
@@ -227,7 +227,7 @@ export const DEFAULT_POSITION: ModalPositionTable = {
       top: "100%",
       transform: "translate(-100%, -100%) scale(1)",
     },
-    [MODAL_LIFECYCLE_STATE.final]: {
+    [MODAL_LIFECYCLE_STATE.close]: {
       left: "100%",
       top: "100%",
       transform: "translate(0, 0) scale(0)",

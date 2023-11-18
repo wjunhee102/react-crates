@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { ModalComponentProps } from "../types";
+import { ModalComponentProps } from "../services/ModalFiber";
 
 const ModalContext = createContext<ModalComponentProps | null>(null);
 

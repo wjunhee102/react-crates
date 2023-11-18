@@ -9,7 +9,6 @@ import {
 import {
   ModalListener,
   ModalComponentFiber,
-  ModalComponent,
   ModalFiber,
   ModalOptions,
   ModalRemovedName,
@@ -31,18 +30,19 @@ import { defaultMiddleware } from "../utils/defaultMiddleware";
 import { getCloseModal } from "../utils/getCloseModal";
 import { getPositionKey } from "../utils/getPositionKey";
 import {
-  ModalStateManager,
+  Modal,
   ModalLifecycleState,
   MODAL_LIFECYCLE_STATE,
-  ModalStateProps,
-} from "./modalStateManager";
+  ModalProps,
+  ModalComponent,
+} from "./ModalFiber";
 
 class ModalManager<T extends string = string> {
   private currentId: number = 0;
   private callCount: number = 0;
   private transactionState: ModalTransactionState =
     MODAL_TRANSACTION_STATE.idle;
-  private modalFiberStack: ModalFiber[] = [];
+  private modalFiberStack: Modal[] = [];
   private listeners: ModalListener[] = [];
   private modalComponentFiberMap: Map<string, ModalComponentFiber> = new Map();
   private modalPositionMap: ModalPositionMap = new Map();
@@ -74,13 +74,12 @@ class ModalManager<T extends string = string> {
   }
 
   private setModalComponentFiberMap(componentFiber: ModalComponentFiber) {
-    console.log("this", this);
     const { name, component, defaultOptions } = componentFiber;
 
     if (component === undefined || checkDefaultModalName(name)) {
       return;
     }
-    console.log(this, this.modalComponentFiberMap);
+    console.log("modalManager", this, this.modalComponentFiberMap);
     const currentModalComponentFiber = this.modalComponentFiberMap.get(name);
 
     if (
@@ -103,8 +102,8 @@ class ModalManager<T extends string = string> {
 
   private getAppliedModalFiber(
     modalFiber: ModalFiber<ModalDispatchOptions>
-  ): ModalFiber<ModalOptions> {
-    const { id, options } = modalFiber;
+  ): Modal {
+    const { id, options, name, modalKey, component, } = modalFiber;
 
     const closeModal = getCloseModal({
       id,
@@ -119,25 +118,21 @@ class ModalManager<T extends string = string> {
       ? options.middleware
       : defaultMiddleware;
 
-    const initialState: ModalStateProps = {
+    const appliedOptions: ModalOptions<any> = {
+      ...options,
       callback: options.callback,
-      closeDelayDuration: options.closeDelay,
+      closeModal,
+      middleware,
     };
 
-    const modalStateManager = new ModalStateManager(initialState);
 
-    const appliedModalFiber = {
-      ...modalFiber,
-      options: {
-        ...options,
-        closeModal,
-        middleware,
-        stateManager: modalStateManager,
-        isPending: false,
-      },
-    } as ModalFiber<ModalOptions>;
-
-    return appliedModalFiber;
+    return new Modal({
+      id,
+      name,
+      modalKey,
+      component,
+      options: appliedOptions
+    }, this);
   }
 
   getCallCount() {
@@ -373,15 +368,18 @@ class ModalManager<T extends string = string> {
   editModalFiberProps(id: number, props: EditModalOptionsProps) {
     let fiberId = 0;
 
-    this.modalFiberStack = this.modalFiberStack.map((fiber) => {
-      if (fiber.id !== id) {
-        return fiber;
-      }
+    /**
+     * modal 수정하는 로직 만들기
+     */
+    // this.modalFiberStack = this.modalFiberStack.map((fiber) => {
+    //   if (fiber.id !== id) {
+    //     return fiber;
+    //   }
 
-      fiberId = fiber.id;
+    //   fiberId = fiber.id;
 
-      return { ...fiber, options: { ...fiber.options, ...props } };
-    });
+    //   return { ...fiber, options: { ...fiber.options, ...props } };
+    // });
 
     this.notify();
 
@@ -393,7 +391,7 @@ class ModalManager<T extends string = string> {
       | ModalFiber<ModalDispatchOptions>
       | ModalFiber<ModalDispatchOptions>[]
   ) {
-    let appliedModalFiberStack: ModalFiber<ModalOptions>[];
+    let appliedModalFiberStack: Modal[];
 
     if (Array.isArray(modalFiber)) {
       appliedModalFiberStack = modalFiber.map((fiber) =>
@@ -483,10 +481,18 @@ class ModalManager<T extends string = string> {
     }
   }
 
-  action(targetModalId: number) {
-    /**
-     * 이것을 개발하려면 먼저 modalState
-     */
+  action(targetModalId: number, confirm?: boolean | string) {
+    const targetModal = this.modalFiberStack.filter(modal => targetModalId === modal.id)[0];
+
+    if (!targetModal) {
+      return;
+    }
+
+    targetModal.action(confirm);
+    this.remove(targetModalId);
+    this.notify();
+
+    return;
   }
 
   /**

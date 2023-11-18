@@ -1,25 +1,25 @@
 import React, { ButtonHTMLAttributes, MouseEvent } from "react";
 import useModalOptions from "../hooks/useModalOptions";
-import { ModalConfirmType } from "../services/modalStateManager";
+import { ModalConfirmType } from "../services/ModalFiber";
 
-export interface ModalSubButtonProps
+export interface ModalCustomButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
   confirmType: ModalConfirmType;
 }
 
-const ModalSubButton = ({
+const ModalCustomButton = ({
   onClick,
   children,
   confirmType,
   ...restProps
-}: ModalSubButtonProps) => {
+}: ModalCustomButtonProps) => {
   const options = useModalOptions();
 
   if (!options) {
     return null;
   }
 
-  const { action, subBtnContent } = options;
+  const { action, customContent } = options;
 
   const onClickSub = (e: MouseEvent<HTMLButtonElement>) => {
     onClick && onClick(e);
@@ -28,9 +28,9 @@ const ModalSubButton = ({
 
   return (
     <button {...restProps} onClick={onClickSub} type="button">
-      {subBtnContent || children || "서브"}
+      {customContent || children || "커스텀"}
     </button>
   );
 };
 
-export default ModalSubButton;
+export default ModalCustomButton;

@@ -1,12 +1,17 @@
-import { CSSProperties, ReactNode } from "react";
-import { ModalComponent, ModalOptions, ModalTransactionState } from "../types";
-import ModalManager from "./modalManager";
+import React, { CSSProperties, ReactNode } from "react";
 import { MODAL_POSITION, MODAL_TRANSACTION_STATE } from "../contants/constants";
+import { ModalOptions, ModalTransactionState } from "../types";
 import { delay } from "../utils/delay";
+import ModalManager from "./modalManager";
 
 export type ModalLifecycleState = "open" | "active" | "close";
 
-export type ModalActionState = "initial" | "pending" | "success" | "error" | "final";
+export type ModalActionState =
+  | "initial"
+  | "pending"
+  | "success"
+  | "error"
+  | "final";
 
 export interface StateController {
   initial: () => void;
@@ -29,7 +34,7 @@ export interface StateController {
   getActionState: () => ModalActionState;
 }
 
-export type ModalConfirmType = boolean | string | null;
+export type ModalConfirmType = string | boolean;
 
 export type ModalCallback = (
   confirm: ModalConfirmType | undefined,
@@ -68,28 +73,33 @@ export interface ModalMiddlewareProps {
   modalState: Modal;
 }
 
-interface ModalComponentProps {
+export interface ModalComponentProps<T = any> {
   title?: ReactNode;
+  subTitle?: ReactNode;
   content?: ReactNode;
+  subContent?: ReactNode;
   confirmContent?: ReactNode;
   cancelContent?: ReactNode;
   customContent?: ReactNode;
   action: (confirm?: string | boolean) => void;
   actionState: ModalActionState;
+  payload?: T;
 }
 
+export type ModalComponent<T = any> = React.FC<ModalComponentProps<T>>;
+
 export interface ModalState {
-  Component: ModalComponent<any>;
+  Component: ModalComponent;
   modalStyle: CSSProperties;
   backCoverStyle: CSSProperties;
   componentProps: ModalComponentProps;
 }
 
-interface ModalProps {
+export interface ModalProps {
   id: number;
   modalKey: string | null;
   name: string;
-  component: ModalComponent<any>;
+  component: ModalComponent;
   options: ModalOptions<any>;
 }
 
@@ -97,7 +107,7 @@ export class Modal {
   private _id: number;
   private _modalKey: string | null;
   private _name: string;
-  private _component: ModalComponent<any>;
+  private _component: ModalComponent;
   private _options: ModalOptions<any>;
   private lifecycleState: ModalLifecycleState = MODAL_LIFECYCLE_STATE.open;
   private _actionState: ModalActionState = MODAL_ACTION_STATE.initial;
@@ -106,12 +116,18 @@ export class Modal {
   private _closeDelayDuration = -1;
   private _confirm: ModalConfirmType | undefined = undefined;
   private _message: ReactNode = undefined;
+  // eslint-disable-next-line
   private _callback: ModalCallback = () => { };
-  private endCallback: (() => void) = () => { };
+  // eslint-disable-next-line
+  private endCallback: () => void = () => { };
   private listeners: ((state: ModalState) => void)[] = [];
-  private breakPoint: number = 0;
+  private breakPoint = 0;
+  private isInitial = false;
 
-  constructor({ id, modalKey, name, component, options }: ModalProps, private eventManager: ModalManager) {
+  constructor(
+    { id, modalKey, name, component, options }: ModalProps,
+    private eventManager: ModalManager
+  ) {
     this._id = id;
     this._name = name;
     this._modalKey = modalKey;
@@ -185,9 +201,7 @@ export class Modal {
   }
 
   setOption() {
-    const {
-      closeDelay,
-    } = this.options;
+    const { closeDelay } = this.options;
 
     if (closeDelay) {
       this._closeDelayDuration = closeDelay;
@@ -318,7 +332,7 @@ export class Modal {
       end: this.end,
       getActionState: this.getActionState,
       getLifecycleState: this.getLifecycleState,
-    }
+    };
   }
 
   getMiddlewareProps(): ModalMiddlewareProps {
@@ -330,11 +344,13 @@ export class Modal {
         endTransaction: this.eventManager.endTransaction,
       },
       modalState: this,
-    }
+    };
   }
 
   action(confirm?: ModalConfirmType, callback?: ModalCallback) {
-    if (this.eventManager.getTransactionState() !== MODAL_TRANSACTION_STATE.idle) {
+    if (
+      this.eventManager.getTransactionState() !== MODAL_TRANSACTION_STATE.idle
+    ) {
       return;
     }
 
@@ -350,23 +366,26 @@ export class Modal {
   }
 
   getModalStyle(): CSSProperties {
-    const {
-      position,
-      duration,
-      transitionOptions,
-    } = this.options;
+    const { position, duration, transitionOptions } = this.options;
 
-    const appliedPosition = typeof position === "function" ? position(this.breakPoint) : position;
+    const appliedPosition =
+      typeof position === "function" ? position(this.breakPoint) : position;
 
     const isAciveState = this.lifecycleState === MODAL_LIFECYCLE_STATE.active;
-    const modalPosition = this.eventManager.getCurrentModalPosition(this.lifecycleState, appliedPosition);
-    const transition = this.eventManager.getModalTrainsition(duration, transitionOptions);
+    const modalPosition = this.eventManager.getCurrentModalPosition(
+      this.lifecycleState,
+      appliedPosition
+    );
+    const transition = this.eventManager.getModalTrainsition(
+      duration,
+      transitionOptions
+    );
 
     return {
       pointerEvents: isAciveState ? "auto" : "none",
       ...transition,
-      ...modalPosition
-    }
+      ...modalPosition,
+    };
   }
 
   getBackCoverStyle(): CSSProperties {
@@ -379,28 +398,23 @@ export class Modal {
     } = this.options;
 
     const isAciveState = this.lifecycleState === MODAL_LIFECYCLE_STATE.active;
-    const {
-      background,
-      opacity,
-      ...backCoverPosition
-    } = this.eventManager.getCurrentModalPosition(
-      this.lifecycleState,
-      MODAL_POSITION.backCover
+    const { background, opacity, ...backCoverPosition } =
+      this.eventManager.getCurrentModalPosition(
+        this.lifecycleState,
+        MODAL_POSITION.backCover
+      );
+    const transition = this.eventManager.getModalTrainsition(
+      duration,
+      transitionOptions
     );
-    const transition = this.eventManager.getModalTrainsition(duration, transitionOptions);
 
     return {
-      cursor:
-        isAciveState && backCoverConfirm !== null
-          ? "pointer"
-          : "default",
+      cursor: isAciveState && backCoverConfirm !== null ? "pointer" : "default",
       ...transition,
       ...backCoverPosition,
-      background:
-        (isAciveState && backCoverColor) || background,
-      opacity:
-        (isAciveState && backCoverOpacity) || opacity
-    }
+      background: (isAciveState && backCoverColor) || background,
+      opacity: (isAciveState && backCoverOpacity) || opacity,
+    };
   }
 
   get isActive() {
@@ -422,7 +436,7 @@ export class Modal {
 
   close() {
     this.lifecycleState = "close";
-    this.options.closeModal(this.endCallback, this._confirm);
+    this.options.closeModal(this.endCallback, this.confirm);
 
     this.notify();
   }
@@ -430,22 +444,27 @@ export class Modal {
   getComponentProps(): ModalComponentProps {
     const {
       title,
+      subTitle,
       content,
+      subContent,
       confirmContent,
       cancelContent,
-      subBtnContent
+      customContent,
+      payload,
     } = this.options;
-
 
     return {
       title,
+      subTitle,
       content,
+      subContent,
       confirmContent,
       cancelContent,
-      customContent: subBtnContent,
+      customContent,
       action: this.action,
       actionState: this.actionState,
-    }
+      payload,
+    };
   }
 
   getState(): ModalState {
@@ -454,7 +473,7 @@ export class Modal {
       modalStyle: this.getModalStyle(),
       backCoverStyle: this.getBackCoverStyle(),
       componentProps: this.getComponentProps(),
-    }
+    };
   }
 
   subscribe(listener: (state: ModalState) => void) {
@@ -469,6 +488,17 @@ export class Modal {
     return this;
   }
 
+  init() {
+    if (this.isInitial) {
+      return;
+    }
+
+    this.isInitial = true;
+    setTimeout(() => {
+      this.active();
+    }, 10);
+  }
+
   notify() {
     const modalState = this.getState();
 
@@ -478,8 +508,11 @@ export class Modal {
   }
 
   setBreakPoint(breakPoint: number) {
+    if (this.breakPoint === breakPoint) {
+      return;
+    }
+
     this.breakPoint = breakPoint;
     this.notify();
   }
-
 }

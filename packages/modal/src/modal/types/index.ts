@@ -1,17 +1,16 @@
 import {
-  ModalStateManager,
+  Modal,
+  ModalComponent,
+  ModalMiddlewareProps,
+} from "../services/ModalFiber";
+import {
   ModalLifecycleState,
-  ModalState,
-  StateController,
   ModalConfirmType,
   ModalCallback,
 } from "../services/modalStateManager";
-import {
-  ModalMiddlewareProps
-} from "../services/ModalFiber";
 
 export interface ModalListenerProps {
-  modalFiberStack: ModalFiber<ModalOptions>[];
+  modalFiberStack: Modal[];
   transactionState: ModalTransactionState;
 }
 
@@ -100,6 +99,11 @@ export type ModalMiddleware = (
   props: ModalMiddlewareProps
 ) => void | Promise<void>;
 
+type ModalPosition =
+  | ((breakPoint: number) => DefaultModalPosition | string)
+  | DefaultModalPosition
+  | string;
+
 export interface ModalDispatchOptions<T = any> {
   modalKey?: string;
   callback?: ModalCallback;
@@ -113,15 +117,12 @@ export interface ModalDispatchOptions<T = any> {
   subContent?: React.ReactNode;
   confirmContent?: React.ReactNode;
   cancelContent?: React.ReactNode;
-  subBtnContent?: React.ReactNode;
+  customContent?: React.ReactNode;
   payload?: T;
   closeDelay?: number;
   duration?: number;
   transitionOptions?: ModalTransitionOptions;
-  position?:
-  | ((breakPoint: number) => DefaultModalPosition | string)
-  | DefaultModalPosition
-  | string;
+  position?: ModalPosition;
   required?: boolean;
 }
 
@@ -138,7 +139,7 @@ export type ModalClose = (
 export interface ModalOptions<T = any> extends EditModalOptionsProps<T> {
   closeModal: ModalClose;
   middleware: ModalMiddleware;
-  stateManager: ModalStateManager;
+  // stateManager: ModalStateManager;
 }
 
 export type CloseModalProps =
@@ -148,15 +149,16 @@ export type CloseModalProps =
 
 export type CloseModal = (closeModalProps: CloseModalProps) => void;
 
+/** 
 export interface ModalComponentProps<T = any>
   extends Omit<ModalOptions<T>, "callback" | "closeModal" | "middleware">,
   ModalState {
   transactionState: ModalTransactionState;
   action: (confirm?: ModalConfirmType) => void;
-  stateController: StateController;
 }
+**/
 
-export type ModalComponent<T = any> = React.FC<ModalComponentProps<T>>;
+// export type ModalComponent<T = any> = React.FC<ModalComponentProps<T>>;
 
 export interface ModalComponentFiber {
   name: string;

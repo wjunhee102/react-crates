@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ModalManager from "../services/modalManager";
 import { ModalCallback } from "../services/modalStateManager";
-import {
-  ModalComponent,
-  ModalComponentProps,
-  ModalDispatchOptions,
-} from "../types";
+import { ModalDispatchOptions } from "../types";
+import { ModalComponent, ModalComponentProps } from "../services/ModalFiber";
 
 export interface ModalRegistratorProps {
   open?: boolean;
