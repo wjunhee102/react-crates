@@ -1,7 +1,7 @@
 import DefaultModal from "./components/DetaultModal";
-import { ModalComponentFiber } from "./types";
+import { ModalComponentSeed } from "./types";
 
-const modalMetaList: ModalComponentFiber[] = [
+const modalMetaList: ModalComponentSeed[] = [
   {
     name: "default",
     component: DefaultModal

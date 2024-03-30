@@ -8,8 +8,8 @@ import {
 } from "../contants/constants";
 import {
   ModalListener,
-  ModalComponentFiber,
-  ModalFiber,
+  ModalComponentSeed,
+  ModalSeed,
   ModalOptions,
   ModalRemovedName,
   ModalDispatchOptions,
@@ -22,8 +22,8 @@ import {
   ModalTransitionProps,
   ModalPositionStyle,
   ModalTransitionOptions,
-  ModalListenerProps,
   ModalTransactionState,
+  ModalManagerState,
 } from "../types";
 import { checkDefaultModalName } from "../utils/checkDefaultModalName";
 import { defaultMiddleware } from "../utils/defaultMiddleware";
@@ -35,31 +35,39 @@ import {
   MODAL_LIFECYCLE_STATE,
   ModalProps,
   ModalComponent,
-} from "./ModalFiber";
+} from "./modal";
 
 class ModalManager<T extends string = string> {
   private currentId: number = 0;
   private callCount: number = 0;
   private transactionState: ModalTransactionState =
     MODAL_TRANSACTION_STATE.idle;
-  private modalFiberStack: Modal[] = [];
+  private modalStack: Modal[] = [];
   private listeners: ModalListener[] = [];
-  private modalComponentFiberMap: Map<string, ModalComponentFiber> = new Map();
+  private modalComponentMap: Map<string, ModalComponentSeed> = new Map();
   private modalPositionMap: ModalPositionMap = new Map();
   private modalTransition: ModalTransition = DEFAULT_TRANSITION;
   private modalDuration: number = DEFAULT_DURATION;
+  private breakPoint: number = 0;
+  private modalManagerState!: ModalManagerState;
 
   constructor(
-    baseModalComponentFiber: ModalComponentFiber[] = [],
+    baseModalComponentSeed: ModalComponentSeed[] = [],
     options: ModalManagerOptionsProps<T> = {}
   ) {
-    if (!this.modalComponentFiberMap) {
-      this.modalComponentFiberMap = new Map();
+    if (!this.modalComponentMap) {
+      this.modalComponentMap = new Map();
     }
-    this.setModalComponentFiberMap = this.setModalComponentFiberMap.bind(this);
 
-    baseModalComponentFiber.forEach(this.setModalComponentFiberMap);
+    this.bind();
+
+    baseModalComponentSeed.forEach(this.setModalComponentMap);
     this.initModalOptions(options);
+    this.setModalManagerState();
+  }
+
+  private bind() {
+    this.setModalComponentMap = this.setModalComponentMap.bind(this);
 
     this.call = this.call.bind(this);
     this.open = this.open.bind(this);
@@ -73,37 +81,46 @@ class ModalManager<T extends string = string> {
     this.endTransaction = this.endTransaction.bind(this);
   }
 
-  private setModalComponentFiberMap(componentFiber: ModalComponentFiber) {
-    const { name, component, defaultOptions } = componentFiber;
+  private setModalManagerState() {
+    this.modalManagerState = {
+      modalStack: this.modalStack,
+      transactionState: this.transactionState,
+      isOpen: this.modalStack.length > 0 ? true : false,
+      breakPoint: this.breakPoint
+    }
+  }
+
+  private setModalComponentMap(componentSeed: ModalComponentSeed) {
+    const { name, component, defaultOptions } = componentSeed;
 
     if (component === undefined || checkDefaultModalName(name)) {
       return;
     }
 
-    const currentModalComponentFiber = this.modalComponentFiberMap.get(name);
+    const currentModalComponentSeed = this.modalComponentMap.get(name);
 
     if (
-      currentModalComponentFiber &&
-      currentModalComponentFiber.defaultOptions?.required
+      currentModalComponentSeed &&
+      currentModalComponentSeed.defaultOptions?.required
     ) {
       return;
     }
 
-    const modalComponentFiber = {
-      ...componentFiber,
+    const modalComponentSeed = {
+      ...componentSeed,
       defaultOptions: {
         ...defaultOptions,
         duration: defaultOptions?.duration || this.modalDuration,
       },
     };
 
-    this.modalComponentFiberMap.set(name, modalComponentFiber);
+    this.modalComponentMap.set(name, modalComponentSeed);
   }
 
-  private getAppliedModalFiber(
-    modalFiber: ModalFiber<ModalDispatchOptions>
+  private createModal(
+    modalSeed: ModalSeed<ModalDispatchOptions>
   ): Modal {
-    const { id, options, name, modalKey, component, } = modalFiber;
+    const { id, options, name, modalKey, component, } = modalSeed;
 
     const closeModal = getCloseModal({
       id,
@@ -125,7 +142,6 @@ class ModalManager<T extends string = string> {
       middleware,
     };
 
-
     return new Modal({
       id,
       name,
@@ -133,6 +149,10 @@ class ModalManager<T extends string = string> {
       component,
       options: appliedOptions
     }, this);
+  }
+
+  getState(): ModalManagerState {
+    return this.modalManagerState;
   }
 
   getCallCount() {
@@ -143,16 +163,16 @@ class ModalManager<T extends string = string> {
     return this.transactionState;
   }
 
-  getModalFiberStack() {
-    return this.modalFiberStack;
+  getModalStack() {
+    return this.modalStack;
   }
 
-  getCurrentModalFiberId() {
-    if (this.modalFiberStack.length === 0) {
+  getCurrentModalId() {
+    if (this.modalStack.length === 0) {
       return 0;
     }
 
-    return this.modalFiberStack[this.modalFiberStack.length - 1].id;
+    return this.modalStack[this.modalStack.length - 1].id;
   }
 
   getModalTrainsition(
@@ -235,7 +255,7 @@ class ModalManager<T extends string = string> {
     };
   }
 
-  public initModalOptions(optionsProps: ModalManagerOptionsProps<T>) {
+  initModalOptions(optionsProps: ModalManagerOptionsProps<T>) {
     const { position, transition, duration } = optionsProps;
 
     const initialPosition: ModalPositionTable = {
@@ -291,13 +311,18 @@ class ModalManager<T extends string = string> {
     return transactionState;
   }
 
+  setBreakPoint(breakPoint: number) {
+    this.breakPoint = breakPoint;
+    this.notify();
+  }
+
   setModalComponent(
-    componentFiber: ModalComponentFiber | ModalComponentFiber[]
+    componentSeed: ModalComponentSeed | ModalComponentSeed[]
   ) {
-    if (Array.isArray(componentFiber)) {
-      componentFiber.forEach((fiber) => this.setModalComponentFiberMap(fiber));
+    if (Array.isArray(componentSeed)) {
+      componentSeed.forEach((seed) => this.setModalComponentMap(seed));
     } else {
-      this.setModalComponentFiberMap(componentFiber);
+      this.setModalComponentMap(componentSeed);
     }
 
     return this;
@@ -306,17 +331,17 @@ class ModalManager<T extends string = string> {
   removeModalComponent(name: string | string[]) {
     if (Array.isArray(name)) {
       name.forEach((n) => {
-        this.modalComponentFiberMap.delete(n);
+        this.modalComponentMap.delete(n);
       });
 
-      this.modalFiberStack = this.modalFiberStack.filter(
-        (fiber) => !name.includes(fiber.name)
+      this.modalStack = this.modalStack.filter(
+        (modal) => !name.includes(modal.name)
       );
     } else {
-      this.modalComponentFiberMap.delete(name);
+      this.modalComponentMap.delete(name);
 
-      this.modalFiberStack = this.modalFiberStack.filter(
-        (fiber) => fiber.name !== name
+      this.modalStack = this.modalStack.filter(
+        (modal) => modal.name !== name
       );
     }
 
@@ -357,97 +382,94 @@ class ModalManager<T extends string = string> {
   }
 
   notify() {
-    const listenerProps: ModalListenerProps = {
-      modalFiberStack: this.modalFiberStack,
-      transactionState: this.transactionState,
-    };
+    this.setModalManagerState();
 
-    this.listeners.forEach((listener) => listener(listenerProps));
+    this.listeners.forEach((listener) => listener(this.modalManagerState));
   }
 
-  editModalFiberProps(id: number, props: EditModalOptionsProps) {
-    let fiberId = 0;
+  editModalProps(id: number, props: EditModalOptionsProps) {
+    let modalId = 0;
 
     /**
      * modal 수정하는 로직 만들기
      */
-    // this.modalFiberStack = this.modalFiberStack.map((fiber) => {
-    //   if (fiber.id !== id) {
-    //     return fiber;
+    // this.modalStack = this.modalStack.map((modal) => {
+    //   if (modal.id !== id) {
+    //     return modal;
     //   }
 
-    //   fiberId = fiber.id;
+    //   modalId = modal.id;
 
-    //   return { ...fiber, options: { ...fiber.options, ...props } };
+    //   return { ...modal, options: { ...modal.options, ...props } };
     // });
 
     this.notify();
 
-    return fiberId;
+    return modalId;
   }
 
-  pushModalFiber(
-    modalFiber:
-      | ModalFiber<ModalDispatchOptions>
-      | ModalFiber<ModalDispatchOptions>[]
+  pushModal(
+    modalSeed:
+      | ModalSeed<ModalDispatchOptions>
+      | ModalSeed<ModalDispatchOptions>[]
   ) {
-    let appliedModalFiberStack: Modal[];
+    let newModalStack: Modal[];
 
-    if (Array.isArray(modalFiber)) {
-      appliedModalFiberStack = modalFiber.map((fiber) =>
-        this.getAppliedModalFiber(fiber)
+    if (Array.isArray(modalSeed)) {
+      newModalStack = modalSeed.map((seed) =>
+        this.createModal(seed)
       );
     } else {
-      appliedModalFiberStack = [this.getAppliedModalFiber(modalFiber)];
+      newModalStack = [this.createModal(modalSeed)];
     }
 
-    this.modalFiberStack = [...this.modalFiberStack, ...appliedModalFiberStack];
+    this.modalStack = [...this.modalStack, ...newModalStack];
 
     this.notify();
   }
 
-  filterModalFiberByType(name: string | string[]) {
+  filterModalByType(name: string | string[]) {
     if (Array.isArray(name)) {
-      this.modalFiberStack = this.modalFiberStack.filter(
-        (fiber) => !name.includes(fiber.name)
+      this.modalStack = this.modalStack.filter(
+        (modal) => !name.includes(modal.name)
       );
     } else {
-      this.modalFiberStack = this.modalFiberStack.filter(
-        (fiber) => fiber.name !== name
+      this.modalStack = this.modalStack.filter(
+        (modal) => modal.name !== name
       );
     }
 
     return this;
   }
 
-  clearModalFiberStack() {
-    this.modalFiberStack = [];
+  clearModalStack() {
+    this.modalStack = [];
     this.currentId = 0;
 
     return this;
   }
 
-  popModalFiber(removedName?: ModalRemovedName) {
-    if (this.modalFiberStack.length === 0) {
+  popModal(removedName?: ModalRemovedName) {
+    if (this.modalStack.length === 0) {
       this.currentId = 0;
       return this;
     }
 
     if (removedName === undefined) {
-      this.modalFiberStack = this.modalFiberStack.slice(0, -1);
+      this.modalStack = this.modalStack.slice(0, -1);
 
 
       return this;
     }
 
     if (removedName === MODAL_NAME.clear) {
-      this.clearModalFiberStack();
+      this.clearModalStack();
 
       return this;
     }
 
 
-    this.filterModalFiberByType(removedName);
+    this.filterModalByType(removedName);
 
     return this;
   }
@@ -457,7 +479,7 @@ class ModalManager<T extends string = string> {
     asyncCallbackProps: P
   ) {
     if (typeof asyncCallback !== "function") {
-      throw new Error("modalManager.ts line 372: not function");
+      throw new Error("modalManager.ts line 482: not function");
     }
 
     this.startTransaction();
@@ -475,14 +497,14 @@ class ModalManager<T extends string = string> {
         throw new Error(error);
       }
 
-      throw new Error("modalManager.ts line 383: not error");
+      throw new Error("modalManager.ts line 500: not error");
     } finally {
       this.endTransaction();
     }
   }
 
   action(targetModalId: number, confirm?: boolean | string) {
-    const targetModal = this.modalFiberStack.filter(modal => targetModalId === modal.id)[0];
+    const targetModal = this.modalStack.filter(modal => targetModalId === modal.id)[0];
 
     if (!targetModal) {
       return;
@@ -507,28 +529,28 @@ class ModalManager<T extends string = string> {
     const modalKey = options.modalKey || null;
 
     if (modalKey) {
-      const modalFiber = this.modalFiberStack.find(
-        (fiber) => fiber.modalKey === modalKey
+      const findedModal = this.modalStack.find(
+        (modal) => modal.modalKey === modalKey
       );
 
-      if (modalFiber) {
+      if (findedModal) {
         return 0;
       }
     }
 
 
     if (typeof name === "string") {
-      const componentFiber = this.modalComponentFiberMap.get(name);
+      const componentSeed = this.modalComponentMap.get(name);
 
-      if (componentFiber === undefined) {
+      if (componentSeed === undefined) {
         return 0;
       }
 
-      const { component, defaultOptions } = componentFiber;
+      const { component, defaultOptions } = componentSeed;
 
       this.currentId += 1;
 
-      const modalFiber: ModalFiber<ModalDispatchOptions<TPayload>> = {
+      const modalSeed: ModalSeed<ModalDispatchOptions<TPayload>> = {
         id: this.currentId,
         modalKey,
         name,
@@ -539,7 +561,7 @@ class ModalManager<T extends string = string> {
         },
       };
 
-      this.pushModalFiber(modalFiber);
+      this.pushModal(modalSeed);
 
       return this.currentId;
     }
@@ -550,7 +572,7 @@ class ModalManager<T extends string = string> {
 
     this.currentId += 1;
 
-    this.pushModalFiber({
+    this.pushModal({
       id: this.currentId,
       modalKey,
       name: "unknown",
@@ -567,28 +589,28 @@ class ModalManager<T extends string = string> {
    */
   remove(removedName?: CloseModalProps) {
     if (typeof removedName === "number") {
-      this.modalFiberStack = this.modalFiberStack.filter(
-        (fiber) => fiber.id !== removedName
+      this.modalStack = this.modalStack.filter(
+        (modal) => modal.id !== removedName
       );
       this.notify();
 
-      return this.getCurrentModalFiberId();
+      return this.getCurrentModalId();
     }
 
     if (Array.isArray(removedName)) {
-      this.modalFiberStack = this.modalFiberStack.filter(
-        (fiber) => fiber.id !== removedName[0]
+      this.modalStack = this.modalStack.filter(
+        (modal) => modal.id !== removedName[0]
       );
 
-      this.popModalFiber(removedName[1]);
+      this.popModal(removedName[1]);
 
-      return this.getCurrentModalFiberId();
+      return this.getCurrentModalId();
     }
 
-    this.popModalFiber(removedName);
+    this.popModal(removedName);
     this.notify();
 
-    return this.getCurrentModalFiberId();
+    return this.getCurrentModalId();
   }
 
   /**
@@ -598,7 +620,7 @@ class ModalManager<T extends string = string> {
    * @returns 마지막으로 등록된 모달의 id를 반환합니다. 만약 등록된 모달이 없다면 0을 반환합니다.
    */
   edit(id: number, props: EditModalOptionsProps) {
-    return this.editModalFiberProps(id, props);
+    return this.editModalProps(id, props);
   }
 
   /**
@@ -606,7 +628,7 @@ class ModalManager<T extends string = string> {
    * @returns 마지막으로 등록된 모달의 id를 반환합니다. 만약 등록된 모달이 없다면 0을 반환합니다.
    */
   close(id: number) {
-    return this.editModalFiberProps(id, { isClose: false });
+    return this.editModalProps(id, { isClose: false });
   }
 }
 

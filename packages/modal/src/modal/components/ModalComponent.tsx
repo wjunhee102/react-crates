@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { MODAL_TRANSACTION_STATE } from "../contants/constants";
 import ModalContext from "../services/modalContext";
-import { Modal as ModalStateManager, ModalState } from "../services/ModalFiber";
+import { Modal as ModalStateManager, ModalState } from "../services/modal";
 import { ModalTransactionState } from "../types";
 
 interface ModalProps {
@@ -10,7 +10,11 @@ interface ModalProps {
   modal: ModalStateManager;
 }
 
-const Modal = ({ breakPoint, transactionState, modal }: ModalProps) => {
+const ModalComponent = ({
+  breakPoint,
+  transactionState,
+  modal,
+}: ModalProps) => {
   const [state, setState] = useState(modal.getState());
 
   const { Component, componentProps, backCoverStyle, modalStyle } = state;
@@ -64,4 +68,4 @@ const Modal = ({ breakPoint, transactionState, modal }: ModalProps) => {
   );
 };
 
-export default Modal;
+export default ModalComponent;

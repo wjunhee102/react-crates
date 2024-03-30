@@ -1,5 +1,5 @@
 import { MODAL_TRANSACTION_STATE } from "../contants/constants";
-import { ModalMiddlewareProps } from "../services/ModalFiber";
+import { ModalMiddlewareProps } from "../services/modal";
 
 export async function defaultMiddleware({
   transactionController: {

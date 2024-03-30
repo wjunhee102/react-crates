@@ -2,19 +2,26 @@ import {
   Modal,
   ModalComponent,
   ModalMiddlewareProps,
-} from "../services/ModalFiber";
+} from "../services/modal";
 import {
   ModalLifecycleState,
   ModalConfirmType,
   ModalCallback,
 } from "../services/modalStateManager";
 
-export interface ModalListenerProps {
-  modalFiberStack: Modal[];
+export interface ModalManagerState {
+  modalStack: Modal[];
+  breakPoint: number;
+  isOpen: boolean;
   transactionState: ModalTransactionState;
 }
 
-export type ModalListener = (listenerProps: ModalListenerProps) => void;
+export interface ModalListenerProps {
+  modalStack: Modal[];
+  transactionState: ModalTransactionState;
+}
+
+export type ModalListener = (state: ModalManagerState) => void;
 
 export type DefaultModalName = "clear" | "unknown";
 
@@ -160,13 +167,13 @@ export interface ModalComponentProps<T = any>
 
 // export type ModalComponent<T = any> = React.FC<ModalComponentProps<T>>;
 
-export interface ModalComponentFiber {
+export interface ModalComponentSeed {
   name: string;
   component: ModalComponent;
   defaultOptions?: ModalDispatchOptions;
 }
 
-export interface ModalFiber<T extends ModalDispatchOptions = ModalOptions> {
+export interface ModalSeed<T extends ModalDispatchOptions = ModalOptions> {
   id: number;
   modalKey: string | null;
   name: string;

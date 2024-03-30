@@ -7,8 +7,8 @@ function setUseIsOpenModal(defaultModalManager: ModalManager) {
     const [isOpenModal, setIsOpen] = useState<boolean>(false);
 
     useEffect(() => {
-      const listener: ModalListener = ({ modalFiberStack }) => {
-        setIsOpen(modalFiberStack.length > 0);
+      const listener: ModalListener = ({ modalStack }) => {
+        setIsOpen(modalStack.length > 0);
       };
 
       modalManager.subscribe(listener);

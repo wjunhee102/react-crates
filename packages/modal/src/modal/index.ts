@@ -3,12 +3,12 @@ import CancelButton from "./components/ModalCancelButton";
 import ConfirmButton from "./components/ModalConfirmButton";
 import Content from "./components/ModalContent";
 import CustomButton from "./components/ModalCustomButton";
-import setDispatcher from "./components/ModalDispatcher";
+import setProvider from "./components/ModalProvider";
 import setRegistrator from "./components/ModalRegistrator";
 import Title from "./components/ModalTitle";
 import setUseIsOpen from "./hooks/useIsOpenModal";
 import modalMetaList from "./modalMetaList";
-import { ModalComponent as Component } from "./services/ModalFiber";
+import { ModalComponent as Component } from "./services/modal";
 import Manager from "./services/modalManager";
 import {
   ModalConfirmType as ConfirmType,
@@ -16,13 +16,13 @@ import {
 } from "./services/modalStateManager";
 import {
   ModalOptions as Options,
-  ModalComponentFiber as ComponentFiber,
+  ModalComponentSeed as ComponentSeed,
 } from "./types";
 import setController from "./utils/setModalController";
 
 export const defaultModalManager = new Manager(modalMetaList);
 export const modalController = setController(defaultModalManager);
-export const ModalProvider = setDispatcher(defaultModalManager);
+export const ModalProvider = setProvider(defaultModalManager);
 export const Modal = setRegistrator(defaultModalManager);
 export const ModalConfirmButton = ConfirmButton;
 export const ModalCancelButton = CancelButton;
@@ -38,7 +38,7 @@ export type ModalOptions = Options;
 export type ModalConfirmType = ConfirmType;
 export type ModalCallback = Callback;
 export type ModalFC = Component;
-export type ModalMeta = ComponentFiber;
+export type ModalMeta = ComponentSeed;
 
 /**
  * @description

@@ -13,6 +13,12 @@ callback에 넘겨줄 인자를 타입으로 따로 만들면 modal state manage
 callback에서는 modal component 바꿀 수 있고 modal state를 바꿀 수 있음.
 바꿀 수 있는 것을 리스트업 할 것.
 
+2024년 3월 30일 토요일
+일단 기존 코드를 정리하고 해석해가면서 수정할 것.
+Modal 컴포넌트를 ModalComponent로 변경하면서 ModalFiber를 Modal로 변경. 그러면서 기존에 ModalFiber와 혼재된 것을 정리함
+Modal: Modal의 상태를 관리
+ModalSeed: Modal 객체를 생성하기 위한 seed 데이터
+
 ### modal manager
 
 1. modal default options 저장
@@ -23,6 +29,19 @@ callback에서는 modal component 바꿀 수 있고 modal state를 바꿀 수 �
 ### modal dispatcher
 
 ### modal component
+
+모달 action 상태는
+
+- initial
+- pending
+- success
+- error
+- final
+
+지금 목표로 하는 기능은 각 상태마다 기존의 등록된 모달 컴포넌트의 형태를 하거나 아니면 사용자가 원하는 모달을 주입해서 해당 모달의 형태가 되길 원함.
+
+그래서 현재 하는 것은 componentProps를 살펴보는 것.
+componentProps가 아니라 component가 바뀌어야 함.
 
 ## Modal manager
 

@@ -17,7 +17,7 @@ describe("ModalManager class", () => {
 
     modalManager.open("mockType", mockOptions);
 
-    const modalFiberList = modalManager.getModalFiberStack();
+    const modalFiberList = modalManager.getModalStack();
 
     expect(modalFiberList.length).toBe(1);
     expect(modalFiberList[0].name).toBe("mockType");
@@ -31,7 +31,7 @@ describe("ModalManager class", () => {
     modalManager.open("mockType", mockOptions);
     modalManager.remove();
 
-    expect(modalManager.getModalFiberStack().length).toBe(0);
+    expect(modalManager.getModalStack().length).toBe(0);
   });
 
 });
