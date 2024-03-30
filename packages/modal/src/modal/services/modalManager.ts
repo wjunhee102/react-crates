@@ -79,7 +79,7 @@ class ModalManager<T extends string = string> {
     if (component === undefined || checkDefaultModalName(name)) {
       return;
     }
-    console.log("modalManager", this, this.modalComponentFiberMap);
+
     const currentModalComponentFiber = this.modalComponentFiberMap.get(name);
 
     if (

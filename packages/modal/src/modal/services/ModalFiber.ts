@@ -103,6 +103,7 @@ export interface ModalProps {
   options: ModalOptions<any>;
 }
 
+// TO-DO: 파일명 바꾸기
 export class Modal {
   private _id: number;
   private _modalKey: string | null;

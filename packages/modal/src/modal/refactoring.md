@@ -20,8 +20,6 @@ callback에서는 modal component 바꿀 수 있고 modal state를 바꿀 수 �
 - modal component
 - modal
 
-2.
-
 ### modal dispatcher
 
 ### modal component

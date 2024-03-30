@@ -29,6 +29,7 @@ function setModalDispatcher(defaultModalManager: ModalManager) {
   }: ModalDispatcherProps) {
     const [modalFiberList, setModalFiberList] = useState<Modal[]>([]);
     const [breakPoint, setBreakPoint] = useState(window?.innerWidth ?? 0);
+    // TO-DO: isOpen, transactionState와 같은 상태는 modalManager에서 관리하여 하나의 상태로 보여주기
     const [isOpen, setIsOpen] = useState(false);
     const [transactionState, setTransactionState] =
       useState<ModalTransactionState>(MODAL_TRANSACTION_STATE.idle);
@@ -70,6 +71,7 @@ function setModalDispatcher(defaultModalManager: ModalManager) {
       // eslint-disable-next-line
     }, [modalManager]);
 
+    // TO-DO: useEffect에서 setState 제거 하기.
     useEffect(() => {
       let asyncOpenModal: NodeJS.Timeout | null = null;
 
@@ -111,6 +113,7 @@ function setModalDispatcher(defaultModalManager: ModalManager) {
     }, []);
 
     return (
+      // TO-DO: css 이름 -r에서 바꾸기
       <div className={`modalDispatcher-r ${isOpen ? "open-r" : ""}`}>
         <button
           type="button"

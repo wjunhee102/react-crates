@@ -34,5 +34,4 @@ describe("ModalManager class", () => {
     expect(modalManager.getModalFiberStack().length).toBe(0);
   });
 
-  // Continue with other tests...
 });

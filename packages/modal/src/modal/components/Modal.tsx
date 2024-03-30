@@ -43,15 +43,6 @@ const Modal = ({ breakPoint, transactionState, modal }: ModalProps) => {
     };
   }, [modal]);
 
-  /**
-  useEffect(() => {
-    if (transactionState === "idle" && isClose) {
-      modalProps.action(backCoverConfirm);
-    }
-    // eslint-disable-next-line
-  }, [isClose, transactionState]);
-  **/
-
   return (
     <div className="modalWrapper-r">
       <button
