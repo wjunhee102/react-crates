@@ -36,6 +36,7 @@ export default [
       postcss(),
       terser(),
       babel({
+        babelHelpers: "bundled",
         presets: [
           "@babel/preset-env",
           "@babel/preset-react",
