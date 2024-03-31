@@ -22,10 +22,10 @@ export async function defaultMiddleware({
 
   await modalState.callback(modalState.confirm, modalState.getStateController());
 
-  if (modalState.isCloseDelay && modalState.closeDelayDuration > 0 && setTimeout) {
+  if (modalState.isCloseDelay) {
     setTimeout(() => {
       modalState.close();
-    }, modalState.closeDelayDuration);
+    }, Math.max(modalState.closeDelayDuration, 0));
 
     return;
   }

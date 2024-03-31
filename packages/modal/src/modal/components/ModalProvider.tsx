@@ -74,16 +74,14 @@ function setModalProvider(defaultModalManager: ModalManager) {
 
       if (isOpen) {
         disableBodyScroll(disableScroll);
-      } else if (setTimeout) {
+      } else {
         asyncOpenModal = setTimeout(() => {
           disableBodyScroll(false);
         }, 0);
-      } else {
-        disableBodyScroll(false);
       }
 
       return () => {
-        if (clearTimeout && asyncOpenModal) {
+        if (asyncOpenModal) {
           clearTimeout(asyncOpenModal);
         }
       };

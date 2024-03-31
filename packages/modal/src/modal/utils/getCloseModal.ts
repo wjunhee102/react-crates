@@ -1,12 +1,6 @@
 import { MODAL_TRANSACTION_STATE } from "../contants/constants";
 import { CloseModal, ModalClose, ModalTransactionState } from "../types";
 
-function setDuration(rawDuration: number) {
-  const duration = rawDuration;
-
-  return duration < 0 ? 0 : duration;
-}
-
 interface GetCloseModalProps {
   id: number;
   duration?: number;
@@ -18,7 +12,7 @@ interface GetCloseModalProps {
 
 export function getCloseModal({
   id,
-  duration: rawDuration,
+  duration,
   closeModal,
   getTransactionState,
   startTransaction,
@@ -30,7 +24,7 @@ export function getCloseModal({
     endTransaction();
   };
 
-  if (rawDuration === undefined) {
+  if (duration === undefined) {
     return async (callback, confirm) => {
       const transactionState = getTransactionState();
 
@@ -44,8 +38,6 @@ export function getCloseModal({
     };
   }
 
-  const duration = setDuration(rawDuration);
-
   return async (callback, confirm) => {
     const transactionState = getTransactionState();
 
@@ -55,13 +47,8 @@ export function getCloseModal({
 
     startTransaction();
 
-    if (setTimeout === undefined) {
-      close(callback, confirm);
-      return;
-    }
-
     setTimeout(() => {
       close(callback, confirm);
-    }, duration);
+    }, Math.max(duration, 0));
   };
 }

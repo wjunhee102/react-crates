@@ -495,6 +495,7 @@ export class Modal {
     }
 
     this.isInitial = true;
+
     setTimeout(() => {
       this.active();
     }, 10);
