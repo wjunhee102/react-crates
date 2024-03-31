@@ -7,7 +7,7 @@ import {
   ModalLifecycleState,
   ModalConfirmType,
   ModalCallback,
-} from "../services/modalStateManager";
+} from "../services/modal";
 
 export interface ModalManagerState {
   modalStack: Modal[];
@@ -85,6 +85,7 @@ export interface ModalManagerOptionsProps<T extends string> {
   duration?: number;
   backCoverColor?: string;
   backCoverOpacity?: number;
+  stateResponsiveComponent?: boolean;
 }
 
 export type ModalTransactionState = "idle" | "standby" | "active";
@@ -130,6 +131,7 @@ export interface ModalDispatchOptions<T = any> {
   duration?: number;
   transitionOptions?: ModalTransitionOptions;
   position?: ModalPosition;
+  stateResponsiveComponent?: boolean;
   required?: boolean;
 }
 

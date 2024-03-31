@@ -33,7 +33,6 @@ import {
   Modal,
   ModalLifecycleState,
   MODAL_LIFECYCLE_STATE,
-  ModalProps,
   ModalComponent,
 } from "./modal";
 
@@ -48,6 +47,7 @@ class ModalManager<T extends string = string> {
   private modalPositionMap: ModalPositionMap = new Map();
   private modalTransition: ModalTransition = DEFAULT_TRANSITION;
   private modalDuration: number = DEFAULT_DURATION;
+  private stateResponsiveComponent: boolean = false;
   private breakPoint: number = 0;
   private modalManagerState!: ModalManagerState;
 
@@ -120,7 +120,7 @@ class ModalManager<T extends string = string> {
   private createModal(
     modalSeed: ModalSeed<ModalDispatchOptions>
   ): Modal {
-    const { id, options, name, modalKey, component, } = modalSeed;
+    const { id, options, name, modalKey, component } = modalSeed;
 
     const closeModal = getCloseModal({
       id,
@@ -135,7 +135,8 @@ class ModalManager<T extends string = string> {
       ? options.middleware
       : defaultMiddleware;
 
-    const appliedOptions: ModalOptions<any> = {
+    const mergedOptions: ModalOptions<any> = {
+      stateResponsiveComponent: this.stateResponsiveComponent,
       ...options,
       callback: options.callback,
       closeModal,
@@ -147,7 +148,7 @@ class ModalManager<T extends string = string> {
       name,
       modalKey,
       component,
-      options: appliedOptions
+      options: mergedOptions
     }, this);
   }
 
@@ -255,14 +256,19 @@ class ModalManager<T extends string = string> {
     };
   }
 
+  getModalComponentSeed(name: string) {
+    return this.modalComponentMap.get(name);
+  }
+
   initModalOptions(optionsProps: ModalManagerOptionsProps<T>) {
-    const { position, transition, duration } = optionsProps;
+    const { position, transition, duration, stateResponsiveComponent } = optionsProps;
 
     const initialPosition: ModalPositionTable = {
       ...DEFAULT_POSITION,
       ...position,
     };
 
+    this.stateResponsiveComponent = stateResponsiveComponent || false;
     this.setModalPosition(initialPosition);
     this.setModalTransition(transition);
     this.setModalDuration(duration);
@@ -540,7 +546,7 @@ class ModalManager<T extends string = string> {
 
 
     if (typeof name === "string") {
-      const componentSeed = this.modalComponentMap.get(name);
+      const componentSeed = this.getModalComponentSeed(name);
 
       if (componentSeed === undefined) {
         return 0;

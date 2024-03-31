@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react";
 import { MODAL_TRANSACTION_STATE } from "../contants/constants";
 import { ModalComponentPropsContext } from "../services/modalComponentPropsContext";
-import { Modal as ModalStateManager, ModalState } from "../services/modal";
+import { Modal, ModalState } from "../services/modal";
 import { ModalTransactionState } from "../types";
 
-interface ModalProps {
+interface ModalComponentProps {
   breakPoint: number;
   transactionState: ModalTransactionState;
-  modal: ModalStateManager;
+  modal: Modal;
 }
 
 const ModalComponent = ({
   breakPoint,
   transactionState,
   modal,
-}: ModalProps) => {
+}: ModalComponentProps) => {
   const [state, setState] = useState(modal.getState());
 
   const { Component, componentProps, backCoverStyle, modalStyle } = state;
 
   useEffect(() => {
     modal.setBreakPoint(breakPoint);
-  }, [modal, breakPoint]);
+  }, [breakPoint]);
 
   const onCloseModal = () => {
     if (
@@ -45,7 +45,7 @@ const ModalComponent = ({
     return () => {
       modal.unSubscribe(listener);
     };
-  }, [modal]);
+  }, []);
 
   return (
     <div className="modalWrapper">
@@ -54,9 +54,7 @@ const ModalComponent = ({
         style={backCoverStyle}
         type="button"
         onClick={onCloseModal}
-      >
-        {" "}
-      </button>
+      />
       <div className="modalContentContainer">
         <div className="modalContent" style={modalStyle}>
           <ModalComponentPropsContext.Provider value={componentProps}>

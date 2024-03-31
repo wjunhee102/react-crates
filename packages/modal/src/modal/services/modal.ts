@@ -1,6 +1,6 @@
 import React, { CSSProperties, ReactNode } from "react";
 import { MODAL_POSITION, MODAL_TRANSACTION_STATE } from "../contants/constants";
-import { ModalOptions, ModalTransactionState } from "../types";
+import { ModalDispatchOptions, ModalOptions, ModalTransactionState } from "../types";
 import { delay } from "../utils/delay";
 import ModalManager from "./modalManager";
 
@@ -13,23 +13,30 @@ export type ModalActionState =
   | "error"
   | "final";
 
+export interface ComponentPropsOptions {
+  title?: React.ReactNode;
+  subTitle?: React.ReactNode;
+  content?: React.ReactNode;
+  subContent?: React.ReactNode;
+  confirmContent?: React.ReactNode;
+  cancelContent?: React.ReactNode;
+  customContent?: React.ReactNode;
+}
+
+export interface StateControllerOptions {
+  message?: ReactNode;
+  endCallback?: (confirm?: ModalConfirmType) => void;
+  isAwaitingConfirm?: boolean;
+  component?: string | ModalComponent;
+  options?: ComponentPropsOptions;
+}
+
 export interface StateController {
   initial: () => void;
-  pending: (message?: ReactNode) => void;
-  success: (
-    message?: ReactNode,
-    callback?: (confirm?: ModalConfirmType) => void,
-    isAwaitingConfirm?: boolean
-  ) => void;
-  error: (
-    message?: ReactNode,
-    callback?: (confirm?: ModalConfirmType) => void,
-    isAwaitingConfirm?: boolean
-  ) => void;
-  end: (
-    callback?: (confirm?: ModalConfirmType) => void,
-    isAwaitingConfirm?: boolean
-  ) => void;
+  pending: (message?: string | Omit<StateControllerOptions, "endCallback" | "isAwaitingConfirm">) => void;
+  success: (message?: string | StateControllerOptions) => void;
+  error: (message?: string | StateControllerOptions) => void;
+  end: (message?: string | StateControllerOptions) => void;
   getLifecycleState: () => ModalLifecycleState;
   getActionState: () => ModalActionState;
 }
@@ -105,25 +112,27 @@ export interface ModalProps {
 
 // TO-DO: 파일명 바꾸기
 export class Modal {
+  private originComponent: ModalComponent;
+  private lifecycleState: ModalLifecycleState = MODAL_LIFECYCLE_STATE.open;
+  private endCallback: () => void = () => { };
+  private listeners: ((state: ModalState) => void)[] = [];
+  private breakPoint = 0;
+  private isInitial = false;
+  private stateResponsive: boolean = false;
+
   private _id: number;
   private _modalKey: string | null;
   private _name: string;
   private _component: ModalComponent;
+  private _componentProps!: ModalComponentProps;
   private _options: ModalOptions<any>;
-  private lifecycleState: ModalLifecycleState = MODAL_LIFECYCLE_STATE.open;
   private _actionState: ModalActionState = MODAL_ACTION_STATE.initial;
   private _isAwaitingConfirm = false;
   private _isCloseDelay = true;
   private _closeDelayDuration = -1;
   private _confirm: ModalConfirmType | undefined = undefined;
   private _message: ReactNode = undefined;
-  // eslint-disable-next-line
   private _callback: ModalCallback = () => { };
-  // eslint-disable-next-line
-  private endCallback: () => void = () => { };
-  private listeners: ((state: ModalState) => void)[] = [];
-  private breakPoint = 0;
-  private isInitial = false;
 
   constructor(
     { id, modalKey, name, component, options }: ModalProps,
@@ -132,11 +141,147 @@ export class Modal {
     this._id = id;
     this._name = name;
     this._modalKey = modalKey;
+    this.originComponent = component;
     this._component = component;
     this._options = options;
 
     this.bind();
     this.setOption();
+    this.initComponent();
+  }
+
+  private bind() {
+    this.action = this.action.bind(this);
+    this.getActionState = this.getActionState.bind(this);
+    this.getLifecycleState = this.getLifecycleState.bind(this);
+    this.initial = this.initial.bind(this);
+    this.pending = this.pending.bind(this);
+    this.success = this.success.bind(this);
+    this.error = this.error.bind(this);
+    this.end = this.end.bind(this);
+    this.open = this.open.bind(this);
+    this.active = this.active.bind(this);
+    this.close = this.close.bind(this);
+  }
+
+  private setOption() {
+    const { closeDelay, callback, stateResponsiveComponent } = this.options;
+
+    if (closeDelay) {
+      this._closeDelayDuration = closeDelay;
+    }
+
+    if (callback) {
+      this._callback = callback;
+    }
+
+    if (stateResponsiveComponent) {
+      this.stateResponsive = stateResponsiveComponent;
+    }
+  }
+
+  private setComponentProps(options: ModalDispatchOptions = {}) {
+    const {
+      title,
+      subTitle,
+      content,
+      subContent,
+      confirmContent,
+      cancelContent,
+      customContent,
+      payload,
+    } = this.options;
+
+    const componentProps = {
+      title,
+      subTitle,
+      content,
+      subContent,
+      confirmContent,
+      cancelContent,
+      customContent,
+      action: this.action,
+      actionState: this.actionState,
+      payload,
+    }
+
+    this._componentProps = { ...componentProps, ...options };
+  }
+
+  private initComponent() {
+    this._component = this.originComponent;
+
+    this.setComponentProps();
+  }
+
+  private changeComponent(component: string | ModalComponent, options: ComponentPropsOptions = {}) {
+    if (typeof component === "function") {
+      this._component = component;
+    } else {
+      const modalSeed = this.eventManager.getModalComponentSeed(component);
+
+      if (!modalSeed) {
+        this.initComponent();
+        return;
+      }
+
+      this._component = modalSeed.component;
+    }
+
+    this.setComponentProps(options);
+  }
+
+  private changeStateResponsiveComponent({ component, options }: { component?: string | ModalComponent; options?: ComponentPropsOptions; } = {}) {
+    if (this._actionState === "initial") {
+      this.initComponent();
+      this.notify();
+
+      return;
+    }
+
+    if (component) {
+      this.changeComponent(component, options);
+      this.notify();
+
+      return;
+    }
+
+    if (!this.stateResponsive) {
+      return;
+    }
+
+    this.changeComponent(this._actionState, options);
+    this.notify();
+
+    return;
+  }
+
+  private changeState(stateControllerOptions?: string | StateControllerOptions) {
+    if (!stateControllerOptions) {
+      this.changeStateResponsiveComponent();
+
+      return;
+    }
+
+    if (typeof stateControllerOptions === "string") {
+      this._message = stateControllerOptions;
+
+      return;
+    }
+
+    const { message, isAwaitingConfirm, component, endCallback, options } = stateControllerOptions;
+
+    this._message = message;
+
+    if (isAwaitingConfirm) {
+      this._isAwaitingConfirm = isAwaitingConfirm;
+    }
+
+    if (endCallback) {
+      this.endCallback = endCallback;
+    }
+
+    this.changeStateResponsiveComponent({ component, options });
   }
 
   get id() {
@@ -167,7 +312,7 @@ export class Modal {
     return this._confirm;
   }
 
-  get messate() {
+  get message() {
     return this._message;
   }
 
@@ -187,112 +332,49 @@ export class Modal {
     return this._closeDelayDuration;
   }
 
-  bind() {
-    this.action.bind(this);
-    this.getActionState.bind(this);
-    this.getLifecycleState.bind(this);
-    this.initial.bind(this);
-    this.pending.bind(this);
-    this.success.bind(this);
-    this.error.bind(this);
-    this.end.bind(this);
-    this.open.bind(this);
-    this.active.bind(this);
-    this.close.bind(this);
-  }
-
-  setOption() {
-    const { closeDelay } = this.options;
-
-    if (closeDelay) {
-      this._closeDelayDuration = closeDelay;
-    }
-  }
-
   initial() {
     this._actionState = "initial";
-    this.notify();
+    this.changeState();
 
     return this;
   }
 
-  pending(message?: ReactNode) {
-    this._actionState = "pending";
+  pending(message?: string | Omit<StateControllerOptions, "endCallback" | "isAwaitingConfirm">) {
+    this._actionState = MODAL_ACTION_STATE.pending;
 
-    if (message) {
-      this._message = message;
-    }
-
-    this.notify();
+    this.changeState(message);
 
     return this;
   }
 
   success(
-    message?: ReactNode,
-    callback?: (confirm?: ModalConfirmType) => void,
-    isAwaitingConfirm?: boolean
+    message?: string | StateControllerOptions
   ) {
     this._actionState = MODAL_ACTION_STATE.success;
     this._isCloseDelay = true;
 
-    if (message) {
-      this._message = message;
-    }
-
-    if (callback) {
-      this.endCallback = callback;
-    }
-
-    if (isAwaitingConfirm !== undefined) {
-      this._isAwaitingConfirm = isAwaitingConfirm;
-    }
-
-    this.notify();
+    this.changeState(message);
 
     return this;
   }
 
   error(
-    message?: ReactNode,
-    callback?: (confirm?: ModalConfirmType) => void,
-    isAwaitingConfirm?: boolean
+    message?: string | StateControllerOptions
   ) {
     this._actionState = MODAL_ACTION_STATE.error;
     this._isCloseDelay = true;
 
-    if (message) {
-      this._message = message;
-    }
-
-    if (callback) {
-      this.endCallback = callback;
-    }
-
-    if (isAwaitingConfirm !== undefined) {
-      this._isAwaitingConfirm = isAwaitingConfirm;
-    }
-
-    this.notify();
+    this.changeState(message);
 
     return this;
   }
 
   end(
-    callback?: (confirm?: ModalConfirmType) => void,
-    isAwaitingConfirm?: boolean
+    message?: string | StateControllerOptions
   ) {
     this._actionState = MODAL_ACTION_STATE.initial;
 
-    if (callback) {
-      this.endCallback = callback;
-    }
-
-    if (isAwaitingConfirm !== undefined) {
-      this._isAwaitingConfirm = isAwaitingConfirm;
-    }
-
-    this.notify();
+    this.changeState(message);
 
     return this;
   }
@@ -442,38 +524,12 @@ export class Modal {
     this.notify();
   }
 
-  getComponentProps(): ModalComponentProps {
-    const {
-      title,
-      subTitle,
-      content,
-      subContent,
-      confirmContent,
-      cancelContent,
-      customContent,
-      payload,
-    } = this.options;
-
-    return {
-      title,
-      subTitle,
-      content,
-      subContent,
-      confirmContent,
-      cancelContent,
-      customContent,
-      action: this.action,
-      actionState: this.actionState,
-      payload,
-    };
-  }
-
   getState(): ModalState {
     return {
       Component: this.component,
+      componentProps: this._componentProps,
       modalStyle: this.getModalStyle(),
-      backCoverStyle: this.getBackCoverStyle(),
-      componentProps: this.getComponentProps(),
+      backCoverStyle: this.getBackCoverStyle()
     };
   }
 
