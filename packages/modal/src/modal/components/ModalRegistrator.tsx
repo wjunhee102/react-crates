@@ -15,13 +15,12 @@ export interface ModalRegistratorProps {
     | ModalComponent;
 }
 
-const setModalRegistrator = (defaultModalManager: ModalManager) =>
+const setModalRegistrator = (modalManager: ModalManager) =>
   function ModalRegistrator({
     open,
     setOpen,
     children,
     name,
-    modalManager = defaultModalManager,
     options = {},
   }: ModalRegistratorProps) {
     const [modalId, setModalId] = useState(-1);

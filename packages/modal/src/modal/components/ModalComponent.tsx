@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MODAL_TRANSACTION_STATE } from "../contants/constants";
-import ModalContext from "../services/modalContext";
+import { ModalComponentPropsContext } from "../services/modalComponentPropsContext";
 import { Modal as ModalStateManager, ModalState } from "../services/modal";
 import { ModalTransactionState } from "../types";
 
@@ -59,9 +59,9 @@ const ModalComponent = ({
       </button>
       <div className="modalContentContainer-r">
         <div className="modalContent-r" style={modalStyle}>
-          <ModalContext.Provider value={componentProps}>
+          <ModalComponentPropsContext.Provider value={componentProps}>
             <Component {...componentProps} />
-          </ModalContext.Provider>
+          </ModalComponentPropsContext.Provider>
         </div>
       </div>
     </div>

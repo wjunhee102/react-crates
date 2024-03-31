@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { ButtonHTMLAttributes, MouseEvent } from "react";
-import useModalOptions from "../hooks/useModalOptions";
+import { useModalComponentProps } from "../hooks/useModalComponentProps ";
 import { ModalConfirmType, ModalComponentProps } from "../services/modal";
 
 function getContent(
@@ -34,20 +34,14 @@ const ModalButton = ({
   confirmType,
   ...restProps
 }: ModalButtonProps) => {
-  const options = useModalOptions();
-
-  if (!options) {
-    return null;
-  }
-
-  const { action } = options;
+  const componentProps = useModalComponentProps();
 
   const onClickSub = (e: MouseEvent<HTMLButtonElement>) => {
     onClick && onClick(e);
-    action(confirmType);
+    componentProps.action(confirmType);
   };
 
-  const content = getContent(children, options, confirmType);
+  const content = getContent(children, componentProps, confirmType);
 
   if (!content) {
     return null;

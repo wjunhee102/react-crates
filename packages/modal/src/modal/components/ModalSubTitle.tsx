@@ -1,18 +1,12 @@
 import { ElementType, HTMLAttributes } from "react";
-import useModalOptions from "../hooks/useModalOptions";
+import { useModalComponentProps } from "../hooks/useModalComponentProps ";
 
 export interface ModalSubTitleProps extends HTMLAttributes<HTMLHeadingElement> {
   as?: ElementType;
 }
 
 const ModalSubTitle = ({ as, children, ...restProps }: ModalSubTitleProps) => {
-  const options = useModalOptions();
-
-  if (!options) {
-    return null;
-  }
-
-  const { subTitle } = options;
+  const { subTitle } = useModalComponentProps();
 
   if (!subTitle && !children) {
     return null;

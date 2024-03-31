@@ -1,18 +1,12 @@
 import { ElementType, HTMLAttributes } from "react";
-import useModalOptions from "../hooks/useModalOptions";
+import { useModalComponentProps } from "../hooks/useModalComponentProps ";
 
 export interface ModalContentProps extends HTMLAttributes<HTMLDivElement> {
   as?: ElementType;
 }
 
 const ModalContent = ({ as, children, ...restProps }: ModalContentProps) => {
-  const options = useModalOptions();
-
-  if (!options) {
-    return null;
-  }
-
-  const { content } = options;
+  const { content } = useModalComponentProps();
 
   if (!content && !children) {
     return null;

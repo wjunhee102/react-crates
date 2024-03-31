@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes, MouseEvent } from "react";
-import useModalOptions from "../hooks/useModalOptions";
+import { useModalComponentProps } from "../hooks/useModalComponentProps ";
 import { ModalConfirmType } from "../services/modal";
 
 export interface ModalCustomButtonProps
@@ -13,13 +13,7 @@ const ModalCustomButton = ({
   confirmType,
   ...restProps
 }: ModalCustomButtonProps) => {
-  const options = useModalOptions();
-
-  if (!options) {
-    return null;
-  }
-
-  const { action, customContent } = options;
+  const { action, customContent } = useModalComponentProps();
 
   const onClickSub = (e: MouseEvent<HTMLButtonElement>) => {
     onClick && onClick(e);
