@@ -24,7 +24,6 @@ export interface ComponentPropsOptions {
 }
 
 export interface StateControllerOptions {
-  message?: ReactNode;
   endCallback?: (confirm?: ModalConfirmType) => void;
   isAwaitingConfirm?: boolean;
   component?: string | ModalComponent;
@@ -34,9 +33,9 @@ export interface StateControllerOptions {
 export interface StateController {
   initial: () => void;
   pending: (message?: string | Omit<StateControllerOptions, "endCallback" | "isAwaitingConfirm">) => void;
-  success: (message?: string | StateControllerOptions) => void;
-  error: (message?: string | StateControllerOptions) => void;
-  end: (message?: string | StateControllerOptions) => void;
+  success: (message?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => unknown)) => void;
+  error: (message?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => unknown)) => void;
+  end: (message?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => unknown)) => void;
   getLifecycleState: () => ModalLifecycleState;
   getActionState: () => ModalActionState;
 }
@@ -114,7 +113,7 @@ export interface ModalProps {
 export class Modal {
   private originComponent: ModalComponent;
   private lifecycleState: ModalLifecycleState = MODAL_LIFECYCLE_STATE.open;
-  private endCallback: () => void = () => { };
+  private endCallback: () => unknown = () => { };
   private listeners: ((state: ModalState) => void)[] = [];
   private breakPoint = 0;
   private isInitial = false;
@@ -131,7 +130,6 @@ export class Modal {
   private _isCloseDelay = true;
   private _closeDelayDuration = -1;
   private _confirm: ModalConfirmType | undefined = undefined;
-  private _message: ReactNode = undefined;
   private _callback: ModalCallback = () => { };
 
   constructor(
@@ -256,22 +254,28 @@ export class Modal {
     return;
   }
 
-  private changeState(stateControllerOptions?: string | StateControllerOptions) {
+  private changeState(stateControllerOptions?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => void)) {
     if (!stateControllerOptions) {
       this.changeStateResponsiveComponent();
 
       return;
     }
 
-    if (typeof stateControllerOptions === "string") {
-      this._message = stateControllerOptions;
+    if (typeof stateControllerOptions === "function") {
+      this.endCallback = stateControllerOptions;
+
+      this.changeStateResponsiveComponent();
 
       return;
     }
 
-    const { message, isAwaitingConfirm, component, endCallback, options } = stateControllerOptions;
+    if (typeof stateControllerOptions === "string") {
+      this.changeStateResponsiveComponent({ options: { content: stateControllerOptions } })
 
-    this._message = message;
+      return;
+    }
+
+    const { isAwaitingConfirm, component, endCallback, options } = stateControllerOptions;
 
     if (isAwaitingConfirm) {
       this._isAwaitingConfirm = isAwaitingConfirm;
@@ -312,10 +316,6 @@ export class Modal {
     return this._confirm;
   }
 
-  get message() {
-    return this._message;
-  }
-
   get actionState() {
     return this._actionState;
   }
@@ -348,7 +348,7 @@ export class Modal {
   }
 
   success(
-    message?: string | StateControllerOptions
+    message?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => void)
   ) {
     this._actionState = MODAL_ACTION_STATE.success;
     this._isCloseDelay = true;
@@ -359,7 +359,7 @@ export class Modal {
   }
 
   error(
-    message?: string | StateControllerOptions
+    message?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => void)
   ) {
     this._actionState = MODAL_ACTION_STATE.error;
     this._isCloseDelay = true;
@@ -370,7 +370,7 @@ export class Modal {
   }
 
   end(
-    message?: string | StateControllerOptions
+    message?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => void)
   ) {
     this._actionState = MODAL_ACTION_STATE.initial;
 
