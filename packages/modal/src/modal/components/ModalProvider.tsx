@@ -88,13 +88,8 @@ function setModalProvider(defaultModalManager: ModalManager) {
     }, [isOpen]);
 
     return (
-      // TO-DO: css 이름 -r에서 바꾸기
-      <div className={`modalProvider-r ${isOpen ? "open-r" : ""}`}>
-        <button
-          type="button"
-          className="modalClearBtn-r"
-          onClick={onClearModal}
-        >
+      <div className={`modalProvider ${isOpen ? "open" : ""}`}>
+        <button type="button" className="modalClearBtn" onClick={onClearModal}>
           {" "}
         </button>
         {modalStack.map((modal) => (

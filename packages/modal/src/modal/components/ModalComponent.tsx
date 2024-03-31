@@ -48,17 +48,17 @@ const ModalComponent = ({
   }, [modal]);
 
   return (
-    <div className="modalWrapper-r">
+    <div className="modalWrapper">
       <button
-        className={`closeModalCover-r ${modal.isActive ? "" : "close-r"}`}
+        className={`closeModalCover ${modal.isActive ? "" : "close"}`}
         style={backCoverStyle}
         type="button"
         onClick={onCloseModal}
       >
         {" "}
       </button>
-      <div className="modalContentContainer-r">
-        <div className="modalContent-r" style={modalStyle}>
+      <div className="modalContentContainer">
+        <div className="modalContent" style={modalStyle}>
           <ModalComponentPropsContext.Provider value={componentProps}>
             <Component {...componentProps} />
           </ModalComponentPropsContext.Provider>

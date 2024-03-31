@@ -1,4 +1,4 @@
-.modalProvider-r {
+.modalProvider {
   display: block;
   overflow: hidden;
   position: fixed;
@@ -14,7 +14,7 @@
   transition: height 0.2s ease-in-out;
 }
 
-.modalProvider-r .modalClearBtn-r {
+.modalProvider .modalClearBtn {
   all: unset;
   position: relative;
   width: 100%;
@@ -23,12 +23,12 @@
   background: transparent;
 }
 
-.modalProvider-r.open-r .modalClearBtn-r {
+.modalProvider.open .modalClearBtn {
   pointer-events: auto;
   cursor: pointer;
 }
 
-.modalProvider-r .modalWrapper-r {
+.modalProvider .modalWrapper {
   position: absolute;
   top: 0;
   left: 0;
@@ -37,7 +37,7 @@
   display: block;
 }
 
-.modalProvider-r .modalWrapper-r .closeModalCover-r {
+.modalProvider .modalWrapper .closeModalCover {
   all: unset;
   position: absolute;
   width: 100%;
@@ -45,7 +45,7 @@
   pointer-events: auto;
 }
 
-.modalProvider-r .modalWrapper-r .modalContentContainer-r {
+.modalProvider .modalWrapper .modalContentContainer {
   position: absolute;
   top: 0;
   left: 0;
@@ -55,7 +55,7 @@
   background: transparent;
 }
 
-.modalProvider-r .modalWrapper-r .modalContentContainer-r .modalContent-r {
+.modalProvider .modalWrapper .modalContentContainer .modalContent {
   /* all: unset; */
   display: block;
   position: absolute;
