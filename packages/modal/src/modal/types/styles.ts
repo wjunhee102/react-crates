@@ -1,4 +1,4 @@
-import { ModalLifecycleState } from "../services/modalStateManager";
+import { ModalLifecycleState } from "../services/modal";
 
 export interface ModalTransition {
   transitionProperty: string;

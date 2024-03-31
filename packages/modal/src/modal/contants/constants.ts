@@ -1,4 +1,4 @@
-import { MODAL_LIFECYCLE_STATE } from "../services/modalStateManager";
+import { MODAL_LIFECYCLE_STATE } from "../services/modal";
 import {
   DefaultModalName,
   DefaultModalPosition,

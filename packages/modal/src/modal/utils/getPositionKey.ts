@@ -3,7 +3,7 @@ import {
   MODAL_LIFECYCLE_STATE,
   MODAL_LIFECYCLE_STATE_LIST,
   ModalLifecycleState,
-} from "../services/modalStateManager";
+} from "../services/modal";
 
 const POSITION_STATE_VALUE = {
   [MODAL_LIFECYCLE_STATE.open]: 0,

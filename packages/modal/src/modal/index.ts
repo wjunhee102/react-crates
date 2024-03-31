@@ -8,12 +8,11 @@ import setRegistrator from "./components/ModalRegistrator";
 import Title from "./components/ModalTitle";
 import setUseIsOpen from "./hooks/useIsOpenModal";
 import modalMetaList from "./modalMetaList";
-import { ModalComponent as Component } from "./services/modal";
-import Manager from "./services/modalManager";
 import {
-  ModalConfirmType as ConfirmType,
+  ModalComponent as Component, ModalConfirmType as ConfirmType,
   ModalCallback as Callback,
-} from "./services/modalStateManager";
+} from "./services/modal";
+import Manager from "./services/modalManager";
 import {
   ModalOptions as Options,
   ModalComponentSeed as ComponentSeed,
