@@ -4,7 +4,8 @@
 2. modal state service 역할 분명히
 3. modal component 역할 분명히
 
-2023년 7월 1일 토요일
+### 2023년 7월 1일 토요일
+
 set 함수를 이용하고 modal 이란 함수로 modal open 함수로 만들기.
 key 값으로 open 만들면 될 것 같음.
 export로 기본 modal로도 사용할 수 있게 할 것.
@@ -13,11 +14,25 @@ callback에 넘겨줄 인자를 타입으로 따로 만들면 modal state manage
 callback에서는 modal component 바꿀 수 있고 modal state를 바꿀 수 있음.
 바꿀 수 있는 것을 리스트업 할 것.
 
-2024년 3월 30일 토요일
+### 2024년 3월 30일 토요일
+
 일단 기존 코드를 정리하고 해석해가면서 수정할 것.
 Modal 컴포넌트를 ModalComponent로 변경하면서 ModalFiber를 Modal로 변경. 그러면서 기존에 ModalFiber와 혼재된 것을 정리함
 Modal: Modal의 상태를 관리
 ModalSeed: Modal 객체를 생성하기 위한 seed 데이터
+
+### 2024년 3월 31일 일요일
+
+modal action state에 따라 component를 변경하는 기능을 만듬.
+그러나 modal이 정리되지 않고 중복되는 method들이 있어 한번 리팩토링을 해야할 것 같음.
+그리고 내일은 테스트 코드를 작성할 것.
+테스트 케이스는 상태별 잘 컴포넌트가 변경되는지 파악을 해보면 될 것 같음.
+이제 이걸 데모 사이트를 만들고 구동을 해봐야 할 것 같음.
+
+### 2024년 4월 1일 월요일
+
+modal과 modalManager가 순환 참조하고 있기 때문에 modal에서 필요한 메소드들만 interface화해서 전달하게 함.
+그리고 이 interface를 기준으로 서로 추상화된 메소드들이 필요한 것을 기준으로 type을 정리해야할 것 같음.
 
 ### modal manager
 

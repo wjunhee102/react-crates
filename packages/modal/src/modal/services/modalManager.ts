@@ -24,6 +24,7 @@ import {
   ModalTransitionOptions,
   ModalTransactionState,
   ModalManagerState,
+  ModalTransctionController,
 } from "../types";
 import { checkDefaultModalName } from "../utils/checkDefaultModalName";
 import { defaultMiddleware } from "../utils/defaultMiddleware";
@@ -33,7 +34,7 @@ import {
   Modal,
   ModalLifecycleState,
   MODAL_LIFECYCLE_STATE,
-  ModalComponent,
+  ModalComponent
 } from "./modal";
 
 class ModalManager<T extends string = string> {
@@ -75,6 +76,8 @@ class ModalManager<T extends string = string> {
     this.edit = this.edit.bind(this);
     this.close = this.close.bind(this);
 
+    this.getModalComponentSeed = this.getModalComponentSeed.bind(this);
+    this.getCurrentModalPosition = this.getCurrentModalPosition.bind(this);
     this.getTransactionState = this.getTransactionState.bind(this);
     this.standbyTransaction = this.standbyTransaction.bind(this);
     this.startTransaction = this.startTransaction.bind(this);
@@ -149,7 +152,13 @@ class ModalManager<T extends string = string> {
       modalKey,
       component,
       options: mergedOptions
-    }, this);
+    }, {
+      transactionController: this.getModalTransactionController(),
+      getCurrentModalPosition: this.getCurrentModalPosition,
+      getModalComponentSeed: this.getModalComponentSeed,
+      getModalTransition: this.getModalTransition,
+      call: this.call
+    });
   }
 
   getState(): ModalManagerState {
@@ -176,7 +185,7 @@ class ModalManager<T extends string = string> {
     return this.modalStack[this.modalStack.length - 1].id;
   }
 
-  getModalTrainsition(
+  getModalTransition(
     duration: number = -1,
     options: ModalTransitionOptions = {}
   ): ModalTransition {
@@ -387,6 +396,15 @@ class ModalManager<T extends string = string> {
     return this.callCount;
   }
 
+  getModalTransactionController(): ModalTransctionController {
+    return {
+      getTransactionState: this.getTransactionState,
+      standbyTransaction: this.standbyTransaction,
+      startTransaction: this.startTransaction,
+      endTransaction: this.endTransaction
+    }
+  }
+
   notify() {
     this.setModalManagerState();
 
@@ -481,7 +499,7 @@ class ModalManager<T extends string = string> {
   }
 
   async call<F = any, P = any>(
-    asyncCallback: (props: P) => F,
+    asyncCallback: (props: P) => Promise<F>,
     asyncCallbackProps: P
   ) {
     if (typeof asyncCallback !== "function") {

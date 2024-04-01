@@ -1,6 +1,6 @@
 import React, { CSSProperties, ReactNode } from "react";
 import { MODAL_POSITION, MODAL_TRANSACTION_STATE } from "../contants/constants";
-import { ModalDispatchOptions, ModalOptions, ModalTransactionState } from "../types";
+import { ManagerInterface, ModalComponentSeed, ModalDispatchOptions, ModalOptions, ModalTransactionState, ModalTransctionController, ModalTransition, PositionStyle } from "../types";
 import { delay } from "../utils/delay";
 import ModalManager from "./modalManager";
 
@@ -70,12 +70,7 @@ export const MODAL_LIFECYCLE_STATE_LIST: string[] = Object.values(
 );
 
 export interface ModalMiddlewareProps {
-  transactionController: {
-    transactionState: ModalTransactionState;
-    standbyTransaction: () => void;
-    startTransaction: () => void;
-    endTransaction: () => void;
-  };
+  transactionController: ModalTransctionController;
   modalState: Modal;
 }
 
@@ -134,7 +129,7 @@ export class Modal {
 
   constructor(
     { id, modalKey, name, component, options }: ModalProps,
-    private eventManager: ModalManager
+    private manager: ManagerInterface
   ) {
     this._id = id;
     this._name = name;
@@ -216,7 +211,7 @@ export class Modal {
     if (typeof component === "function") {
       this._component = component;
     } else {
-      const modalSeed = this.eventManager.getModalComponentSeed(component);
+      const modalSeed = this.manager.getModalComponentSeed(component);
 
       if (!modalSeed) {
         this.initComponent();
@@ -420,19 +415,14 @@ export class Modal {
 
   getMiddlewareProps(): ModalMiddlewareProps {
     return {
-      transactionController: {
-        transactionState: this.eventManager.getTransactionState(),
-        standbyTransaction: this.eventManager.standbyTransaction,
-        startTransaction: this.eventManager.startTransaction,
-        endTransaction: this.eventManager.endTransaction,
-      },
+      transactionController: this.manager.transactionController,
       modalState: this,
     };
   }
 
   action(confirm?: ModalConfirmType, callback?: ModalCallback) {
     if (
-      this.eventManager.getTransactionState() !== MODAL_TRANSACTION_STATE.idle
+      this.manager.transactionController.getTransactionState() !== MODAL_TRANSACTION_STATE.idle
     ) {
       return;
     }
@@ -453,13 +443,12 @@ export class Modal {
 
     const appliedPosition =
       typeof position === "function" ? position(this.breakPoint) : position;
-
     const isAciveState = this.lifecycleState === MODAL_LIFECYCLE_STATE.active;
-    const modalPosition = this.eventManager.getCurrentModalPosition(
+    const modalPosition = this.manager.getCurrentModalPosition(
       this.lifecycleState,
       appliedPosition
     );
-    const transition = this.eventManager.getModalTrainsition(
+    const transition = this.manager.getModalTransition(
       duration,
       transitionOptions
     );
@@ -482,11 +471,11 @@ export class Modal {
 
     const isAciveState = this.lifecycleState === MODAL_LIFECYCLE_STATE.active;
     const { background, opacity, ...backCoverPosition } =
-      this.eventManager.getCurrentModalPosition(
+      this.manager.getCurrentModalPosition(
         this.lifecycleState,
         MODAL_POSITION.backCover
       );
-    const transition = this.eventManager.getModalTrainsition(
+    const transition = this.manager.getModalTransition(
       duration,
       transitionOptions
     );
@@ -506,7 +495,7 @@ export class Modal {
 
   open() {
     this.lifecycleState = "open";
-    this.eventManager.call(delay, this.options.duration ?? 0);
+    this.manager.call(delay, this.options.duration ?? 0);
 
     this.notify();
   }

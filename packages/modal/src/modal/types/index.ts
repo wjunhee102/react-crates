@@ -103,6 +103,21 @@ export type ModalAsyncCall<T = any, P = any> = (
 //   stateController: StateController;
 // }
 
+export interface ModalTransctionController {
+  getTransactionState: () => ModalTransactionState;
+  standbyTransaction: () => void;
+  startTransaction: () => void;
+  endTransaction: () => void;
+}
+
+export interface ManagerInterface {
+  transactionController: ModalTransctionController;
+  getCurrentModalPosition: (positionState: ModalLifecycleState, position?: string) => PositionStyle;
+  getModalTransition: (duration?: number, options?: ModalTransitionOptions) => ModalTransition;
+  getModalComponentSeed: (name: string) => ModalComponentSeed | undefined;
+  call: <F = any, P = any>(asyncCallback: (props: P) => Promise<F>, asyncCallbackProps: P) => Promise<F>;
+}
+
 export type ModalMiddleware = (
   props: ModalMiddlewareProps
 ) => void | Promise<void>;
