@@ -1,5 +1,7 @@
-import { useContext } from "react";
-import { ModalComponentPropsContext } from "../services/modalComponentPropsContext";
+import { useContext, createContext } from "react";
+import { ModalComponentProps } from "../services/modal";
+
+export const ModalComponentPropsContext = createContext<ModalComponentProps | null>(null);
 
 export function useModalComponentProps() {
   const modalComponentProps = useContext(ModalComponentPropsContext);

@@ -517,6 +517,7 @@ class ModalManager<T extends string = string> {
     }
 
     targetModal.action(confirm);
+
     this.remove(targetModalId);
     this.notify();
 
