@@ -7,7 +7,7 @@ export function useModalComponentProps() {
   const modalComponentProps = useContext(ModalComponentPropsContext);
 
   if (!modalComponentProps) {
-    throw new Error("useModalComponentProps  must be used within a ModalComponentProps Provider");
+    throw new Error("useModalComponentProps must be used within a ModalComponentProps Provider");
   }
 
   return modalComponentProps;

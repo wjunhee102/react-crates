@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MODAL_TRANSACTION_STATE } from "../contants/constants";
-import { ModalComponentPropsContext } from "../hooks/useModalComponentProps1";
+import { ModalComponentPropsContext } from "../hooks/useModalComponentProps";
 import { Modal, ModalState } from "../services/modal";
 import { ModalTransactionState } from "../types";
 
