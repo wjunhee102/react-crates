@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes, MouseEvent } from "react";
 import { useModalComponentProps } from "../hooks/useModalComponentProps";
-import { ModalConfirmType } from "../services/modal";
+import { ModalConfirmType } from "../types";
 
 export interface ModalCustomButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {

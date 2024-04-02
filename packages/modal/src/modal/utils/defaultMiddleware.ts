@@ -1,5 +1,5 @@
-import { MODAL_TRANSACTION_STATE } from "../contants/constants";
-import { ModalMiddlewareProps } from "../services/modal";
+import { MODAL_TRANSACTION_STATE } from "../contants";
+import { ModalMiddlewareProps } from "../types";
 
 export async function defaultMiddleware({
   transactionController: {
@@ -19,7 +19,7 @@ export async function defaultMiddleware({
     return;
   }
 
-  await modalState.callback(modalState.confirm, modalState.getStateController());
+  await modalState.callback(modalState.confirm, modalState);
 
   if (modalState.isCloseDelay) {
     setTimeout(() => {

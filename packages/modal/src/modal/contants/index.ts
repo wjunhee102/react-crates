@@ -1,7 +1,8 @@
-import { MODAL_LIFECYCLE_STATE } from "../services/modal";
 import {
   DefaultModalName,
   DefaultModalPosition,
+  ModalActionState,
+  ModalLifecycleState,
   ModalPositionTable,
   ModalTransactionState,
   ModalTransition,
@@ -13,6 +14,28 @@ export const MODAL_TRANSACTION_STATE: {
   idle: "idle",
   standby: "standby",
   active: "active",
+};
+
+export const MODAL_LIFECYCLE_STATE: {
+  [key in ModalLifecycleState]: key;
+} = {
+  open: "open",
+  active: "active",
+  close: "close",
+};
+
+export const MODAL_LIFECYCLE_STATE_LIST: string[] = Object.values(
+  MODAL_LIFECYCLE_STATE
+);
+
+export const MODAL_ACTION_STATE: {
+  [key in ModalActionState]: key;
+} = {
+  initial: "initial",
+  pending: "pending",
+  success: "success",
+  error: "error",
+  final: "final",
 };
 
 export const MODAL_NAME: {

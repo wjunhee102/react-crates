@@ -1,5 +1,5 @@
 import { useContext, createContext } from "react";
-import { ModalComponentProps } from "../services/modal";
+import { ModalComponentProps } from "../types";
 
 export const ModalComponentPropsContext = createContext<ModalComponentProps | null>(null);
 

@@ -34,6 +34,11 @@ modal action state에 따라 component를 변경하는 기능을 만듬.
 modal과 modalManager가 순환 참조하고 있기 때문에 modal에서 필요한 메소드들만 interface화해서 전달하게 함.
 그리고 이 interface를 기준으로 서로 추상화된 메소드들이 필요한 것을 기준으로 type을 정리해야할 것 같음.
 
+### 2024년 4월 2일 화요일
+
+modalManager를 인터페이스화 시킬 예정이다.
+타입을 분리하고 service의 메소드들을 기능에 따라 분류함.
+
 ### modal manager
 
 1. modal default options 저장

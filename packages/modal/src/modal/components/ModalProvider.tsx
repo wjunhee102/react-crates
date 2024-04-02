@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { MODAL_TRANSACTION_STATE } from "../contants/constants";
+import { MODAL_TRANSACTION_STATE } from "../contants";
 import ModalManager from "../services/modalManager";
 import {
   ModalComponentSeed,
   ModalManagerOptionsProps,
   ModalManagerState,
 } from "../types";
-import { Modal } from "../services/modal";
 import { setDisableBodyScroll } from "../utils/disableBodyScroll";
 import ModalComponent from "./ModalComponent";
 

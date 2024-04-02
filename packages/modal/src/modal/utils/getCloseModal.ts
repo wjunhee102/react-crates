@@ -1,4 +1,4 @@
-import { MODAL_TRANSACTION_STATE } from "../contants/constants";
+import { MODAL_TRANSACTION_STATE } from "../contants";
 import { CloseModal, ModalClose, ModalTransactionState } from "../types";
 
 interface GetCloseModalProps {

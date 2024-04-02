@@ -1,4 +1,4 @@
-import { ModalLifecycleState } from "../services/modal";
+export type ModalLifecycleState = "open" | "active" | "close";
 
 export interface ModalTransition {
   transitionProperty: string;
@@ -34,11 +34,6 @@ export interface PositionStyle {
   background?: string;
 }
 
-export type DefaultModalName = "clear" | "unknown";
-
-export type ModalRemovedName = DefaultModalName | string | string[];
-
-
 export type ModalPositionStyle = {
   [key in ModalLifecycleState]: PositionStyle;
 };
@@ -52,7 +47,21 @@ export type ModalPositionMap<T extends string = string> = Map<
   ModalPositionStyle
 >;
 
+export type ModalPosition =
+  | ((breakPoint: number) => DefaultModalPosition | string)
+  | DefaultModalPosition
+  | string;
+
 export type ModalTransitionOptions = Omit<
   ModalTransitionProps,
   "transitionDuration"
 >;
+
+export type ModalConfirmType = string | boolean;
+
+export type ModalActionState =
+  | "initial"
+  | "pending"
+  | "success"
+  | "error"
+  | "final";

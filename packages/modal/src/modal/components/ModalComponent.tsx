@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { MODAL_TRANSACTION_STATE } from "../contants/constants";
+import { MODAL_TRANSACTION_STATE } from "../contants";
 import { ModalComponentPropsContext } from "../hooks/useModalComponentProps";
-import { Modal, ModalState } from "../services/modal";
-import { ModalTransactionState } from "../types";
+import { Modal } from "../services/modal";
+import { ModalState, ModalTransactionState } from "../types";
 
 interface ModalComponentProps {
   breakPoint: number;

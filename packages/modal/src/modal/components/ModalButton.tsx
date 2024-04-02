@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { ButtonHTMLAttributes, MouseEvent } from "react";
 import { useModalComponentProps } from "../hooks/useModalComponentProps";
-import { ModalConfirmType, ModalComponentProps } from "../services/modal";
+import { ModalComponentProps, ModalConfirmType } from "../types";
 
 function getContent(
   children: ReactNode,

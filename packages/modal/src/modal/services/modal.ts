@@ -1,102 +1,9 @@
-import React, { CSSProperties, ReactNode } from "react";
-import { MODAL_POSITION, MODAL_TRANSACTION_STATE } from "../contants/constants";
-import { ManagerInterface, ModalComponentSeed, ModalDispatchOptions, ModalOptions, ModalTransactionState, ModalTransctionController, ModalTransition, PositionStyle } from "../types";
+import { CSSProperties } from "react";
+import { MODAL_ACTION_STATE, MODAL_LIFECYCLE_STATE, MODAL_POSITION, MODAL_TRANSACTION_STATE } from "../contants";
+import { ModalManagerInterface, ComponentPropsOptions, ModalActionState, ModalCallback, ModalComponent, ModalComponentProps, ModalConfirmType, ModalDispatchOptions, ModalLifecycleState, ModalMiddlewareProps, ModalOptions, ModalState, StateControllerOptions } from "../types";
 import { delay } from "../utils/delay";
-import ModalManager from "./modalManager";
 
-export type ModalLifecycleState = "open" | "active" | "close";
-
-export type ModalActionState =
-  | "initial"
-  | "pending"
-  | "success"
-  | "error"
-  | "final";
-
-export interface ComponentPropsOptions {
-  title?: React.ReactNode;
-  subTitle?: React.ReactNode;
-  content?: React.ReactNode;
-  subContent?: React.ReactNode;
-  confirmContent?: React.ReactNode;
-  cancelContent?: React.ReactNode;
-  customContent?: React.ReactNode;
-}
-
-export interface StateControllerOptions {
-  endCallback?: (confirm?: ModalConfirmType) => void;
-  isAwaitingConfirm?: boolean;
-  component?: string | ModalComponent;
-  options?: ComponentPropsOptions;
-}
-
-export interface StateController {
-  initial: () => void;
-  pending: (message?: string | Omit<StateControllerOptions, "endCallback" | "isAwaitingConfirm">) => void;
-  success: (message?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => unknown)) => void;
-  error: (message?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => unknown)) => void;
-  end: (message?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => unknown)) => void;
-  getLifecycleState: () => ModalLifecycleState;
-  getActionState: () => ModalActionState;
-}
-
-export type ModalConfirmType = string | boolean;
-
-export type ModalCallback = (
-  confirm: ModalConfirmType | undefined,
-  stateController: StateController
-) => any | Promise<any>;
-
-export const MODAL_ACTION_STATE: {
-  [key in ModalActionState]: key;
-} = {
-  initial: "initial",
-  pending: "pending",
-  success: "success",
-  error: "error",
-  final: "final",
-};
-
-export const MODAL_LIFECYCLE_STATE: {
-  [key in ModalLifecycleState]: key;
-} = {
-  open: "open",
-  active: "active",
-  close: "close",
-};
-
-export const MODAL_LIFECYCLE_STATE_LIST: string[] = Object.values(
-  MODAL_LIFECYCLE_STATE
-);
-
-export interface ModalMiddlewareProps {
-  transactionController: ModalTransctionController;
-  modalState: Modal;
-}
-
-export interface ModalComponentProps<T = any> {
-  title?: ReactNode;
-  subTitle?: ReactNode;
-  content?: ReactNode;
-  subContent?: ReactNode;
-  confirmContent?: ReactNode;
-  cancelContent?: ReactNode;
-  customContent?: ReactNode;
-  action: (confirm?: string | boolean) => void;
-  actionState: ModalActionState;
-  payload?: T;
-}
-
-export type ModalComponent<T = any> = React.FC<ModalComponentProps<T>>;
-
-export interface ModalState {
-  Component: ModalComponent;
-  modalStyle: CSSProperties;
-  backCoverStyle: CSSProperties;
-  componentProps: ModalComponentProps;
-}
-
-export interface ModalProps {
+interface ModalProps {
   id: number;
   modalKey: string | null;
   name: string;
@@ -104,7 +11,6 @@ export interface ModalProps {
   options: ModalOptions<any>;
 }
 
-// TO-DO: 파일명 바꾸기
 export class Modal {
   private originComponent: ModalComponent;
   private lifecycleState: ModalLifecycleState = MODAL_LIFECYCLE_STATE.open;
@@ -129,7 +35,7 @@ export class Modal {
 
   constructor(
     { id, modalKey, name, component, options }: ModalProps,
-    private manager: ManagerInterface
+    private manager: ModalManagerInterface
   ) {
     this._id = id;
     this._name = name;
@@ -142,6 +48,8 @@ export class Modal {
     this.setOption();
     this.initComponent();
   }
+
+  /* 초기화 및 설정 */
 
   private bind() {
     this.action = this.action.bind(this);
@@ -173,6 +81,60 @@ export class Modal {
     }
   }
 
+  private initComponent() {
+    this._component = this.originComponent;
+
+    this.setComponentProps();
+  }
+
+  /* Getter */
+
+  get id() {
+    return this._id;
+  }
+
+  get options() {
+    return this._options;
+  }
+
+  get modalKey() {
+    return this._modalKey;
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  get component() {
+    return this._component;
+  }
+
+  get callback() {
+    return this._callback;
+  }
+
+  get confirm() {
+    return this._confirm;
+  }
+
+  get actionState() {
+    return this._actionState;
+  }
+
+  get isAwaitingConfirm() {
+    return this._isAwaitingConfirm;
+  }
+
+  get isCloseDelay() {
+    return this._isCloseDelay;
+  }
+
+  get closeDelayDuration() {
+    return this._closeDelayDuration;
+  }
+
+  /* 컴포넌트 및 상태 관리 */
+
   private setComponentProps(options: ModalDispatchOptions = {}) {
     const {
       title,
@@ -199,12 +161,6 @@ export class Modal {
     }
 
     this._componentProps = { ...componentProps, ...options };
-  }
-
-  private initComponent() {
-    this._component = this.originComponent;
-
-    this.setComponentProps();
   }
 
   private changeComponent(component: string | ModalComponent, options: ComponentPropsOptions = {}) {
@@ -283,48 +239,98 @@ export class Modal {
     this.changeStateResponsiveComponent({ component, options });
   }
 
-  get id() {
-    return this._id;
-  }
+  /* 상태 조회 */
 
-  get options() {
-    return this._options;
-  }
-
-  get modalKey() {
-    return this._modalKey;
-  }
-
-  get name() {
-    return this._name;
-  }
-
-  get component() {
-    return this._component;
-  }
-
-  get callback() {
-    return this._callback;
-  }
-
-  get confirm() {
-    return this._confirm;
-  }
-
-  get actionState() {
+  getActionState() {
     return this._actionState;
   }
 
-  get isAwaitingConfirm() {
-    return this._isAwaitingConfirm;
+  getLifecycleState() {
+    return this.lifecycleState;
   }
 
-  get isCloseDelay() {
-    return this._isCloseDelay;
+  get isActive() {
+    return this.lifecycleState === "active";
   }
 
-  get closeDelayDuration() {
-    return this._closeDelayDuration;
+  /* 생명주기 */
+
+  open() {
+    this.lifecycleState = "open";
+    this.manager.call(delay, this.options.duration ?? 0);
+
+    this.notify();
+  }
+
+  active() {
+    this.lifecycleState = "active";
+
+    this.notify();
+  }
+
+  close() {
+    this.lifecycleState = "close";
+    this.options.closeModal(this.endCallback, this.confirm);
+
+    this.notify();
+  }
+
+  init() {
+    if (this.isInitial) {
+      return;
+    }
+
+    this.isInitial = true;
+
+    setTimeout(() => {
+      this.active();
+    }, 10);
+  }
+
+  blockCloseDelay() {
+    this._isCloseDelay = false;
+
+    return this;
+  }
+
+  setCloseDelay(duration: number) {
+    if (duration < 1) {
+      this._isCloseDelay = false;
+
+      return this;
+    }
+
+    this._isCloseDelay = true;
+    this._closeDelayDuration = duration;
+
+    return this;
+  }
+
+  /* 액션 및 이벤트 처리 */
+
+  getMiddlewareProps(): ModalMiddlewareProps {
+    return {
+      transactionController: this.manager,
+      modalState: this,
+    };
+  }
+
+  action(confirm?: ModalConfirmType, callback?: ModalCallback) {
+    if (
+      this.manager.getTransactionState() !== MODAL_TRANSACTION_STATE.idle
+    ) {
+      return;
+    }
+
+    if (confirm) {
+      this._confirm = confirm;
+    }
+
+    if (callback) {
+      this._callback = callback;
+    }
+
+    this.options.middleware(this.getMiddlewareProps());
   }
 
   initial() {
@@ -374,69 +380,7 @@ export class Modal {
     return this;
   }
 
-  blockCloseDelay() {
-    this._isCloseDelay = false;
-
-    return this;
-  }
-
-  setCloseDelay(duration: number) {
-    if (duration < 1) {
-      this._isCloseDelay = false;
-
-      return this;
-    }
-
-    this._isCloseDelay = true;
-    this._closeDelayDuration = duration;
-
-    return this;
-  }
-
-  getActionState() {
-    return this._actionState;
-  }
-
-  getLifecycleState() {
-    return this.lifecycleState;
-  }
-
-  getStateController(): StateController {
-    return {
-      initial: this.initial,
-      pending: this.pending,
-      success: this.success,
-      error: this.error,
-      end: this.end,
-      getActionState: this.getActionState,
-      getLifecycleState: this.getLifecycleState,
-    };
-  }
-
-  getMiddlewareProps(): ModalMiddlewareProps {
-    return {
-      transactionController: this.manager.transactionController,
-      modalState: this,
-    };
-  }
-
-  action(confirm?: ModalConfirmType, callback?: ModalCallback) {
-    if (
-      this.manager.transactionController.getTransactionState() !== MODAL_TRANSACTION_STATE.idle
-    ) {
-      return;
-    }
-
-    if (confirm) {
-      this._confirm = confirm;
-    }
-
-    if (callback) {
-      this._callback = callback;
-    }
-
-    this.options.middleware(this.getMiddlewareProps());
-  }
+  /* 스타일 및 렌더링 */
 
   getModalStyle(): CSSProperties {
     const { position, duration, transitionOptions } = this.options;
@@ -489,29 +433,16 @@ export class Modal {
     };
   }
 
-  get isActive() {
-    return this.lifecycleState === "active";
-  }
+  setBreakPoint(breakPoint: number) {
+    if (this.breakPoint === breakPoint) {
+      return;
+    }
 
-  open() {
-    this.lifecycleState = "open";
-    this.manager.call(delay, this.options.duration ?? 0);
-
+    this.breakPoint = breakPoint;
     this.notify();
   }
 
-  active() {
-    this.lifecycleState = "active";
-
-    this.notify();
-  }
-
-  close() {
-    this.lifecycleState = "close";
-    this.options.closeModal(this.endCallback, this.confirm);
-
-    this.notify();
-  }
+  /* 상태 업데이트 및 리스너 관리 */
 
   getState(): ModalState {
     return {
@@ -534,18 +465,6 @@ export class Modal {
     return this;
   }
 
-  init() {
-    if (this.isInitial) {
-      return;
-    }
-
-    this.isInitial = true;
-
-    setTimeout(() => {
-      this.active();
-    }, 10);
-  }
-
   notify() {
     const modalState = this.getState();
 
@@ -554,12 +473,4 @@ export class Modal {
     return this;
   }
 
-  setBreakPoint(breakPoint: number) {
-    if (this.breakPoint === breakPoint) {
-      return;
-    }
-
-    this.breakPoint = breakPoint;
-    this.notify();
-  }
 }
