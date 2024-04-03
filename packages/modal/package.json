@@ -1,7 +1,7 @@
 {
-  "name": "@react-libs/modal",
-  "version": "0.0.1",
-  "description": "리액트 라이브러리입니다.",
+  "name": "@junhee_h/react-modal",
+  "version": "0.0.2",
+  "description": "리액트 모달을 쉽게 등록하고 사용가능한 라이브러리입니다.",
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs",
     "watch": "rollup -c --bundleConfigAsCjs --watch",
@@ -54,5 +54,17 @@
   "peerDependencies": {
     "react": "^16 || ^17 || ^18",
     "react-dom": "^16 || ^17 || ^18"
-  }
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wjunhee102/react-libraries.git#main"
+  },
+  "bugs": {
+    "url": "https://github.com/wjunhee102/react-libraries/issues"
+  },
+  "homepage": "https://github.com/wjunhee102/react-libraries/tree/main#readme"
 }
