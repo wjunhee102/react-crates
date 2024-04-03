@@ -1,6 +1,15 @@
-import { ModalProvider, openModal } from "@react-libs/modal";
 import logo from "./logo.svg";
 import "./App.css";
+import { ModalProvider, modalCtrl } from "./modal";
+import { Modal } from "@junhee_h/react-modal";
+
+export function delay(duration: number = 0) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, Math.max(duration, 0));
+  });
+}
 
 function App() {
   return (
@@ -19,29 +28,87 @@ function App() {
           Learn React
         </a>
         <button
-          onClick={() =>
-            openModal(
+          onClick={() => {
+            modalCtrl.open(
               () => (
                 <div className="bg-white w-[200px] h-[300px]">
-                  "안녕하세요."
+                  "안녕하세요.1"
                 </div>
               ),
               {
                 backCoverOpacity: 0.5,
                 backCoverColor: "#fff",
-                callback: () => {
-                  openModal("default");
+                closeDelay: 1000,
+                stateResponsiveComponent: true,
+                callback: async (confirm, { pending, success }) => {
+                  pending();
+                  await delay(1000);
+
+                  success(() =>
+                    modalCtrl.open(() => (
+                      <div className="bg-white w-[200px] h-[300px]">새모달</div>
+                    ))
+                  );
                 },
                 duration: 300,
               }
-            )
-          }
+            );
+          }}
         >
           모달 열기
         </button>
+        <button
+          onClick={() => {
+            modalCtrl.alert({
+              payload: "타입 체킹 잘된다.",
+              confirmContents: "후후후",
+              backCoverOpacity: 0.5,
+              backCoverColor: "#fff",
+              closeDelay: 1000,
+              stateResponsiveComponent: true,
+              callback: async (confirm, { pending, success }) => {
+                pending();
+                await delay(1000);
+
+                success(() =>
+                  modalCtrl.open(() => (
+                    <div className="bg-white w-[200px] h-[300px]">새모달</div>
+                  ))
+                );
+              },
+              duration: 300,
+            });
+          }}
+        >
+          알림
+        </button>
       </header>
       <div className="w-full h-[500px]"></div>
-      <ModalProvider />
+      <ModalProvider
+        modalMeta={[
+          {
+            name: "success",
+            component: () => (
+              <div className="bg-green-400 w-[200px] h-[300px]">
+                <Modal.Contents>성공!!</Modal.Contents>
+              </div>
+            ),
+          },
+          {
+            name: "pending",
+            component: () => (
+              <div className="bg-gray-400 w-[200px] h-[300px]">로딩</div>
+            ),
+          },
+          {
+            name: "test",
+            component: () => (
+              <div className="bg-cyan-400 w-[200px] h-[300px]">테스트</div>
+            ),
+          },
+        ]}
+        options={{ stateResponsiveComponent: true }}
+      />
     </div>
   );
 }

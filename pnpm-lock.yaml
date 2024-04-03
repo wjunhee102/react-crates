@@ -94,7 +94,7 @@ importers:
 
   apps/playground-react:
     dependencies:
-      '@react-libs/modal':
+      '@junhee_h/react-modal':
         specifier: workspace:*
         version: link:../../packages/modal
       '@testing-library/jest-dom':
@@ -208,10 +208,10 @@ importers:
   packages/modal:
     dependencies:
       react:
-        specifier: ^16 || ^17 || ^18
+        specifier: ^18.2.0
         version: 18.2.0
       react-dom:
-        specifier: ^16 || ^17 || ^18
+        specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@babel/core':

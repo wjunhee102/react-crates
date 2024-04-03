@@ -1,4 +1,4 @@
-import { generateModalSuite, Modal } from "@react-libs/modal";
+import { generateModalSuite, Modal } from "@junhee_h/react-modal";
 
 export const { modalCtrl, ModalProvider } = generateModalSuite({
   alert: {
