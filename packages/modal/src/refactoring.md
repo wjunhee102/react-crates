@@ -112,3 +112,5 @@ componentProps가 아니라 component가 바뀌어야 함.
 - infer를 이용하여 modalDispatchOptions의 payload를 추론하게 하니 타입스크립트 체킹이 느려졌음.
 - 원래 복잡한 연산을 하면 느려진다고 함.
 - 지금 느린 이유는 Controller 타입과 그 밑에 로직으로 설정한 타입이 달라서 추론이 길어진 것이였음. 동일하게 타입을 설정하니 반응이 빨라짐.
+- Modal에 요소와 Provider를 분리 시킴. 그리고 modalManager 의존성 주입을 위해 generateModalSuite를 만들었음.
+- 이름이 멋있음.

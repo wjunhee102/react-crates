@@ -1,18 +1,9 @@
-import ModalButton from "./components/ModalButton";
-import ModalCancelButton from "./components/ModalCancelButton";
-import ModalConfirmButton from "./components/ModalConfirmButton";
-import ModalContents from "./components/ModalContents";
-import ModalCustomButton from "./components/ModalCustomButton";
-import setModalProvider from "./components/ModalProvider";
-import setModalRegistrator from "./components/ModalRegistrator";
-import ModalSubContents from "./components/ModalSubContents";
-import ModalSubTitle from "./components/ModalSubTitle";
-import ModalTitle from "./components/ModalTitle";
+import { setModalProvider, setModalRegistrator } from "./components";
 import setUseIsOpenModal from "./hooks/useIsOpenModal";
 import ModalManager from "./services/modalManager";
 import { Controller, ModalComponent, ModalComponentSeedTable, ModalController, ModalDispatchOptions, ModalManagerOptionsProps, ModalPositionTable } from "./types"
 
-export function generateModalController<T extends ModalComponentSeedTable, P extends ModalPositionTable>(modalManager: ModalManager, modalComponentSeedEntries: [string, {
+function generateModalController<T extends ModalComponentSeedTable, P extends ModalPositionTable>(modalManager: ModalManager, modalComponentSeedEntries: [string, {
   component: ModalComponent;
   defaultOptions?: ModalDispatchOptions<any, string> | undefined;
 }][]): ModalController<T, P> {
@@ -70,69 +61,10 @@ export function generateModalSuite<T extends ModalComponentSeedTable, P extends 
   const modalManager = new ModalManager(modalComponentSeedList, options);
 
   return {
-    Modal: {
-      Provider: setModalProvider(modalManager),
-      Registrator: setModalRegistrator(modalManager),
-      Button: ModalButton,
-      ConfirmButton: ModalConfirmButton,
-      CancelButton: ModalCancelButton,
-      CustomButton: ModalCustomButton,
-      Contents: ModalContents,
-      SubContents: ModalSubContents,
-      Title: ModalTitle,
-      SubTitle: ModalSubTitle,
-    },
+    ModalProvider: setModalProvider(modalManager),
+    ModalRegistrator: setModalRegistrator(modalManager),
     useIsOpenModal: setUseIsOpenModal(modalManager),
     modalCtrl: generateModalController<T, P>(modalManager, modalComponentSeedEntries),
     extendModalSuite: setExtendModalSuite<T, P>(modalManager)
   }
 }
-
-const { modalCtrl, extendModalSuite } = generateModalSuite({
-  test: {
-    component: () => null,
-    defaultOptions: {
-      payload: "바보"
-    }
-  },
-  바보: {
-    component: () => null,
-    defaultOptions: {}
-  }
-}, {
-  position: {
-    test: {
-      open: {},
-      active: {},
-      close: {}
-    }
-  }
-});
-
-const ctrl = extendModalSuite({
-  test: {
-    component: () => null,
-    defaultOptions: {
-      payload: 0
-    }
-  }
-}, {
-  position: {
-    test: {
-      open: {},
-      active: {},
-      close: {}
-    }
-  }
-})
-
-modalCtrl.test({
-  payload: "s",
-  position: "center-backCover-bottom",
-});
-
-ctrl.test({
-  payload: 1,
-  position: "test"
-})
-modalCtrl.바보({ payload: "ㄴㅁㅇㅁㄴㅇ", position: "backCover-backCover-backCover" });

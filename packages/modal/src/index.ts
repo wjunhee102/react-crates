@@ -6,5 +6,6 @@ export type {
   ModalCallback,
 } from "./types";
 
+export { Modal } from "./components";
 export * from "./generate";
 
