@@ -1,0 +1,64 @@
+.modalProvider {
+  display: block;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10001;
+  width: 100vw;
+  height: 100vh;
+  /* 주소 표시줄이 보이거나 숨겨질 때 뷰포트 높이 조정 */
+  height: calc(var(--vh, 1vh) * 100);
+  background-color: transparent;
+  pointer-events: none;
+  transition: height 0.2s ease-in-out;
+}
+
+.modalProvider .modalClearBtn {
+  all: unset;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: transparent;
+}
+
+.modalProvider.open .modalClearBtn {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.modalProvider .modalWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.modalProvider .modalWrapper .closeModalCover {
+  all: unset;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+}
+
+.modalProvider .modalWrapper .modalContentContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.modalProvider .modalWrapper .modalContentContainer .modalContent {
+  /* all: unset; */
+  display: block;
+  position: absolute;
+  width: auto;
+  height: auto;
+}
