@@ -58,33 +58,24 @@ function App() {
         </button>
         <button
           onClick={() => {
-            modalCtrl.alert({
-              payload: "타입 체킹 잘된다.",
-              confirmContents: "후후후",
-              backCoverOpacity: 0.5,
-              backCoverColor: "#fff",
-              closeDelay: 1000,
-              stateResponsiveComponent: true,
-              callback: async (confirm, { pending, success }) => {
-                pending();
-                await delay(1000);
+            modalCtrl.alert(async (confirm, { pending, success }) => {
+              pending();
+              await delay(1000);
 
-                success(() => {
-                  modalCtrl.open(() => (
-                    <div className="bg-white w-[200px] h-[300px]">새모달1</div>
-                  ));
-                  modalCtrl.open(() => (
-                    <div className="bg-white w-[200px] h-[300px]">새모달2</div>
-                  ));
-                  modalCtrl.open(() => (
-                    <div className="bg-white w-[200px] h-[300px]">새모달3</div>
-                  ));
-                  modalCtrl.open(() => (
-                    <div className="bg-white w-[200px] h-[300px]">새모달4</div>
-                  ));
-                });
-              },
-              duration: 300,
+              success(() => {
+                modalCtrl.open(() => (
+                  <div className="bg-white w-[200px] h-[300px]">새모달1</div>
+                ));
+                modalCtrl.open(() => (
+                  <div className="bg-white w-[200px] h-[300px]">새모달2</div>
+                ));
+                modalCtrl.open(() => (
+                  <div className="bg-white w-[200px] h-[300px]">새모달3</div>
+                ));
+                modalCtrl.open(() => (
+                  <div className="bg-white w-[200px] h-[300px]">새모달4</div>
+                ));
+              });
             });
           }}
         >

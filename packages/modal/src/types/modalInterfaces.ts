@@ -1,3 +1,4 @@
+import { ReactElement } from "react";
 import {
   ModalLifecycleState,
   ModalPositionTable,
@@ -6,10 +7,9 @@ import {
   PositionStyle,
 } from "./commonTypes";
 import { ModalComponent } from "./modalComponentTypes";
-import { ModalTransctionController } from "./modalControllerTypes";
+import { ModalCallback, ModalTransctionController } from "./modalControllerTypes";
 import { CloseModalProps } from "./modalManagerTypes";
 import {
-  EditModalOptionsProps,
   ModalDispatchOptions,
 } from "./modalOptionsTypes";
 import { ModalComponentSeed, ModalComponentSeedTable } from "./modalSeedTypes";
@@ -34,25 +34,21 @@ export type Controller<
   T extends ModalComponentSeedTable,
   P extends ModalPositionTable
 > = {
-  [K in keyof T]: (
-    options: T[K]["defaultOptions"] extends { payload: infer R }
-      ? ModalDispatchOptions<R, Extract<keyof P, string>>
-      : ModalDispatchOptions<any, Extract<keyof P, string>>
-  ) => number;
-};
+    [K in keyof T]: (
+      options: ((T[K]["defaultOptions"] extends { payload: infer R }
+        ? ModalDispatchOptions<R, Extract<keyof P, string>>
+        : ModalDispatchOptions<any, Extract<keyof P, string>>) | ModalCallback)
+    ) => number;
+  };
 
 export type ModalController<
   T extends ModalComponentSeedTable,
   P extends ModalPositionTable
 > = {
   open: <K = any>(
-    name: string | ModalComponent,
-    options?: ModalDispatchOptions<K, Extract<keyof P, string>>
+    name: string | ModalComponent | ReactElement,
+    options?: (ModalDispatchOptions<K, Extract<keyof P, string>>) | ModalCallback
   ) => number;
   remove: (removedName?: CloseModalProps) => number;
-  edit: <K = any>(
-    id: number,
-    props: EditModalOptionsProps<K, Extract<keyof P, string>>
-  ) => number;
-  close: (id: number) => number;
+  action: (targetModalId: number, confirm?: boolean | string) => void;
 } & Controller<T, P>;

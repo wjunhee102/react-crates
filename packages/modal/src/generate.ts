@@ -3,6 +3,7 @@ import setUseIsOpenModal from "./hooks/useIsOpenModal";
 import ModalManager from "./services/modalManager";
 import {
   Controller,
+  ModalCallback,
   ModalComponent,
   ModalComponentSeedTable,
   ModalController,
@@ -26,18 +27,17 @@ function generateModalController<
 ): ModalController<T, P> {
   return {
     open: modalManager.open,
-    close: modalManager.close,
-    edit: modalManager.edit,
     remove: modalManager.remove,
+    action: modalManager.action,
     ...modalComponentSeedEntries.reduce((controller, modalEntry) => {
       const modalName = modalEntry[0] as Extract<keyof T, string>;
 
       controller[modalName] = (
-        options: T[typeof modalName]["defaultOptions"] extends {
+        options: (T[typeof modalName]["defaultOptions"] extends {
           payload: infer R;
         }
           ? ModalDispatchOptions<R, Extract<keyof P, string>>
-          : ModalDispatchOptions<any, Extract<keyof P, string>>
+          : ModalDispatchOptions<any, Extract<keyof P, string>>) | ModalCallback
       ) => modalManager.open(modalName, options);
 
       return controller;

@@ -26,6 +26,7 @@ import {
   ModalManagerState,
   ModalLifecycleState,
   ModalComponent,
+  ModalCallback,
 } from "../types";
 import { ModalManagerInterface } from "../types/modalInterfaces";
 import { isReservedModalName } from "../utils/isReservedModalName";
@@ -33,6 +34,7 @@ import { defaultMiddleware } from "../utils/defaultMiddleware";
 import { getCloseModal } from "../utils/getCloseModal";
 import { getPositionKey } from "../utils/getPositionKey";
 import { Modal } from "./modal";
+import { isValidElement, ReactElement } from "react";
 
 class ModalManager<T extends ModalPositionTable = ModalPositionTable>
   implements ModalManagerInterface {
@@ -536,9 +538,10 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
    * @returns 현재 등록된 모달의 id를 반환합니다. 만약 등록되지 않은 모달이라면 0을 반환합니다.
    */
   open<P = any>(
-    name: string | ModalComponent,
-    options: ModalDispatchOptions<P, Extract<keyof T, string>> = {}
+    name: string | ModalComponent | ReactElement,
+    callback: (ModalDispatchOptions<P, Extract<keyof T, string>>) | ModalCallback = {}
   ) {
+    const options = typeof callback === "function" ? { callback } : callback;
     const modalKey = options.modalKey || null;
 
     if (modalKey) {
@@ -578,17 +581,35 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
       return this.currentId;
     }
 
-    if (typeof name !== "function") {
-      return 0;
+    if (typeof name === "function") {
+
+      this.currentId += 1;
+
+      this.pushModal({
+        id: this.currentId,
+        modalKey,
+        name: "unknown",
+        component: name,
+        options: {
+          transitionOptions: this.modalTransition,
+          duration: this.modalDuration,
+          ...options
+        },
+      });
+
+      return this.currentId;
     }
 
+    if (!isValidElement(name)) {
+      return 0;
+    }
     this.currentId += 1;
 
     this.pushModal({
       id: this.currentId,
       modalKey,
       name: "unknown",
-      component: name,
+      component: () => name,
       options: {
         transitionOptions: this.modalTransition,
         duration: this.modalDuration,

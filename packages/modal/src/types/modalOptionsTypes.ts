@@ -5,6 +5,9 @@ import {
 } from "./commonTypes";
 import { ModalCallback, ModalMiddleware } from "./modalControllerTypes";
 
+/**
+ * modalKey는 중복 방지
+ */
 export interface ModalDispatchOptions<T = any, P extends string = string> {
   modalKey?: string;
   callback?: ModalCallback;
