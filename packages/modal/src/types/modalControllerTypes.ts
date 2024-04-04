@@ -64,9 +64,7 @@ export interface ModalMiddlewareProps {
   modalState: Modal;
 }
 
-export type ModalMiddleware = (
-  props: ModalMiddlewareProps
-) => Promise<boolean>;
+export type ModalMiddleware = (props: ModalMiddlewareProps) => Promise<boolean>;
 
 export type ModalCallback = (
   confirm: ModalConfirmType | undefined,

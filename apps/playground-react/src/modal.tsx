@@ -32,7 +32,17 @@ export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
       component: () => (
         <div className="bg-cyan-400 w-[200px] h-[300px]">테스트</div>
       ),
+      defaultOptions: {},
     },
   },
-  { stateResponsiveComponent: true }
+  {
+    stateResponsiveComponent: true,
+    position: {
+      test: {
+        open: {},
+        active: {},
+        close: {},
+      },
+    },
+  }
 );
