@@ -17,7 +17,6 @@ import {
   ModalConfirmType,
   ModalDispatchOptions,
   ModalCallback,
-  ModalPositionTable,
 } from "../../types";
 
 type DynamicModalOptions = Omit<
@@ -182,8 +181,6 @@ const setDynamicModal = <T extends string>(modalManager: ModalManager) => {
   DynamicModal.Trigger = DynamicModalTrigger;
   DynamicModal.Element = DynamicModalElement;
   DynamicModal.Action = Modal.Action;
-  DynamicModal.Content = Modal.Content;
-  DynamicModal.Title = Modal.Title;
 
   return DynamicModal;
 };
