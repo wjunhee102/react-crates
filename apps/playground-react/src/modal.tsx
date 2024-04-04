@@ -19,7 +19,7 @@ export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
     success: {
       component: () => (
         <div className="bg-green-400 w-[200px] h-[300px]">
-          <Modal.Contents>성공!!</Modal.Contents>
+          <Modal.Content>성공!!</Modal.Content>
         </div>
       ),
     },

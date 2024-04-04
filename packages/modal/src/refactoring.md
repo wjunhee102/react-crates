@@ -123,3 +123,10 @@ componentProps가 아니라 component가 바뀌어야 함.
 - stanbyTransaction이 있는 이유를 모르겠어서 파악함.
 - modal의 제거중일때와 구분하고 싶어서 idle-stanby-active로 구분한 것 같음.
 - 지우기는 애매해서 일단 냅두고 나중에 수정할 것.
+- DynamicModal을 만들었고 DynamicModal에서 action을 수행했을때 성공했는지 아닌지 파악을 하기 위해 action에서 결과값을 boolean으로 반환하기로 함.
+- 그래서 그 작업 때문에 middleware, manager.action, getCloseModal, modal.action, modal.close 등등이 Promise<boolean>으로 리턴 값이 바뀜.
+- modal transaction 동안 modal의 커서가 pointer로 활성화가 되서 그것을 수정하기 위해 modalStyle과 modalBackCoverStyle에 transaction이 idle 상태가 아닐때 default로 커서의 모양을 고정함. 이것을 나중에 not-allowed로 바꿀지 고민중임. 그리고 style을 설정하는 로직이 좀 복잡해서 나중에 한번 리팩토링을 진행해야할 것 같음.
+- 그리고 추가로 modal.init에서 transaction이 끝나고 다시 한번 modal의 상태를 업데이트 하는 로직을 넣었음.
+- ModalContents를 ModalContent로 바꿈. 이유는 radix-ui에서 content를 단수형으로 쓰기 때문에 통일하고 싶어서 그렇게 넣음.
+- ModalAction은 button 고정인데 왜냐면 이건 스타일 컴포넌트가 아니기 때문.
+- 내일은 리드미를 작성해야할 것 같음. 추가로 키보드 옵션도 넣어야 할 것 같음.
