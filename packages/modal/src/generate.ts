@@ -3,6 +3,7 @@ import setUseIsOpenModal from "./hooks/useIsOpenModal";
 import ModalManager from "./services/modalManager";
 import {
   Controller,
+  DefaultModalPosition,
   ModalCallback,
   ModalComponent,
   ModalComponentSeedTable,
@@ -33,11 +34,13 @@ function generateModalController<
       const modalName = modalEntry[0] as Extract<keyof T, string>;
 
       controller[modalName] = (
-        options: (T[typeof modalName]["defaultOptions"] extends {
-          payload: infer R;
-        }
-          ? ModalDispatchOptions<R, Extract<keyof P, string>>
-          : ModalDispatchOptions<any, Extract<keyof P, string>>) | ModalCallback
+        options:
+          | (T[typeof modalName]["defaultOptions"] extends {
+            payload: infer R;
+          }
+            ? ModalDispatchOptions<R, Extract<keyof P, string>>
+            : ModalDispatchOptions<any, Extract<keyof P, string>>)
+          | ModalCallback
       ) => modalManager.open(modalName, options);
 
       return controller;
@@ -90,13 +93,16 @@ function setExtendModal<
   };
 }
 
+type ExtractPositionType<T extends ModalManagerOptionsProps> = T extends {
+  position?: infer R;
+}
+  ? R
+  : ModalPositionTable<DefaultModalPosition>;
+
 export function generateModal<
   T extends ModalComponentSeedTable,
-  P extends ModalPositionTable
->(
-  modalComponentSeedTable: T = {} as T,
-  options: ModalManagerOptionsProps<P> = {}
-) {
+  P extends ModalManagerOptionsProps
+>(modalComponentSeedTable: T = {} as T, options: P = {} as P) {
   const modalComponentSeedEntries = Object.entries(modalComponentSeedTable);
   const modalComponentSeedList = modalComponentSeedEntries.map(
     ([name, properties]) => ({ name, ...properties })
@@ -106,13 +112,13 @@ export function generateModal<
 
   return {
     modalManager,
-    modalCtrl: generateModalController<T, P>(
+    modalCtrl: generateModalController<T, ExtractPositionType<P>>(
       modalManager,
       modalComponentSeedEntries
     ),
-    extendModal: setExtendModal<T, P>(modalManager),
+    extendModal: setExtendModal<T, ExtractPositionType<P>>(modalManager),
     ModalProvider: setModalProvider(modalManager),
-    DynamicModal: setDynamicModal(modalManager),
+    DynamicModal: setDynamicModal<Extract<keyof ExtractPositionType<P>, string>>(modalManager),
     useIsOpenModal: setUseIsOpenModal(modalManager),
   };
 }

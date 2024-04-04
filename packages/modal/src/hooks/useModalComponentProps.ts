@@ -9,7 +9,7 @@ export function useModalComponentProps() {
 
   if (!modalComponentProps) {
     throw new Error(
-      "useModalComponentProps must be used within a ModalComponentProps Provider"
+      "useModalComponentProps must be used within a ModalComponentProvider"
     );
   }
 

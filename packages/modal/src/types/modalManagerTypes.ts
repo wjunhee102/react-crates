@@ -27,7 +27,9 @@ export type ReservedModalName =
 
 export type ModalRemovedName = ReservedModalName | string | string[];
 
-export interface ModalManagerOptionsProps<T extends ModalPositionTable> {
+export interface ModalManagerOptionsProps<
+  T extends ModalPositionTable = ModalPositionTable
+> {
   position?: T;
   transition?: ModalTransitionOptions;
   duration?: number;

@@ -37,7 +37,8 @@ import { Modal } from "./modal";
 import { isValidElement, ReactElement } from "react";
 
 class ModalManager<T extends ModalPositionTable = ModalPositionTable>
-  implements ModalManagerInterface {
+  implements ModalManagerInterface
+{
   private currentId: number = 0;
   private transactionCount: number = 0;
   private transactionState: ModalTransactionState =
@@ -519,11 +520,14 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
   /**
    * action이 실행되지 않으면 false
    * 성공적으로 실행되면 true;
-   * @param targetModalId 
-   * @param confirm 
-   * @returns 
+   * @param targetModalId
+   * @param confirm
+   * @returns
    */
-  async action(targetModalId: number, confirm?: boolean | string): Promise<boolean> {
+  async action(
+    targetModalId: number,
+    confirm?: boolean | string
+  ): Promise<boolean> {
     const targetModal = this.modalStack.filter(
       (modal) => targetModalId === modal.id
     )[0];
@@ -546,7 +550,9 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
    */
   open<P = any>(
     name: string | ModalComponent | ReactElement,
-    callback: (ModalDispatchOptions<P, Extract<keyof T, string>>) | ModalCallback = {}
+    callback:
+      | ModalDispatchOptions<P, Extract<keyof T, string>>
+      | ModalCallback = {}
   ) {
     const options = typeof callback === "function" ? { callback } : callback;
     const modalKey = options.modalKey || null;
@@ -589,7 +595,6 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
     }
 
     if (typeof name === "function") {
-
       this.currentId += 1;
 
       this.pushModal({
@@ -600,7 +605,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
         options: {
           transitionOptions: this.modalTransition,
           duration: this.modalDuration,
-          ...options
+          ...options,
         },
       });
 
@@ -620,7 +625,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
       options: {
         transitionOptions: this.modalTransition,
         duration: this.modalDuration,
-        ...options
+        ...options,
       },
     });
 
