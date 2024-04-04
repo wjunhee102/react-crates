@@ -35,7 +35,7 @@ export interface ModalDispatchOptions<T = any, P extends string = string> {
 export type ModalClose = (
   callback?: (confirm?: ModalConfirmType) => void,
   confirm?: ModalConfirmType
-) => void;
+) => Promise<boolean>;
 
 export interface ModalOptions<T = any, P extends string = string>
   extends ModalDispatchOptions<T, P> {

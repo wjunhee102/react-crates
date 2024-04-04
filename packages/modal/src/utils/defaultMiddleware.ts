@@ -1,24 +1,22 @@
 import { ModalMiddlewareProps } from "../types";
+import { delay } from "./delay";
 
 export async function defaultMiddleware({ modalState }: ModalMiddlewareProps) {
   if (modalState.isAwaitingConfirm) {
-    modalState.close();
-    return;
+    return modalState.close();
   }
 
   await modalState.callback(modalState.confirm, modalState);
 
   if (modalState.isCloseDelay) {
-    setTimeout(() => {
-      modalState.close();
-    }, Math.max(modalState.closeDelayDuration, 0));
+    await delay(modalState.closeDelayDuration);
 
-    return;
+    return modalState.close();
   }
 
   if (modalState.isAwaitingConfirm) {
-    return;
+    return false;
   }
 
-  modalState.close();
+  return modalState.close();
 }

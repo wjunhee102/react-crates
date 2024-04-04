@@ -293,7 +293,7 @@ export class Modal {
 
     this.notify();
 
-    this.options.closeModal(this.afterCloseCallback, this.confirm);
+    return this.options.closeModal(this.afterCloseCallback, this.confirm);
   }
 
   init() {
@@ -368,12 +368,12 @@ export class Modal {
     };
   }
 
-  action(confirm?: ModalConfirmType, callback?: ModalCallback) {
+  async action(confirm?: ModalConfirmType, callback?: ModalCallback) {
     if (
       !this._isAwaitingConfirm &&
       this.manager.getTransactionState() !== MODAL_TRANSACTION_STATE.idle
     ) {
-      return;
+      return false;
     }
 
     this.manager.stanbyTransaction();
@@ -386,7 +386,7 @@ export class Modal {
       this.actionCallback = callback;
     }
 
-    this.options.middleware(this.getMiddlewareProps());
+    return this.options.middleware(this.getMiddlewareProps());
   }
 
   initial() {

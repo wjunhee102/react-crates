@@ -1,5 +1,6 @@
 import { MODAL_TRANSACTION_STATE } from "../contants";
 import { CloseModal, ModalClose, ModalTransactionState } from "../types";
+import { delay } from "./delay";
 
 interface GetCloseModalProps {
   id: number;
@@ -22,31 +23,31 @@ export function getCloseModal({
     callback && (await callback(confirm));
     closeModal(id);
     endTransaction();
+
+    return true;
   };
 
   if (duration === undefined) {
     return async (callback, confirm) => {
-      console.log(getTransactionState());
       if (getTransactionState() === MODAL_TRANSACTION_STATE.active) {
-        return;
+        return false;
       }
 
       startTransaction();
 
-      close(callback, confirm);
+      return close(callback, confirm);
     };
   }
 
   return async (callback, confirm) => {
-    console.log(getTransactionState());
     if (getTransactionState() === MODAL_TRANSACTION_STATE.active) {
-      return;
+      return false;
     }
 
     startTransaction();
 
-    setTimeout(() => {
-      close(callback, confirm);
-    }, Math.max(duration, 0));
+    await delay(duration);
+
+    return close(callback, confirm);
   };
 }

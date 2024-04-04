@@ -516,20 +516,27 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
 
   /* 모달 액션 관련 */
 
-  action(targetModalId: number, confirm?: boolean | string) {
+  /**
+   * action이 실행되지 않으면 false
+   * 성공적으로 실행되면 true;
+   * @param targetModalId 
+   * @param confirm 
+   * @returns 
+   */
+  async action(targetModalId: number, confirm?: boolean | string): Promise<boolean> {
     const targetModal = this.modalStack.filter(
       (modal) => targetModalId === modal.id
     )[0];
 
     if (!targetModal) {
-      return;
+      return false;
     }
 
-    targetModal.action(confirm);
+    const result = await targetModal.action(confirm);
 
     this.notify();
 
-    return;
+    return result;
   }
 
   /**
