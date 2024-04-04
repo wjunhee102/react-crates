@@ -1,30 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
-import ModalManager from "../services/modalManager";
-import {
-  ModalComponentSeed,
-  ModalManagerOptionsProps,
-  ModalManagerState,
-} from "../types";
-import { MODAL_TRANSACTION_STATE } from "../contants";
-import { setDisableBodyScroll } from "../utils/disableBodyScroll";
-import ModalComponent from "./ModalComponent";
+import ModalManager from "../../services/modalManager";
+import { ModalManagerState } from "../../types";
+import { MODAL_TRANSACTION_STATE } from "../../contants";
+import { setDisableBodyScroll } from "../../utils/disableBodyScroll";
+import ModalComponentProvider from "./ModalComponentProvider";
 
-import "./modal.css";
+import "./modalProvider.css";
 
 export interface ModalProviderProps {
-  modalManager?: ModalManager;
-  modalMeta?: ModalComponentSeed | ModalComponentSeed[];
-  options?: ModalManagerOptionsProps<any>;
   disableScroll?: boolean;
 }
 
-function setModalProvider(defaultModalManager: ModalManager) {
-  return function ModalProvider({
-    modalManager = defaultModalManager,
-    modalMeta,
-    options,
-    disableScroll = true,
-  }: ModalProviderProps) {
+function setModalProvider(modalManager: ModalManager) {
+  return function ModalProvider({ disableScroll = true }: ModalProviderProps) {
     const [
       { modalStack, transactionState, isOpen, breakPoint },
       setModalManagerState,
@@ -42,14 +30,6 @@ function setModalProvider(defaultModalManager: ModalManager) {
     };
 
     useEffect(() => {
-      if (modalMeta) {
-        modalManager.setModalComponent(modalMeta);
-      }
-
-      if (options) {
-        modalManager.initModalOptions(options);
-      }
-
       modalManager.subscribe(setModalManagerState);
 
       const listener = () => {
@@ -92,10 +72,9 @@ function setModalProvider(defaultModalManager: ModalManager) {
           {" "}
         </button>
         {modalStack.map((modal) => (
-          <ModalComponent
+          <ModalComponentProvider
             key={modal.id}
             breakPoint={breakPoint}
-            transactionState={transactionState}
             modal={modal}
           />
         ))}

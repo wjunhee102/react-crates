@@ -114,3 +114,12 @@ componentProps가 아니라 component가 바뀌어야 함.
 - 지금 느린 이유는 Controller 타입과 그 밑에 로직으로 설정한 타입이 달라서 추론이 길어진 것이였음. 동일하게 타입을 설정하니 반응이 빨라짐.
 - Modal에 요소와 Provider를 분리 시킴. 그리고 modalManager 의존성 주입을 위해 generateModalSuite를 만들었음.
 - 이름이 멋있음.
+- @react-libs로 배포를 하려고 했는데 조직이 필요하다고 함. 그래서 조직을 만드려고 했는데 이미 있는 조직이라고 해서 일단은 @junhee_h/react-modal로 배포함.
+- 코어라는 명칭을 쓰지 않고 그냥 template을 따로 만들어서 template을 사용하고 싶은 사람에게 따로 받게 하는 식으로 하려고 함.
+- 내일은 문서를 작성해서 일단 사용법을 먼저 작성하고 그 다음 그 사용법을 토대로 테스트 코드를 작성하려고 함.
+
+## 2024년 4월 4일 목요일
+
+- stanbyTransaction이 있는 이유를 모르겠어서 파악함.
+- modal의 제거중일때와 구분하고 싶어서 idle-stanby-active로 구분한 것 같음.
+- 지우기는 애매해서 일단 냅두고 나중에 수정할 것.
