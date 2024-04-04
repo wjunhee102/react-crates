@@ -195,7 +195,7 @@ const setDynamicModal = <T extends string>(modalManager: ModalManager) => {
   DynamicModal.Trigger = DynamicModalTrigger;
   DynamicModal.Element = DynamicModalElement;
   DynamicModal.Action = Modal.Action;
-  DynamicModal.Cotent = Modal.Content;
+  DynamicModal.Content = Modal.Content;
   DynamicModal.Title = Modal.Title;
 
   return DynamicModal;
