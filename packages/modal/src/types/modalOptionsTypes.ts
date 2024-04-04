@@ -5,6 +5,9 @@ import {
 } from "./commonTypes";
 import { ModalCallback, ModalMiddleware } from "./modalControllerTypes";
 
+/**
+ * modalKey는 중복 방지
+ */
 export interface ModalDispatchOptions<T = any, P extends string = string> {
   modalKey?: string;
   callback?: ModalCallback;
@@ -14,11 +17,11 @@ export interface ModalDispatchOptions<T = any, P extends string = string> {
   backCoverOpacity?: number;
   title?: React.ReactNode;
   subTitle?: React.ReactNode;
-  contents?: React.ReactNode;
-  subContents?: React.ReactNode;
-  confirmContents?: React.ReactNode;
-  cancelContents?: React.ReactNode;
-  customContents?: React.ReactNode;
+  content?: React.ReactNode;
+  subContent?: React.ReactNode;
+  confirmContent?: React.ReactNode;
+  cancelContent?: React.ReactNode;
+  customActionContent?: React.ReactNode;
   payload?: T;
   closeDelay?: number;
   duration?: number;
@@ -28,18 +31,13 @@ export interface ModalDispatchOptions<T = any, P extends string = string> {
   required?: boolean;
 }
 
-export interface EditModalOptionsProps<T = any, P extends string = string>
-  extends ModalDispatchOptions<T, P> {
-  isClose?: boolean;
-}
-
 export type ModalClose = (
   callback?: (confirm?: ModalConfirmType) => void,
   confirm?: ModalConfirmType
-) => void;
+) => Promise<boolean>;
 
 export interface ModalOptions<T = any, P extends string = string>
-  extends EditModalOptionsProps<T, P> {
+  extends ModalDispatchOptions<T, P> {
   closeModal: ModalClose;
   middleware: ModalMiddleware;
 }

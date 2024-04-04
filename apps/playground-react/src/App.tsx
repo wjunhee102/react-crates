@@ -1,7 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { ModalProvider, modalCtrl } from "./modal";
-import { Modal } from "@junhee_h/react-modal";
+import { DynamicModal, ModalProvider, modalCtrl } from "./modal";
 
 export function delay(duration: number = 0) {
   return new Promise((resolve) => {
@@ -50,7 +49,7 @@ function App() {
                     ))
                   );
                 },
-                duration: 300,
+                duration: 1500,
               }
             );
           }}
@@ -59,56 +58,40 @@ function App() {
         </button>
         <button
           onClick={() => {
-            modalCtrl.alert({
-              payload: "타입 체킹 잘된다.",
-              confirmContents: "후후후",
-              backCoverOpacity: 0.5,
-              backCoverColor: "#fff",
-              closeDelay: 1000,
-              stateResponsiveComponent: true,
-              callback: async (confirm, { pending, success }) => {
-                pending();
-                await delay(1000);
+            modalCtrl.alert(async (confirm, { pending, success }) => {
+              pending();
+              await delay(1000);
 
-                success(() =>
-                  modalCtrl.open(() => (
-                    <div className="bg-white w-[200px] h-[300px]">새모달</div>
-                  ))
-                );
-              },
-              duration: 300,
+              success(() => {
+                modalCtrl.open(() => (
+                  <div className="bg-white w-[200px] h-[300px]">새모달1</div>
+                ));
+                modalCtrl.open(() => (
+                  <div className="bg-white w-[200px] h-[300px]">새모달2</div>
+                ));
+                modalCtrl.open(() => (
+                  <div className="bg-white w-[200px] h-[300px]">새모달3</div>
+                ));
+                modalCtrl.open(() => (
+                  <div className="bg-white w-[200px] h-[300px]">새모달4</div>
+                ));
+              });
             });
           }}
         >
           알림
         </button>
+        <DynamicModal options={{ duration: 1500 }}>
+          <DynamicModal.Trigger>다이나믹 모달</DynamicModal.Trigger>
+          <DynamicModal.Element>
+            <div className="bg-white w-[200px] h-[300px]">
+              <DynamicModal.Action>실행</DynamicModal.Action>
+            </div>
+          </DynamicModal.Element>
+        </DynamicModal>
       </header>
       <div className="w-full h-[500px]"></div>
-      <ModalProvider
-        modalMeta={[
-          {
-            name: "success",
-            component: () => (
-              <div className="bg-green-400 w-[200px] h-[300px]">
-                <Modal.Contents>성공!!</Modal.Contents>
-              </div>
-            ),
-          },
-          {
-            name: "pending",
-            component: () => (
-              <div className="bg-gray-400 w-[200px] h-[300px]">로딩</div>
-            ),
-          },
-          {
-            name: "test",
-            component: () => (
-              <div className="bg-cyan-400 w-[200px] h-[300px]">테스트</div>
-            ),
-          },
-        ]}
-        options={{ stateResponsiveComponent: true }}
-      />
+      <ModalProvider />
     </div>
   );
 }

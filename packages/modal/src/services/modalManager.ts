@@ -15,7 +15,6 @@ import {
   ModalRemovedName,
   ModalDispatchOptions,
   CloseModalProps,
-  EditModalOptionsProps,
   ModalPositionMap,
   ModalPositionTable,
   ModalTransition,
@@ -27,6 +26,7 @@ import {
   ModalManagerState,
   ModalLifecycleState,
   ModalComponent,
+  ModalCallback,
 } from "../types";
 import { ModalManagerInterface } from "../types/modalInterfaces";
 import { isReservedModalName } from "../utils/isReservedModalName";
@@ -34,11 +34,12 @@ import { defaultMiddleware } from "../utils/defaultMiddleware";
 import { getCloseModal } from "../utils/getCloseModal";
 import { getPositionKey } from "../utils/getPositionKey";
 import { Modal } from "./modal";
+import { isValidElement, ReactElement } from "react";
 
 class ModalManager<T extends ModalPositionTable = ModalPositionTable>
-  implements ModalManagerInterface
-{
+  implements ModalManagerInterface {
   private currentId: number = 0;
+  private transactionCount: number = 0;
   private transactionState: ModalTransactionState =
     MODAL_TRANSACTION_STATE.idle;
   private modalStack: Modal[] = [];
@@ -74,8 +75,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
     this.executeAsync = this.executeAsync.bind(this);
     this.open = this.open.bind(this);
     this.remove = this.remove.bind(this);
-    this.edit = this.edit.bind(this);
-    this.close = this.close.bind(this);
+    this.action = this.action.bind(this);
 
     this.getModalComponentSeed = this.getModalComponentSeed.bind(this);
     this.getCurrentModalPosition = this.getCurrentModalPosition.bind(this);
@@ -347,8 +347,8 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
 
     return {
       ...this.modalTransition,
-      transitionDuration,
       ...options,
+      transitionDuration,
     };
   }
 
@@ -412,25 +412,47 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
     };
   }
 
-  /* 트랜잭션 관리 */
+  /* 트랜잭션 관리 
+    modal이 한번에 생성되고 있을 때 action을 방지하기 위함입니다.
+  */
 
   setTransactionState(transactionState: ModalTransactionState) {
     this.transactionState = transactionState;
     this.notify();
 
-    return transactionState;
+    return this.transactionCount;
   }
 
   stanbyTransaction() {
+    this.transactionCount += 1;
+
     return this.setTransactionState(MODAL_TRANSACTION_STATE.standby);
   }
 
   startTransaction() {
+    if (this.transactionState !== MODAL_TRANSACTION_STATE.standby) {
+      this.transactionCount += 1;
+    }
+
     return this.setTransactionState(MODAL_TRANSACTION_STATE.active);
   }
 
   endTransaction() {
-    return this.setTransactionState(MODAL_TRANSACTION_STATE.idle);
+    if (this.transactionState === MODAL_TRANSACTION_STATE.idle) {
+      this.transactionCount = 0;
+
+      return this.transactionCount;
+    }
+
+    this.transactionCount -= 1;
+
+    if (this.transactionCount < 1) {
+      this.transactionCount = 0;
+
+      return this.setTransactionState(MODAL_TRANSACTION_STATE.idle);
+    }
+
+    return this.transactionCount;
   }
 
   getTransactionState() {
@@ -494,20 +516,27 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
 
   /* 모달 액션 관련 */
 
-  action(targetModalId: number, confirm?: boolean | string) {
+  /**
+   * action이 실행되지 않으면 false
+   * 성공적으로 실행되면 true;
+   * @param targetModalId 
+   * @param confirm 
+   * @returns 
+   */
+  async action(targetModalId: number, confirm?: boolean | string): Promise<boolean> {
     const targetModal = this.modalStack.filter(
       (modal) => targetModalId === modal.id
     )[0];
 
     if (!targetModal) {
-      return;
+      return false;
     }
 
-    targetModal.action(confirm);
+    const result = await targetModal.action(confirm);
 
     this.notify();
 
-    return;
+    return result;
   }
 
   /**
@@ -516,9 +545,10 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
    * @returns 현재 등록된 모달의 id를 반환합니다. 만약 등록되지 않은 모달이라면 0을 반환합니다.
    */
   open<P = any>(
-    name: string | ModalComponent,
-    options: ModalDispatchOptions<P, Extract<keyof T, string>> = {}
+    name: string | ModalComponent | ReactElement,
+    callback: (ModalDispatchOptions<P, Extract<keyof T, string>>) | ModalCallback = {}
   ) {
+    const options = typeof callback === "function" ? { callback } : callback;
     const modalKey = options.modalKey || null;
 
     if (modalKey) {
@@ -558,18 +588,40 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
       return this.currentId;
     }
 
-    if (typeof name !== "function") {
-      return 0;
+    if (typeof name === "function") {
+
+      this.currentId += 1;
+
+      this.pushModal({
+        id: this.currentId,
+        modalKey,
+        name: "unknown",
+        component: name,
+        options: {
+          transitionOptions: this.modalTransition,
+          duration: this.modalDuration,
+          ...options
+        },
+      });
+
+      return this.currentId;
     }
 
+    if (!isValidElement(name)) {
+      return 0;
+    }
     this.currentId += 1;
 
     this.pushModal({
       id: this.currentId,
       modalKey,
       name: "unknown",
-      component: name,
-      options,
+      component: () => name,
+      options: {
+        transitionOptions: this.modalTransition,
+        duration: this.modalDuration,
+        ...options
+      },
     });
 
     return this.currentId;
@@ -603,50 +655,6 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
     this.notify();
 
     return this.getCurrentModalId();
-  }
-
-  editModalProps<P = any>(
-    id: number,
-    props: EditModalOptionsProps<P, Extract<keyof T, string>>
-  ) {
-    let modalId = 0;
-
-    /**
-     * modal 수정하는 로직 만들기
-     */
-    // this.modalStack = this.modalStack.map((modal) => {
-    //   if (modal.id !== id) {
-    //     return modal;
-    //   }
-
-    //   modalId = modal.id;
-
-    //   return { ...modal, options: { ...modal.options, ...props } };
-    // });
-
-    this.notify();
-
-    return modalId;
-  }
-
-  /**
-   *
-   * @param id
-   * @param props
-   */
-  edit<P = any>(
-    id: number,
-    props: EditModalOptionsProps<P, Extract<keyof T, string>>
-  ) {
-    return this.editModalProps(id, props);
-  }
-
-  /**
-   * @param id
-   * @returns 마지막으로 등록된 모달의 id를 반환합니다. 만약 등록된 모달이 없다면 0을 반환합니다.
-   */
-  close(id: number) {
-    return this.editModalProps(id, { isClose: false });
   }
 
   setBreakPoint(breakPoint: number) {

@@ -4,11 +4,11 @@ import { ModalActionState } from ".";
 export interface ModalComponentProps<T = any> {
   title?: ReactNode;
   subTitle?: ReactNode;
-  contents?: ReactNode;
-  subContents?: ReactNode;
-  confirmContents?: ReactNode;
-  cancelContents?: ReactNode;
-  customContents?: ReactNode;
+  content?: ReactNode;
+  subContent?: ReactNode;
+  confirmContent?: ReactNode;
+  cancelContent?: ReactNode;
+  customActionContent?: ReactNode;
   action: (confirm?: string | boolean) => void;
   actionState: ModalActionState;
   payload?: T;

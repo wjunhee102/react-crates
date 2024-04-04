@@ -17,4 +17,21 @@ const ModalTitle = ({ as, children, ...restProps }: ModalTitleProps) => {
   return <Component {...restProps}>{title || children}</Component>;
 };
 
+const ModalSubTitle = ({ as, children, ...restProps }: ModalTitleProps) => {
+  const { subTitle } = useModalComponentProps();
+
+  if (!subTitle && !children) {
+    return null;
+  }
+
+  const Component = as || "h3";
+
+  return <Component {...restProps}>{subTitle || children}</Component>;
+};
+
+ModalTitle.displayName = "Modal.Title";
+ModalSubTitle.displayNmae = "Modal.Title.Sub";
+
+ModalTitle.Sub = ModalSubTitle;
+
 export default ModalTitle;

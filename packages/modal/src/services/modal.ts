@@ -33,8 +33,8 @@ interface ModalProps {
 export class Modal {
   private lifecycleState: ModalLifecycleState = MODAL_LIFECYCLE_STATE.open;
   private actionState: ModalActionState = MODAL_ACTION_STATE.initial;
-  private actionCallback: ModalCallback = () => {};
-  private afterCloseCallback: () => unknown = () => {};
+  private actionCallback: ModalCallback = () => { };
+  private afterCloseCallback: () => unknown = () => { };
   private listeners: ((state: ModalState) => void)[] = [];
   private breakPoint = 0;
   private isInitial = false;
@@ -79,7 +79,6 @@ export class Modal {
     this.success = this.success.bind(this);
     this.error = this.error.bind(this);
     this.end = this.end.bind(this);
-    this.open = this.open.bind(this);
     this.active = this.active.bind(this);
     this.close = this.close.bind(this);
   }
@@ -154,22 +153,22 @@ export class Modal {
     const {
       title,
       subTitle,
-      contents,
-      subContents,
-      confirmContents,
-      cancelContents,
-      customContents,
+      content,
+      subContent,
+      confirmContent,
+      cancelContent,
+      customActionContent,
       payload,
     } = this.options;
 
     const componentProps = {
       title,
       subTitle,
-      contents,
-      subContents,
-      confirmContents,
-      cancelContents,
-      customContents,
+      content,
+      subContent,
+      confirmContent,
+      cancelContent,
+      customActionContent,
       action: this.action,
       actionState: this.actionState,
       payload,
@@ -283,13 +282,6 @@ export class Modal {
 
   /* 생명주기 */
 
-  open() {
-    this.lifecycleState = "open";
-    this.manager.executeAsync(delay, this.options.duration ?? 0);
-
-    this.notify();
-  }
-
   active() {
     this.lifecycleState = "active";
 
@@ -301,10 +293,10 @@ export class Modal {
 
     this.notify();
 
-    this.options.closeModal(this.afterCloseCallback, this.confirm);
+    return this.options.closeModal(this.afterCloseCallback, this.confirm);
   }
 
-  init() {
+  async init() {
     if (this.isInitial) {
       return;
     }
@@ -314,6 +306,10 @@ export class Modal {
     setTimeout(() => {
       this.active();
     }, 10);
+
+    await this.manager.executeAsync(delay, this.options.duration ?? 0);
+
+    this.notify();
   }
 
   blockCloseDelay() {
@@ -375,15 +371,15 @@ export class Modal {
     };
   }
 
-  action(confirm?: ModalConfirmType, callback?: ModalCallback) {
+  async action(confirm?: ModalConfirmType, callback?: ModalCallback) {
     if (
       !this._isAwaitingConfirm &&
       this.manager.getTransactionState() !== MODAL_TRANSACTION_STATE.idle
     ) {
-      return;
+      return false;
     }
 
-    this.manager.startTransaction();
+    this.manager.stanbyTransaction();
 
     if (confirm) {
       this._confirm = confirm;
@@ -393,7 +389,7 @@ export class Modal {
       this.actionCallback = callback;
     }
 
-    this.options.middleware(this.getMiddlewareProps());
+    return this.options.middleware(this.getMiddlewareProps());
   }
 
   initial() {
@@ -461,12 +457,12 @@ export class Modal {
   getModalStyle(): CSSProperties {
     const { position, duration, transitionOptions } = this.options;
 
-    const appliedPosition =
+    const mergedPosition =
       typeof position === "function" ? position(this.breakPoint) : position;
     const isAciveState = this.lifecycleState === MODAL_LIFECYCLE_STATE.active;
     const modalPosition = this.manager.getCurrentModalPosition(
       this.lifecycleState,
-      appliedPosition
+      mergedPosition
     );
     const transition = this.manager.getModalTransition(
       duration,
@@ -500,8 +496,20 @@ export class Modal {
       transitionOptions
     );
 
+    const cursor = (() => {
+      if (
+        this.manager.getTransactionState() !== MODAL_TRANSACTION_STATE.idle ||
+        !isAciveState ||
+        backCoverConfirm === null
+      ) {
+        return "default";
+      }
+
+      return "pointer";
+    })();
+
     return {
-      cursor: isAciveState && backCoverConfirm !== null ? "pointer" : "default",
+      cursor,
       ...transition,
       ...backCoverPosition,
       background: (isAciveState && backCoverColor) || background,
