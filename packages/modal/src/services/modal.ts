@@ -153,22 +153,22 @@ export class Modal {
     const {
       title,
       subTitle,
-      contents,
-      subContents,
-      confirmContents,
-      cancelContents,
-      customActionContents,
+      content,
+      subContent,
+      confirmContent,
+      cancelContent,
+      customActionContent,
       payload,
     } = this.options;
 
     const componentProps = {
       title,
       subTitle,
-      contents,
-      subContents,
-      confirmContents,
-      cancelContents,
-      customActionContents,
+      content,
+      subContent,
+      confirmContent,
+      cancelContent,
+      customActionContent,
       action: this.action,
       actionState: this.actionState,
       payload,
@@ -296,17 +296,20 @@ export class Modal {
     return this.options.closeModal(this.afterCloseCallback, this.confirm);
   }
 
-  init() {
+  async init() {
     if (this.isInitial) {
       return;
     }
 
     this.isInitial = true;
-    this.manager.executeAsync(delay, this.options.duration ?? 0);
 
     setTimeout(() => {
       this.active();
     }, 10);
+
+    await this.manager.executeAsync(delay, this.options.duration ?? 0);
+
+    this.notify();
   }
 
   blockCloseDelay() {
@@ -454,12 +457,12 @@ export class Modal {
   getModalStyle(): CSSProperties {
     const { position, duration, transitionOptions } = this.options;
 
-    const appliedPosition =
+    const mergedPosition =
       typeof position === "function" ? position(this.breakPoint) : position;
     const isAciveState = this.lifecycleState === MODAL_LIFECYCLE_STATE.active;
     const modalPosition = this.manager.getCurrentModalPosition(
       this.lifecycleState,
-      appliedPosition
+      mergedPosition
     );
     const transition = this.manager.getModalTransition(
       duration,
@@ -493,8 +496,20 @@ export class Modal {
       transitionOptions
     );
 
+    const cursor = (() => {
+      if (
+        this.manager.getTransactionState() !== MODAL_TRANSACTION_STATE.idle ||
+        !isAciveState ||
+        backCoverConfirm === null
+      ) {
+        return "default";
+      }
+
+      return "pointer";
+    })();
+
     return {
-      cursor: isAciveState && backCoverConfirm !== null ? "pointer" : "default",
+      cursor,
       ...transition,
       ...backCoverPosition,
       background: (isAciveState && backCoverColor) || background,

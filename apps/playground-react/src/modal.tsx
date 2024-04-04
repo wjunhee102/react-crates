@@ -1,6 +1,6 @@
 import { generateModal, Modal } from "@junhee_h/react-modal";
 
-export const { modalCtrl, ModalProvider } = generateModal(
+export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
   {
     alert: {
       component: ({ payload }) => (

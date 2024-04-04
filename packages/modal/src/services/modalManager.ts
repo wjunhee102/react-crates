@@ -347,8 +347,8 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
 
     return {
       ...this.modalTransition,
-      transitionDuration,
       ...options,
+      transitionDuration,
     };
   }
 

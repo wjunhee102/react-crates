@@ -17,11 +17,11 @@ export interface ModalDispatchOptions<T = any, P extends string = string> {
   backCoverOpacity?: number;
   title?: React.ReactNode;
   subTitle?: React.ReactNode;
-  contents?: React.ReactNode;
-  subContents?: React.ReactNode;
-  confirmContents?: React.ReactNode;
-  cancelContents?: React.ReactNode;
-  customActionContents?: React.ReactNode;
+  content?: React.ReactNode;
+  subContent?: React.ReactNode;
+  confirmContent?: React.ReactNode;
+  cancelContent?: React.ReactNode;
+  customActionContent?: React.ReactNode;
   payload?: T;
   closeDelay?: number;
   duration?: number;
@@ -29,7 +29,6 @@ export interface ModalDispatchOptions<T = any, P extends string = string> {
   position?: ModalPosition<P>;
   stateResponsiveComponent?: boolean;
   required?: boolean;
-  isClose?: boolean;
 }
 
 export type ModalClose = (

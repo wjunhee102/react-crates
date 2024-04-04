@@ -1,85 +1,206 @@
-import { useEffect, useState } from "react";
-import ModalManager from "../../services/modalManager";
 import {
-  ModalComponent,
+  ReactNode,
+  ReactElement,
+  isValidElement,
+  createContext,
+  useContext,
+  useMemo,
+  Children,
+  ButtonHTMLAttributes,
+  useCallback,
+  MouseEvent,
+} from "react";
+import ModalManager from "../../services/modalManager";
+import { Modal } from "../../components/modal";
+import {
   ModalComponentProps,
+  ModalConfirmType,
   ModalDispatchOptions,
+  ModalCallback,
 } from "../../types";
-import { ModalCallback } from "../..";
 
-export interface DynamicModalProps {
-  open?: boolean;
-  setOpen?: (open: boolean) => void;
-  name?: string;
-  modalManager?: ModalManager;
-  options?: ModalDispatchOptions;
-  children:
-    | ((props: ModalComponentProps) => React.ReactElement)
-    | ModalComponent;
-}
+type DynamicModalOptions = Omit<
+  ModalDispatchOptions,
+  | keyof ModalComponentProps
+  | "middleware"
+  | "modalKey"
+  | "required"
+  | "isClose"
+  | "payload"
+>;
 
-const setDynamicModal = (modalManager: ModalManager) =>
-  function DynamicModal({
-    open,
-    setOpen,
-    children,
-    name,
-    options = {},
-  }: DynamicModalProps) {
-    const [modalId, setModalId] = useState(-1);
-    const [currentName, setCurrentName] = useState("");
+class DynamicModalManager {
+  private modalId: number | null = null;
+  private isOpen = false;
+  private element: ReactElement | null = null;
+  private options: DynamicModalOptions = {};
 
-    const callback: ModalCallback = (confirm, stateController) => {
-      setOpen && setOpen(false);
-      options.callback && options.callback(confirm, stateController);
+  constructor(private modalManager: ModalManager) {}
+
+  setElement(element: ReactElement) {
+    if (isValidElement(element)) {
+      this.element = element;
+    }
+
+    return this;
+  }
+
+  setOptions(options: DynamicModalOptions = {}) {
+    const callback: ModalCallback = (...props) => {
+      options.callback && options.callback(...props);
+      this.isOpen = false;
     };
 
-    const modalOptions = {
+    this.options = {
       ...options,
       callback,
     };
 
-    if (name) {
-      modalManager.setModalComponent({
-        name,
-        component: children,
-        defaultOptions: modalOptions,
-      });
+    return this;
+  }
+
+  open() {
+    if (this.isOpen || !this.element) {
+      return;
     }
 
-    useEffect(() => {
-      if (!name) {
-        // eslint-disable-next-line
-        return () => {};
-      }
+    this.isOpen = true;
+    this.modalId = this.modalManager.open(this.element, this.options);
+  }
 
-      if (currentName !== name) {
-        setCurrentName(name);
-      }
+  async action(confirm?: ModalConfirmType) {
+    if (!this.modalId) {
+      return;
+    }
 
-      return () => {
-        modalManager.removeModalComponent(name);
-      };
-      // eslint-disable-next-line
-    }, [name]);
+    const result = await this.modalManager.action(this.modalId, confirm);
 
-    useEffect(() => {
-      if (!open) {
-        if (modalId === -1) {
+    if (!result) {
+      return;
+    }
+
+    this.isOpen = false;
+    this.modalId = null;
+
+    return;
+  }
+}
+
+const DynamicModalContext = createContext<DynamicModalManager | null>(null);
+
+function useDynamicModal() {
+  const dynamicModalManager = useContext(DynamicModalContext);
+
+  if (!dynamicModalManager) {
+    throw Error("useDynamicModal must be used within a DynamicModal");
+  }
+
+  return dynamicModalManager;
+}
+
+export interface DynamicModalTriggerProps
+  extends ButtonHTMLAttributes<HTMLButtonElement> {}
+
+const DynamicModalTrigger = ({
+  onClick,
+  ...restProps
+}: DynamicModalTriggerProps) => {
+  const dynamicModalManager = useDynamicModal();
+
+  const openModal = useCallback(
+    (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+      onClick && onClick(event);
+      dynamicModalManager.open();
+    },
+    [dynamicModalManager, onClick]
+  );
+
+  return <button onClick={openModal} {...restProps} />;
+};
+
+export interface DynamicModalElementProps {
+  children: ReactElement;
+}
+
+const DynamicModalElement = ({ children }: DynamicModalElementProps) => {
+  const dynamicModalManager = useDynamicModal();
+
+  dynamicModalManager.setElement(children);
+
+  return null;
+};
+
+interface DynamicModalProviderProps {
+  modalManager: ModalManager;
+  options?: DynamicModalOptions;
+  children: ReactNode;
+}
+
+const DynamicModalProvider = ({
+  modalManager,
+  options,
+  children,
+}: DynamicModalProviderProps) => {
+  const dynamicModalManager = useMemo(
+    () => new DynamicModalManager(modalManager),
+    [modalManager]
+  );
+
+  dynamicModalManager.setOptions(options);
+
+  return (
+    <DynamicModalContext.Provider value={dynamicModalManager}>
+      {children}
+    </DynamicModalContext.Provider>
+  );
+};
+
+export interface DynamicModalProps {
+  options?: ModalDispatchOptions;
+  children: ReactNode;
+}
+
+const setDynamicModal = (modalManager: ModalManager) => {
+  function DynamicModal({ children, options = {} }: DynamicModalProps) {
+    let dynamicElement: ReactElement | null = null;
+    let restChildren: ReactNode[] = [];
+
+    Children.forEach(children, (child) => {
+      if (isValidElement(child)) {
+        if (child.type === DynamicModalElement) {
+          dynamicElement = child;
+
           return;
         }
 
-        modalManager.edit(modalId, { isClose: true });
-        setModalId(-1);
-        return;
+        restChildren.push(child);
       }
+    });
 
-      const id = modalManager.open(name || children, modalOptions);
-      setModalId(id);
-      // eslint-disable-next-line
-    }, [open]);
+    if (!dynamicElement) {
+      return null;
+    }
 
-    return null;
-  };
+    return (
+      <DynamicModalProvider modalManager={modalManager} options={options}>
+        {dynamicElement}
+        {restChildren}
+      </DynamicModalProvider>
+    );
+  }
+
+  DynamicModal.displayName = "DynamicModal";
+
+  DynamicModal.Trigger = DynamicModalTrigger;
+  DynamicModal.Element = DynamicModalElement;
+  DynamicModal.Action = Modal.Action;
+  DynamicModal.Cotent = Modal.Content;
+  DynamicModal.Title = Modal.Title;
+
+  return DynamicModal;
+};
+
+DynamicModalTrigger.displayName = "DynamicModal.Trigger";
+DynamicModalElement.displayName = "DynamicModal.Element";
 
 export default setDynamicModal;

@@ -1,6 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { ModalProvider, modalCtrl } from "./modal";
+import { DynamicModal, ModalProvider, modalCtrl } from "./modal";
 
 export function delay(duration: number = 0) {
   return new Promise((resolve) => {
@@ -49,7 +49,7 @@ function App() {
                     ))
                   );
                 },
-                duration: 300,
+                duration: 1500,
               }
             );
           }}
@@ -81,6 +81,14 @@ function App() {
         >
           알림
         </button>
+        <DynamicModal options={{ duration: 1500 }}>
+          <DynamicModal.Trigger>다이나믹 모달</DynamicModal.Trigger>
+          <DynamicModal.Element>
+            <div className="bg-white w-[200px] h-[300px]">
+              <DynamicModal.Action>실행</DynamicModal.Action>
+            </div>
+          </DynamicModal.Element>
+        </DynamicModal>
       </header>
       <div className="w-full h-[500px]"></div>
       <ModalProvider />

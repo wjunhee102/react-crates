@@ -1,9 +1,9 @@
 import ModalTitle from "./ModalTitle";
-import ModalContents from "./ModalContents";
+import ModalContent from "./ModalContent";
 import ModalAction from "./ModalAction";
 
 export const Modal = {
   Title: ModalTitle,
-  Contents: ModalContents,
+  Content: ModalContent,
   Action: ModalAction,
 };
