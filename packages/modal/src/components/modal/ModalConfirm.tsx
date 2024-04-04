@@ -1,14 +1,14 @@
 import { ButtonHTMLAttributes, MouseEvent } from "react";
 import { useModalComponentProps } from "../../hooks/useModalComponentProps";
 
-export interface ModalConfirmButtonProps
+export interface ModalConfirmProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
-const ModalConfirmButton = ({
+const ModalConfirm = ({
   onClick,
   children,
   ...restProps
-}: ModalConfirmButtonProps) => {
+}: ModalConfirmProps) => {
   const { action, confirmContents } = useModalComponentProps();
 
   const onClickConfirm = (e: MouseEvent<HTMLButtonElement>) => {
@@ -23,4 +23,4 @@ const ModalConfirmButton = ({
   );
 };
 
-export default ModalConfirmButton;
+export default ModalConfirm;

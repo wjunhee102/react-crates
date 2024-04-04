@@ -2,10 +2,17 @@ import { ReactNode } from "react";
 import { ButtonHTMLAttributes, MouseEvent } from "react";
 import { useModalComponentProps } from "../../hooks/useModalComponentProps";
 import { ModalComponentProps, ModalConfirmType } from "../../types";
+import ModalConfirm from "./ModalConfirm";
+import ModalCancle from "./ModalCancel";
+import ModalCustomAction from "./ModalCustomAction";
 
 function getContent(
   children: ReactNode,
-  { confirmContents, cancelContents, customContents }: ModalComponentProps,
+  {
+    confirmContents,
+    cancelContents,
+    customActionContents,
+  }: ModalComponentProps,
   confirmType?: ModalConfirmType
 ) {
   if (children) {
@@ -20,20 +27,20 @@ function getContent(
     return confirmContents;
   }
 
-  return customContents;
+  return customActionContents;
 }
 
-export interface ModalButtonProps
+export interface ModalActionProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
   confirmType?: ModalConfirmType;
 }
 
-const ModalButton = ({
+const ModalAction = ({
   onClick,
   children,
   confirmType,
   ...restProps
-}: ModalButtonProps) => {
+}: ModalActionProps) => {
   const componentProps = useModalComponentProps();
 
   const onClickSub = (e: MouseEvent<HTMLButtonElement>) => {
@@ -54,4 +61,8 @@ const ModalButton = ({
   );
 };
 
-export default ModalButton;
+ModalAction.Confirm = ModalConfirm;
+ModalAction.Cancel = ModalCancle;
+ModalAction.Custom = ModalCustomAction;
+
+export default ModalAction;

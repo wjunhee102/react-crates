@@ -1,14 +1,10 @@
 import { ButtonHTMLAttributes, MouseEvent } from "react";
 import { useModalComponentProps } from "../../hooks/useModalComponentProps";
 
-export interface ModalCancelButtonProps
+export interface ModalCancelProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
-const ModalCancelButton = ({
-  onClick,
-  children,
-  ...restProps
-}: ModalCancelButtonProps) => {
+const ModalCancel = ({ onClick, children, ...restProps }: ModalCancelProps) => {
   const { action, cancelContents } = useModalComponentProps();
 
   const onClickCancel = (e: MouseEvent<HTMLButtonElement>) => {
@@ -23,4 +19,4 @@ const ModalCancelButton = ({
   );
 };
 
-export default ModalCancelButton;
+export default ModalCancel;
