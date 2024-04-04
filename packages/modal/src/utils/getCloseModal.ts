@@ -26,6 +26,7 @@ export function getCloseModal({
 
   if (duration === undefined) {
     return async (callback, confirm) => {
+      console.log(getTransactionState());
       if (getTransactionState() === MODAL_TRANSACTION_STATE.active) {
         return;
       }
@@ -37,6 +38,7 @@ export function getCloseModal({
   }
 
   return async (callback, confirm) => {
+    console.log(getTransactionState());
     if (getTransactionState() === MODAL_TRANSACTION_STATE.active) {
       return;
     }

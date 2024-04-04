@@ -1,17 +1,37 @@
-import { generateModalSuite, Modal } from "@junhee_h/react-modal";
+import { generateModal, Modal } from "@junhee_h/react-modal";
 
-export const { modalCtrl, ModalProvider } = generateModalSuite({
-  alert: {
-    component: ({ payload }) => (
-      <div className="w-[200px] h-[200px] bg-white">
-        안녕하세요 {payload}
-        <div>
-          <Modal.ConfirmButton>반가워요</Modal.ConfirmButton>
+export const { modalCtrl, ModalProvider } = generateModal(
+  {
+    alert: {
+      component: ({ payload }) => (
+        <div className="w-[200px] h-[200px] bg-white">
+          안녕하세요 {payload}
+          <div>
+            <Modal.Action.Confirm>반가워요</Modal.Action.Confirm>
+          </div>
         </div>
-      </div>
-    ),
-    defaultOptions: {
-      payload: "test",
+      ),
+      defaultOptions: {
+        payload: "test",
+      },
+    },
+    success: {
+      component: () => (
+        <div className="bg-green-400 w-[200px] h-[300px]">
+          <Modal.Contents>성공!!</Modal.Contents>
+        </div>
+      ),
+    },
+    pending: {
+      component: () => (
+        <div className="bg-gray-400 w-[200px] h-[300px]">로딩</div>
+      ),
+    },
+    test: {
+      component: () => (
+        <div className="bg-cyan-400 w-[200px] h-[300px]">테스트</div>
+      ),
     },
   },
-});
+  { stateResponsiveComponent: true }
+);

@@ -8,7 +8,7 @@ export interface ModalComponentProps<T = any> {
   subContents?: ReactNode;
   confirmContents?: ReactNode;
   cancelContents?: ReactNode;
-  customContents?: ReactNode;
+  customActionContents?: ReactNode;
   action: (confirm?: string | boolean) => void;
   actionState: ModalActionState;
   payload?: T;

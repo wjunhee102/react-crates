@@ -1,7 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
 import { ModalProvider, modalCtrl } from "./modal";
-import { Modal } from "@junhee_h/react-modal";
 
 export function delay(duration: number = 0) {
   return new Promise((resolve) => {
@@ -70,11 +69,20 @@ function App() {
                 pending();
                 await delay(1000);
 
-                success(() =>
+                success(() => {
                   modalCtrl.open(() => (
-                    <div className="bg-white w-[200px] h-[300px]">새모달</div>
-                  ))
-                );
+                    <div className="bg-white w-[200px] h-[300px]">새모달1</div>
+                  ));
+                  modalCtrl.open(() => (
+                    <div className="bg-white w-[200px] h-[300px]">새모달2</div>
+                  ));
+                  modalCtrl.open(() => (
+                    <div className="bg-white w-[200px] h-[300px]">새모달3</div>
+                  ));
+                  modalCtrl.open(() => (
+                    <div className="bg-white w-[200px] h-[300px]">새모달4</div>
+                  ));
+                });
               },
               duration: 300,
             });
@@ -84,31 +92,7 @@ function App() {
         </button>
       </header>
       <div className="w-full h-[500px]"></div>
-      <ModalProvider
-        modalMeta={[
-          {
-            name: "success",
-            component: () => (
-              <div className="bg-green-400 w-[200px] h-[300px]">
-                <Modal.Contents>성공!!</Modal.Contents>
-              </div>
-            ),
-          },
-          {
-            name: "pending",
-            component: () => (
-              <div className="bg-gray-400 w-[200px] h-[300px]">로딩</div>
-            ),
-          },
-          {
-            name: "test",
-            component: () => (
-              <div className="bg-cyan-400 w-[200px] h-[300px]">테스트</div>
-            ),
-          },
-        ]}
-        options={{ stateResponsiveComponent: true }}
-      />
+      <ModalProvider />
     </div>
   );
 }

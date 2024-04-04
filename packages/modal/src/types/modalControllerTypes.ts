@@ -55,9 +55,9 @@ export interface StateController {
 
 export interface ModalTransctionController {
   getTransactionState: () => ModalTransactionState;
-  stanbyTransaction: () => ModalTransactionState;
-  startTransaction: () => ModalTransactionState;
-  endTransaction: () => ModalTransactionState;
+  stanbyTransaction: () => number;
+  startTransaction: () => number;
+  endTransaction: () => number;
 }
 
 export interface ModalMiddlewareProps {

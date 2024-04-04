@@ -33,8 +33,8 @@ interface ModalProps {
 export class Modal {
   private lifecycleState: ModalLifecycleState = MODAL_LIFECYCLE_STATE.open;
   private actionState: ModalActionState = MODAL_ACTION_STATE.initial;
-  private actionCallback: ModalCallback = () => {};
-  private afterCloseCallback: () => unknown = () => {};
+  private actionCallback: ModalCallback = () => { };
+  private afterCloseCallback: () => unknown = () => { };
   private listeners: ((state: ModalState) => void)[] = [];
   private breakPoint = 0;
   private isInitial = false;
@@ -79,7 +79,6 @@ export class Modal {
     this.success = this.success.bind(this);
     this.error = this.error.bind(this);
     this.end = this.end.bind(this);
-    this.open = this.open.bind(this);
     this.active = this.active.bind(this);
     this.close = this.close.bind(this);
   }
@@ -158,7 +157,7 @@ export class Modal {
       subContents,
       confirmContents,
       cancelContents,
-      customContents,
+      customActionContents,
       payload,
     } = this.options;
 
@@ -169,7 +168,7 @@ export class Modal {
       subContents,
       confirmContents,
       cancelContents,
-      customContents,
+      customActionContents,
       action: this.action,
       actionState: this.actionState,
       payload,
@@ -283,13 +282,6 @@ export class Modal {
 
   /* 생명주기 */
 
-  open() {
-    this.lifecycleState = "open";
-    this.manager.executeAsync(delay, this.options.duration ?? 0);
-
-    this.notify();
-  }
-
   active() {
     this.lifecycleState = "active";
 
@@ -310,6 +302,7 @@ export class Modal {
     }
 
     this.isInitial = true;
+    this.manager.executeAsync(delay, this.options.duration ?? 0);
 
     setTimeout(() => {
       this.active();
@@ -383,7 +376,7 @@ export class Modal {
       return;
     }
 
-    this.manager.startTransaction();
+    this.manager.stanbyTransaction();
 
     if (confirm) {
       this._confirm = confirm;
