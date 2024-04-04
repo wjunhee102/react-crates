@@ -55,9 +55,9 @@ export interface StateController {
 
 export interface ModalTransctionController {
   getTransactionState: () => ModalTransactionState;
-  stanbyTransaction: () => ModalTransactionState;
-  startTransaction: () => ModalTransactionState;
-  endTransaction: () => ModalTransactionState;
+  stanbyTransaction: () => number;
+  startTransaction: () => number;
+  endTransaction: () => number;
 }
 
 export interface ModalMiddlewareProps {
@@ -66,7 +66,7 @@ export interface ModalMiddlewareProps {
 
 export type ModalMiddleware = (
   props: ModalMiddlewareProps
-) => void | Promise<void>;
+) => Promise<boolean>;
 
 export type ModalCallback = (
   confirm: ModalConfirmType | undefined,

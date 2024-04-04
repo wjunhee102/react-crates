@@ -3,6 +3,7 @@ import setUseIsOpenModal from "./hooks/useIsOpenModal";
 import ModalManager from "./services/modalManager";
 import {
   Controller,
+  ModalCallback,
   ModalComponent,
   ModalComponentSeedTable,
   ModalController,
@@ -26,18 +27,17 @@ function generateModalController<
 ): ModalController<T, P> {
   return {
     open: modalManager.open,
-    close: modalManager.close,
-    edit: modalManager.edit,
     remove: modalManager.remove,
+    action: modalManager.action,
     ...modalComponentSeedEntries.reduce((controller, modalEntry) => {
       const modalName = modalEntry[0] as Extract<keyof T, string>;
 
       controller[modalName] = (
-        options: T[typeof modalName]["defaultOptions"] extends {
+        options: (T[typeof modalName]["defaultOptions"] extends {
           payload: infer R;
         }
           ? ModalDispatchOptions<R, Extract<keyof P, string>>
-          : ModalDispatchOptions<any, Extract<keyof P, string>>
+          : ModalDispatchOptions<any, Extract<keyof P, string>>) | ModalCallback
       ) => modalManager.open(modalName, options);
 
       return controller;
@@ -49,17 +49,17 @@ type ExtendModalComponentSeedTable<
   K extends ModalComponentSeedTable,
   T extends Partial<ModalComponentSeedTable>
 > = {
-  [P in keyof K | keyof T]: P extends keyof T
+    [P in keyof K | keyof T]: P extends keyof T
     ? T[P]
     : P extends keyof K
     ? K[P]
     : never;
-};
+  };
 
 /**
- * setExtendModalSuite는 extendModalSuite 함수에 의존성을 주입하기 위한 클로저를 생성합니다.
+ * setExtendModal는 extendModal 함수에 의존성을 주입하기 위한 클로저를 생성합니다.
  * 이 패턴을 통해 기존 ModalManager 인스턴스에 새로운 모달 옵션과 컴포넌트를 추가할 수 있습니다.
- * 반환된 함수인 extendModalSuite는 ModalManager의 기능을 새로운 모달 컴포넌트와 옵션으로 확장하는 데 사용할 수 있습니다.
+ * 반환된 함수인 extendModal는 ModalManager의 기능을 새로운 모달 컴포넌트와 옵션으로 확장하는 데 사용할 수 있습니다.
  *
  * @param {ModalManager} modalManager - 새로운 모달 옵션과 컴포넌트가 추가될 ModalManager 인스턴스입니다.
  * @returns 모달 컴포넌트 시드 테이블과 모달 매니저 옵션을 받아 ModalManager 인스턴스를 확장하는 함수를 반환합니다.

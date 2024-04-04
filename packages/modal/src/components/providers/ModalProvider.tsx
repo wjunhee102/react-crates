@@ -32,6 +32,8 @@ function setModalProvider(modalManager: ModalManager) {
     useEffect(() => {
       modalManager.subscribe(setModalManagerState);
 
+      const originVh = document.documentElement.style.getPropertyValue("--vh");
+
       const listener = () => {
         modalManager.setBreakPoint(window.innerWidth);
         // 주소 표시줄이 보이거나 숨겨질 때 뷰포트 높이 조정
@@ -43,6 +45,7 @@ function setModalProvider(modalManager: ModalManager) {
 
       return () => {
         modalManager.unsubscribe(setModalManagerState);
+        document.documentElement.style.setProperty("--vh", originVh);
         window.removeEventListener("resize", listener);
         disableBodyScroll(false);
       };
