@@ -35,14 +35,14 @@ export type Controller<
   T extends ModalComponentSeedTable,
   P extends ModalPositionTable
 > = {
-  [K in keyof T]: (
-    options:
-      | (T[K]["defaultOptions"] extends { payload: infer R }
-          ? ModalDispatchOptions<R, Extract<keyof P, string>>
-          : ModalDispatchOptions<any, Extract<keyof P, string>>)
-      | ModalCallback
-  ) => number;
-};
+    [K in keyof T]: (
+      options:
+        | (T[K]["defaultOptions"] extends { payload: infer R }
+          ? ModalDispatchOptions<R, Exclude<Extract<keyof P, string>, "backCover" | "default">>
+          : ModalDispatchOptions<any, Exclude<Extract<keyof P, string>, "backCover" | "default">>)
+        | ModalCallback
+    ) => number;
+  };
 
 export type ModalController<
   T extends ModalComponentSeedTable,
@@ -50,7 +50,7 @@ export type ModalController<
 > = {
   open: <K = any>(
     name: string | ModalComponent | ReactElement,
-    options?: ModalDispatchOptions<K, Extract<keyof P, string>> | ModalCallback
+    options?: ModalDispatchOptions<K, Exclude<Extract<keyof P, string>, "backCover" | "default">> | ModalCallback
   ) => number;
   remove: (removedName?: CloseModalProps) => number;
   action: (targetModalId: number, confirm?: boolean | string) => void;

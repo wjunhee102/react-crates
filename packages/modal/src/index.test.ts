@@ -69,7 +69,7 @@ describe("generateModal", () => {
     // 가정: open 함수가 모달 ID를 반환하도록 설정되어 있음
     const modalId = modalCtrl.test({
       payload: "s",
-      position: "backCover-backCover-bottom",
+      position: "bottom-bottom-bottom",
     });
     expect(typeof modalId).toBe("number");
   });
@@ -100,7 +100,7 @@ describe("generateModal", () => {
     // 가정: open 함수가 모달 ID를 반환하도록 설정되어 있음
     const newModalId = ctrl.test({
       payload: 1,
-      position: "test-backCover",
+      position: "test-bottom",
     });
     expect(typeof newModalId).toBe("number");
   });

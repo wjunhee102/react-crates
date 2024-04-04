@@ -163,29 +163,16 @@ export interface DynamicModalProps<T extends string> {
 
 const setDynamicModal = <T extends string>(modalManager: ModalManager) => {
   function DynamicModal({ children, options = {} }: DynamicModalProps<T>) {
-    let dynamicElement: ReactElement | null = null;
-    let restChildren: ReactNode[] = [];
+    const dynamicModalManager = useMemo(
+      () => new DynamicModalManager(modalManager),
+      [modalManager]
+    );
 
-    Children.forEach(children, (child) => {
-      if (isValidElement(child)) {
-        if (child.type === DynamicModalElement) {
-          dynamicElement = child;
-
-          return;
-        }
-
-        restChildren.push(child);
-      }
-    });
-
-    if (!dynamicElement) {
-      return null;
-    }
+    dynamicModalManager.setOptions(options);
 
     return (
       <DynamicModalProvider modalManager={modalManager} options={options}>
-        {dynamicElement}
-        {restChildren}
+        {children}
       </DynamicModalProvider>
     );
   }

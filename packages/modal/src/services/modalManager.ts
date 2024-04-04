@@ -29,7 +29,6 @@ import {
   ModalCallback,
 } from "../types";
 import { ModalManagerInterface } from "../types/modalInterfaces";
-import { isReservedModalName } from "../utils/isReservedModalName";
 import { defaultMiddleware } from "../utils/defaultMiddleware";
 import { getCloseModal } from "../utils/getCloseModal";
 import { getPositionKey } from "../utils/getPositionKey";
@@ -37,8 +36,7 @@ import { Modal } from "./modal";
 import { isValidElement, ReactElement } from "react";
 
 class ModalManager<T extends ModalPositionTable = ModalPositionTable>
-  implements ModalManagerInterface
-{
+  implements ModalManagerInterface {
   private currentId: number = 0;
   private transactionCount: number = 0;
   private transactionState: ModalTransactionState =
@@ -115,7 +113,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
   private setModalComponentSeedMap(componentSeed: ModalComponentSeed) {
     const { name, component, defaultOptions } = componentSeed;
 
-    if (component === undefined || isReservedModalName(name)) {
+    if (component === undefined || Object.prototype.hasOwnProperty.call(RESERVED_MODAL_NAME, name)) {
       return;
     }
 

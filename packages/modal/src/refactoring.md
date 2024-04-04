@@ -131,3 +131,12 @@ componentProps가 아니라 component가 바뀌어야 함.
 - ModalAction은 button 고정인데 왜냐면 이건 스타일 컴포넌트가 아니기 때문.
 - 내일은 리드미를 작성해야할 것 같음. 추가로 키보드 옵션도 넣어야 할 것 같음.
 - position을 따로 등록하지 않으면 추론되지 않는 문제가 있었음.
+
+## 2024년 4월 5일 금요일
+
+- 배포한 패키지에서 예상한 위치에 소스가 없다는 에러메세지가 발생했음.
+- WARNING in ./node_modules/@junhee_h/react-modal/dist/esm/index.js
+  Module Warning (from ./node_modules/source-map-loader/dist/cjs.js):
+  Failed to parse source map from '/Users/junhee/react-library/react-modal/node_modules/@junhee_h/react-modal/src/services/modal.ts' file: Error: ENOENT: no such file or directory, open '/Users/junhee/react-library/react-modal/node_modules/@junhee_h/react-modal/src/services/modal.ts'
+- 이 문제는 package.json files에 "src"를 포함하면서 해결함.
+- react를 16부터 지원하려고 했지만, hook은 16.8부터 제대로 지원하고 17에서는 hoc와 같은 방법으로 setComponent 같은 방법이 지원이 안되서 일단 18버전 부터 하기로 진행함.

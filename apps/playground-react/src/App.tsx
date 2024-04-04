@@ -50,7 +50,7 @@ function App() {
                   );
                 },
                 duration: 1500,
-                position: "backCover-backCover-backCover",
+                position: "bottom",
               }
             );
           }}
@@ -82,9 +82,7 @@ function App() {
         >
           알림
         </button>
-        <DynamicModal
-          options={{ duration: 1500, position: "test-backCover-backCover" }}
-        >
+        <DynamicModal options={{ duration: 1500, position: "center" }}>
           <DynamicModal.Trigger>다이나믹 모달</DynamicModal.Trigger>
           <DynamicModal.Element>
             <div className="bg-white w-[200px] h-[300px]">

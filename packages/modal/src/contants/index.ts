@@ -1,6 +1,6 @@
 import {
   ReservedModalName,
-  DefaultModalPosition,
+  DefaultModalPositionAddBackCover,
   ModalActionState,
   ModalLifecycleState,
   ModalPositionTable,
@@ -60,7 +60,7 @@ export const DEFAULT_TRANSITION: ModalTransition = {
 };
 
 export const MODAL_POSITION: {
-  [key in DefaultModalPosition]: key;
+  [key in DefaultModalPositionAddBackCover]: key;
 } = {
   default: "default",
   backCover: "backCover",
