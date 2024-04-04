@@ -1,20 +1,17 @@
 import { useEffect, useState } from "react";
-import { Modal } from "../services/modal";
-import { ModalState, ModalTransactionState } from "../types";
-import { ModalComponentPropsContext } from "../hooks/useModalComponentProps";
-import { MODAL_TRANSACTION_STATE } from "../contants";
+import { Modal } from "../../services/modal";
+import { ModalState } from "../../types";
+import { ModalComponentPropsContext } from "../../hooks/useModalComponentProps";
 
-interface ModalComponentProps {
+interface ModalComponentProviderProps {
   breakPoint: number;
-  transactionState: ModalTransactionState;
   modal: Modal;
 }
 
-const ModalComponent = ({
+const ModalComponentProvider = ({
   breakPoint,
-  transactionState,
   modal,
-}: ModalComponentProps) => {
+}: ModalComponentProviderProps) => {
   const [state, setState] = useState(modal.getState());
 
   const { Component, componentProps, backCoverStyle, modalStyle, isActive } =
@@ -25,10 +22,7 @@ const ModalComponent = ({
   }, [breakPoint]);
 
   const closeModal = () => {
-    if (
-      transactionState !== MODAL_TRANSACTION_STATE.idle ||
-      modal.options.backCoverConfirm === null
-    ) {
+    if (modal.options.backCoverConfirm === null) {
       return;
     }
 
@@ -67,4 +61,4 @@ const ModalComponent = ({
   );
 };
 
-export default ModalComponent;
+export default ModalComponentProvider;

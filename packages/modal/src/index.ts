@@ -8,4 +8,3 @@ export type {
 
 export { Modal } from "./components";
 export * from "./generate";
-

@@ -1,4 +1,8 @@
-import { ModalConfirmType, ModalPosition, ModalTransitionOptions } from "./commonTypes";
+import {
+  ModalConfirmType,
+  ModalPosition,
+  ModalTransitionOptions,
+} from "./commonTypes";
 import { ModalCallback, ModalMiddleware } from "./modalControllerTypes";
 
 export interface ModalDispatchOptions<T = any, P extends string = string> {
@@ -34,7 +38,8 @@ export type ModalClose = (
   confirm?: ModalConfirmType
 ) => void;
 
-export interface ModalOptions<T = any, P extends string = string> extends EditModalOptionsProps<T, P> {
+export interface ModalOptions<T = any, P extends string = string>
+  extends EditModalOptionsProps<T, P> {
   closeModal: ModalClose;
   middleware: ModalMiddleware;
 }

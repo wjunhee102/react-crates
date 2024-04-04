@@ -1,5 +1,5 @@
 import { ElementType, HTMLAttributes } from "react";
-import { useModalComponentProps } from "../hooks/useModalComponentProps";
+import { useModalComponentProps } from "../../hooks/useModalComponentProps";
 
 export interface ModalTitleProps extends HTMLAttributes<HTMLHeadingElement> {
   as?: ElementType;

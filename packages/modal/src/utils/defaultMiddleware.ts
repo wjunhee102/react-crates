@@ -1,19 +1,6 @@
-import { MODAL_TRANSACTION_STATE } from "../contants";
 import { ModalMiddlewareProps } from "../types";
 
-export async function defaultMiddleware({
-  transactionController: {
-    getTransactionState,
-    standbyTransaction,
-  },
-  modalState,
-}: ModalMiddlewareProps) {
-  if (getTransactionState() !== MODAL_TRANSACTION_STATE.idle) {
-    return;
-  }
-
-  standbyTransaction();
-
+export async function defaultMiddleware({ modalState }: ModalMiddlewareProps) {
   if (modalState.isAwaitingConfirm) {
     modalState.close();
     return;
@@ -30,8 +17,6 @@ export async function defaultMiddleware({
   }
 
   if (modalState.isAwaitingConfirm) {
-    standbyTransaction();
-
     return;
   }
 

@@ -1,6 +1,25 @@
 import { CSSProperties } from "react";
-import { MODAL_ACTION_STATE, MODAL_LIFECYCLE_STATE, MODAL_POSITION, MODAL_TRANSACTION_STATE } from "../contants";
-import { ModalManagerInterface, ComponentPropsOptions, ModalActionState, ModalCallback, ModalComponent, ModalComponentProps, ModalConfirmType, ModalDispatchOptions, ModalLifecycleState, ModalMiddlewareProps, ModalOptions, ModalState, StateControllerOptions } from "../types";
+import {
+  MODAL_ACTION_STATE,
+  MODAL_LIFECYCLE_STATE,
+  MODAL_POSITION,
+  MODAL_TRANSACTION_STATE,
+} from "../contants";
+import {
+  ModalManagerInterface,
+  ComponentPropsOptions,
+  ModalActionState,
+  ModalCallback,
+  ModalComponent,
+  ModalComponentProps,
+  ModalConfirmType,
+  ModalDispatchOptions,
+  ModalLifecycleState,
+  ModalMiddlewareProps,
+  ModalOptions,
+  ModalState,
+  StateControllerOptions,
+} from "../types";
 import { delay } from "../utils/delay";
 
 interface ModalProps {
@@ -14,8 +33,8 @@ interface ModalProps {
 export class Modal {
   private lifecycleState: ModalLifecycleState = MODAL_LIFECYCLE_STATE.open;
   private actionState: ModalActionState = MODAL_ACTION_STATE.initial;
-  private actionCallback: ModalCallback = () => { };
-  private afterCloseCallback: () => unknown = () => { };
+  private actionCallback: ModalCallback = () => {};
+  private afterCloseCallback: () => unknown = () => {};
   private listeners: ((state: ModalState) => void)[] = [];
   private breakPoint = 0;
   private isInitial = false;
@@ -154,12 +173,15 @@ export class Modal {
       action: this.action,
       actionState: this.actionState,
       payload,
-    }
+    };
 
     this.componentProps = { ...componentProps, ...options };
   }
 
-  private changeComponent(component: string | ModalComponent, options: ComponentPropsOptions = {}) {
+  private changeComponent(
+    component: string | ModalComponent,
+    options: ComponentPropsOptions = {}
+  ) {
     if (typeof component === "function") {
       this.currentComponent = component;
     } else {
@@ -176,7 +198,13 @@ export class Modal {
     this.setComponentProps(options);
   }
 
-  private changeStateResponsiveComponent({ component, options }: { component?: string | ModalComponent; options?: ComponentPropsOptions; } = {}) {
+  private changeStateResponsiveComponent({
+    component,
+    options,
+  }: {
+    component?: string | ModalComponent;
+    options?: ComponentPropsOptions;
+  } = {}) {
     if (this.actionState === "initial") {
       this.initComponent();
       this.notify();
@@ -201,7 +229,12 @@ export class Modal {
     return;
   }
 
-  private changeState(stateControllerOptions?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => void)) {
+  private changeState(
+    stateControllerOptions?:
+      | string
+      | StateControllerOptions
+      | ((confirm?: ModalConfirmType) => void)
+  ) {
     if (!stateControllerOptions) {
       this.changeStateResponsiveComponent();
 
@@ -217,12 +250,15 @@ export class Modal {
     }
 
     if (typeof stateControllerOptions === "string") {
-      this.changeStateResponsiveComponent({ options: { content: stateControllerOptions } })
+      this.changeStateResponsiveComponent({
+        options: { content: stateControllerOptions },
+      });
 
       return;
     }
 
-    const { isAwaitingConfirm, component, afterCloseCallback, options } = stateControllerOptions;
+    const { isAwaitingConfirm, component, afterCloseCallback, options } =
+      stateControllerOptions;
 
     if (isAwaitingConfirm) {
       this._isAwaitingConfirm = isAwaitingConfirm;
@@ -307,7 +343,7 @@ export class Modal {
       Component: this.currentComponent,
       componentProps: this.componentProps,
       modalStyle: this.getModalStyle(),
-      backCoverStyle: this.getBackCoverStyle()
+      backCoverStyle: this.getBackCoverStyle(),
     };
   }
 
@@ -335,17 +371,19 @@ export class Modal {
 
   getMiddlewareProps(): ModalMiddlewareProps {
     return {
-      transactionController: this.manager,
       modalState: this,
     };
   }
 
   action(confirm?: ModalConfirmType, callback?: ModalCallback) {
     if (
+      !this._isAwaitingConfirm &&
       this.manager.getTransactionState() !== MODAL_TRANSACTION_STATE.idle
     ) {
       return;
     }
+
+    this.manager.startTransaction();
 
     if (confirm) {
       this._confirm = confirm;
@@ -359,13 +397,17 @@ export class Modal {
   }
 
   initial() {
-    this.actionState = "initial";
+    this.actionState = MODAL_ACTION_STATE.initial;
     this.changeState();
 
     return this;
   }
 
-  pending(message?: string | Omit<StateControllerOptions, "afterCloseCallback" | "isAwaitingConfirm">) {
+  pending(
+    message?:
+      | string
+      | Omit<StateControllerOptions, "afterCloseCallback" | "isAwaitingConfirm">
+  ) {
     this.actionState = MODAL_ACTION_STATE.pending;
 
     this.changeState(message);
@@ -374,7 +416,10 @@ export class Modal {
   }
 
   success(
-    message?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => void)
+    message?:
+      | string
+      | StateControllerOptions
+      | ((confirm?: ModalConfirmType) => void)
   ) {
     this.actionState = MODAL_ACTION_STATE.success;
     this._isCloseDelay = true;
@@ -385,7 +430,10 @@ export class Modal {
   }
 
   error(
-    message?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => void)
+    message?:
+      | string
+      | StateControllerOptions
+      | ((confirm?: ModalConfirmType) => void)
   ) {
     this.actionState = MODAL_ACTION_STATE.error;
     this._isCloseDelay = true;
@@ -396,7 +444,10 @@ export class Modal {
   }
 
   end(
-    message?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => void)
+    message?:
+      | string
+      | StateControllerOptions
+      | ((confirm?: ModalConfirmType) => void)
   ) {
     this.actionState = MODAL_ACTION_STATE.initial;
 
@@ -466,5 +517,4 @@ export class Modal {
     this.breakPoint = breakPoint;
     this.notify();
   }
-
 }

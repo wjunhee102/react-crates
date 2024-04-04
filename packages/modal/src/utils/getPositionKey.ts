@@ -1,4 +1,8 @@
-import { DEFAULT_POSITION, MODAL_LIFECYCLE_STATE, MODAL_LIFECYCLE_STATE_LIST } from "../contants";
+import {
+  DEFAULT_POSITION,
+  MODAL_LIFECYCLE_STATE,
+  MODAL_LIFECYCLE_STATE_LIST,
+} from "../contants";
 import { ModalLifecycleState } from "../types";
 
 const POSITION_STATE_VALUE = {

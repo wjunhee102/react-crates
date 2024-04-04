@@ -46,7 +46,7 @@ export const RESERVED_MODAL_NAME: {
   open: "open",
   close: "close",
   edit: "edit",
-  remove: "remove"
+  remove: "remove",
 };
 
 export const DEFAULT_DURATION = 300;

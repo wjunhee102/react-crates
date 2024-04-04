@@ -17,7 +17,13 @@ export interface ModalListenerProps {
 
 export type ModalListener = (state: ModalManagerState) => void;
 
-export type ReservedModalName = "clear" | "unknown" | "open" | "close" | "edit" | "remove";
+export type ReservedModalName =
+  | "clear"
+  | "unknown"
+  | "open"
+  | "close"
+  | "edit"
+  | "remove";
 
 export type ModalRemovedName = ReservedModalName | string | string[];
 
