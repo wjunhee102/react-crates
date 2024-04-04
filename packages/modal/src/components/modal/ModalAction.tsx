@@ -5,11 +5,7 @@ import { ModalComponentProps, ModalConfirmType } from "../../types";
 
 function getContent(
   children: ReactNode,
-  {
-    confirmContents,
-    cancelContents,
-    customActionContents,
-  }: ModalComponentProps,
+  { confirmContent, cancelContent, customActionContent }: ModalComponentProps,
   confirmType?: ModalConfirmType
 ) {
   if (children) {
@@ -17,14 +13,14 @@ function getContent(
   }
 
   if (!confirmType) {
-    return cancelContents;
+    return cancelContent;
   }
 
   if (confirmType === true) {
-    return confirmContents;
+    return confirmContent;
   }
 
-  return customActionContents;
+  return customActionContent;
 }
 
 export interface ModalActionProps
@@ -66,7 +62,7 @@ const ModalConfirm = ({
   children,
   ...restProps
 }: ModalConfirmProps) => {
-  const { action, confirmContents } = useModalComponentProps();
+  const { action, confirmContent } = useModalComponentProps();
 
   const onClickConfirm = (e: MouseEvent<HTMLButtonElement>) => {
     onClick && onClick(e);
@@ -75,7 +71,7 @@ const ModalConfirm = ({
 
   return (
     <button {...restProps} onClick={onClickConfirm} type="button">
-      {confirmContents || children || "확인"}
+      {confirmContent || children || "확인"}
     </button>
   );
 };
@@ -84,7 +80,7 @@ export interface ModalCancelProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
 const ModalCancel = ({ onClick, children, ...restProps }: ModalCancelProps) => {
-  const { action, cancelContents } = useModalComponentProps();
+  const { action, cancelContent } = useModalComponentProps();
 
   const onClickCancel = (e: MouseEvent<HTMLButtonElement>) => {
     onClick && onClick(e);
@@ -93,7 +89,7 @@ const ModalCancel = ({ onClick, children, ...restProps }: ModalCancelProps) => {
 
   return (
     <button {...restProps} onClick={onClickCancel} type="button">
-      {cancelContents || children || "취소"}
+      {cancelContent || children || "취소"}
     </button>
   );
 };
@@ -109,7 +105,7 @@ const ModalCustomAction = ({
   confirmType,
   ...restProps
 }: ModalCustomActionProps) => {
-  const { action, customActionContents } = useModalComponentProps();
+  const { action, customActionContent } = useModalComponentProps();
 
   const onClickSub = (e: MouseEvent<HTMLButtonElement>) => {
     onClick && onClick(e);
@@ -118,7 +114,7 @@ const ModalCustomAction = ({
 
   return (
     <button {...restProps} onClick={onClickSub} type="button">
-      {customActionContents || children || "커스텀"}
+      {customActionContent || children || "커스텀"}
     </button>
   );
 };

@@ -17,6 +17,7 @@ import {
   ModalConfirmType,
   ModalDispatchOptions,
   ModalCallback,
+  ModalPositionTable,
 } from "../../types";
 
 type DynamicModalOptions = Omit<
@@ -155,13 +156,13 @@ const DynamicModalProvider = ({
   );
 };
 
-export interface DynamicModalProps {
-  options?: ModalDispatchOptions;
+export interface DynamicModalProps<T extends string> {
+  options?: ModalDispatchOptions<any, T>;
   children: ReactNode;
 }
 
-const setDynamicModal = (modalManager: ModalManager) => {
-  function DynamicModal({ children, options = {} }: DynamicModalProps) {
+const setDynamicModal = <T extends string>(modalManager: ModalManager) => {
+  function DynamicModal({ children, options = {} }: DynamicModalProps<T>) {
     let dynamicElement: ReactElement | null = null;
     let restChildren: ReactNode[] = [];
 
