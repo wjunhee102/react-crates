@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import ModalManager from "../services/modalManager";
+import ModalManager from "../../services/modalManager";
 import {
   ModalComponent,
   ModalComponentProps,
   ModalDispatchOptions,
-} from "../types";
-import { ModalCallback } from "..";
+} from "../../types";
+import { ModalCallback } from "../..";
 
-export interface ModalRegistratorProps {
+export interface DynamicModalProps {
   open?: boolean;
   setOpen?: (open: boolean) => void;
   name?: string;
@@ -18,14 +18,14 @@ export interface ModalRegistratorProps {
     | ModalComponent;
 }
 
-const setModalRegistrator = (modalManager: ModalManager) =>
-  function ModalRegistrator({
+const setDynamicModal = (modalManager: ModalManager) =>
+  function DynamicModal({
     open,
     setOpen,
     children,
     name,
     options = {},
-  }: ModalRegistratorProps) {
+  }: DynamicModalProps) {
     const [modalId, setModalId] = useState(-1);
     const [currentName, setCurrentName] = useState("");
 
@@ -82,4 +82,4 @@ const setModalRegistrator = (modalManager: ModalManager) =>
     return null;
   };
 
-export default setModalRegistrator;
+export default setDynamicModal;

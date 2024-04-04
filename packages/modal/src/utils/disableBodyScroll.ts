@@ -27,5 +27,5 @@ export function setDisableBodyScroll() {
       document.body.style.height = height;
       document.body.style.width = width;
     }
-  }
+  };
 }

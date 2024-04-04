@@ -114,3 +114,9 @@ componentProps가 아니라 component가 바뀌어야 함.
 - 지금 느린 이유는 Controller 타입과 그 밑에 로직으로 설정한 타입이 달라서 추론이 길어진 것이였음. 동일하게 타입을 설정하니 반응이 빨라짐.
 - Modal에 요소와 Provider를 분리 시킴. 그리고 modalManager 의존성 주입을 위해 generateModalSuite를 만들었음.
 - 이름이 멋있음.
+
+## 2024년 4월 4일 목요일
+
+- stanbyTransaction이 있는 이유를 모르겠어서 파악함.
+- modal의 제거중일때와 구분하고 싶어서 idle-stanby-active로 구분한 것 같음.
+- 지우기는 애매해서 일단 냅두고 나중에 수정할 것.

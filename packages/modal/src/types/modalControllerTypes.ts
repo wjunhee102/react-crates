@@ -1,5 +1,9 @@
 import { Modal } from "../services/modal";
-import { ModalActionState, ModalConfirmType, ModalLifecycleState } from "./commonTypes";
+import {
+  ModalActionState,
+  ModalConfirmType,
+  ModalLifecycleState,
+} from "./commonTypes";
 import { ModalComponent } from "./modalComponentTypes";
 import { ModalTransactionState } from "./modalManagerTypes";
 
@@ -22,23 +26,41 @@ export interface StateControllerOptions {
 
 export interface StateController {
   initial: () => void;
-  pending: (message?: string | Omit<StateControllerOptions, "afterCloseCallback" | "isAwaitingConfirm">) => void;
-  success: (message?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => unknown)) => void;
-  error: (message?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => unknown)) => void;
-  end: (message?: string | StateControllerOptions | ((confirm?: ModalConfirmType) => unknown)) => void;
+  pending: (
+    message?:
+      | string
+      | Omit<StateControllerOptions, "afterCloseCallback" | "isAwaitingConfirm">
+  ) => void;
+  success: (
+    message?:
+      | string
+      | StateControllerOptions
+      | ((confirm?: ModalConfirmType) => unknown)
+  ) => void;
+  error: (
+    message?:
+      | string
+      | StateControllerOptions
+      | ((confirm?: ModalConfirmType) => unknown)
+  ) => void;
+  end: (
+    message?:
+      | string
+      | StateControllerOptions
+      | ((confirm?: ModalConfirmType) => unknown)
+  ) => void;
   getLifecycleState: () => ModalLifecycleState;
   getActionState: () => ModalActionState;
 }
 
 export interface ModalTransctionController {
   getTransactionState: () => ModalTransactionState;
-  standbyTransaction: () => void;
-  startTransaction: () => void;
-  endTransaction: () => void;
+  stanbyTransaction: () => ModalTransactionState;
+  startTransaction: () => ModalTransactionState;
+  endTransaction: () => ModalTransactionState;
 }
 
 export interface ModalMiddlewareProps {
-  transactionController: ModalTransctionController;
   modalState: Modal;
 }
 
