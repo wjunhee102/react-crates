@@ -100,8 +100,11 @@ type ExtractPositionType<T extends ModalManagerOptionsProps> = T extends {
   : ModalPositionTable<DefaultModalPosition>;
 
 export function generateModal<
-  T extends ModalComponentSeedTable,
-  P extends ModalManagerOptionsProps
+  T extends ModalComponentSeedTable<
+    string,
+    Extract<keyof ExtractPositionType<P>, string>
+  >,
+  P extends ModalManagerOptionsProps = ModalManagerOptionsProps<ModalPositionTable<DefaultModalPosition>>
 >(modalComponentSeedTable: T = {} as T, options: P = {} as P) {
   const modalComponentSeedEntries = Object.entries(modalComponentSeedTable);
   const modalComponentSeedList = modalComponentSeedEntries.map(
@@ -118,7 +121,10 @@ export function generateModal<
     ),
     extendModal: setExtendModal<T, ExtractPositionType<P>>(modalManager),
     ModalProvider: setModalProvider(modalManager),
-    DynamicModal: setDynamicModal<Extract<keyof ExtractPositionType<P>, string>>(modalManager),
+    DynamicModal:
+      setDynamicModal<Extract<keyof ExtractPositionType<P>, string>>(
+        modalManager
+      ),
     useIsOpenModal: setUseIsOpenModal(modalManager),
   };
 }
