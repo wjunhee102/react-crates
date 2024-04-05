@@ -13,7 +13,8 @@ export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
         </div>
       ),
       defaultOptions: {
-        payload: "test",
+        payload: "잘된다!",
+        position: "test-bottom-bottom",
       },
     },
     success: {

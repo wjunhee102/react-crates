@@ -140,3 +140,5 @@ componentProps가 아니라 component가 바뀌어야 함.
   Failed to parse source map from '/Users/junhee/react-library/react-modal/node_modules/@junhee_h/react-modal/src/services/modal.ts' file: Error: ENOENT: no such file or directory, open '/Users/junhee/react-library/react-modal/node_modules/@junhee_h/react-modal/src/services/modal.ts'
 - 이 문제는 package.json files에 "src"를 포함하면서 해결함.
 - react를 16부터 지원하려고 했지만, hook은 16.8부터 제대로 지원하고 17에서는 hoc와 같은 방법으로 setComponent 같은 방법이 지원이 안되서 일단 18버전 부터 하기로 진행함.
+- React v17부터 호환되는 것을 확인함.
+- 그런데 또 position 타입이 동작하지 않는 것을 확인함.

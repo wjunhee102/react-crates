@@ -3,7 +3,7 @@ export type {
   ModalComponentSeed,
   ModalComponent as ModalFC,
   ModalConfirmType,
-  ModalCallback,
+  ModalCallback
 } from "./types";
 
 export { Modal } from "./components";
