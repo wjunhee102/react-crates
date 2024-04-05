@@ -1,6 +1,6 @@
 {
   "name": "@junhee_h/react-modal",
-  "version": "0.1.2",
+  "version": "0.2.1",
   "description": "리액트 모달을 쉽게 등록하고 사용가능한 라이브러리입니다.",
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs",
@@ -56,12 +56,12 @@
     "rollup-plugin-postcss": "4.0.2",
     "tslib": "2.5.0",
     "typescript": "5.0.4",
-    "react": "18",
-    "react-dom": "18"
-  },
-  "peerDependencies": {
     "react": "^18",
     "react-dom": "^18"
+  },
+  "peerDependencies": {
+    "react": "^17 || ^18",
+    "react-dom": "^17 || ^18"
   },
   "repository": {
     "type": "git",
