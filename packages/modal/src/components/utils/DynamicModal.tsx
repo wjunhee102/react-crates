@@ -5,7 +5,6 @@ import {
   createContext,
   useContext,
   useMemo,
-  Children,
   ButtonHTMLAttributes,
   useCallback,
   MouseEvent,
@@ -162,13 +161,6 @@ export interface DynamicModalProps<T extends string> {
 
 const setDynamicModal = <T extends string>(modalManager: ModalManager) => {
   function DynamicModal({ children, options = {} }: DynamicModalProps<T>) {
-    const dynamicModalManager = useMemo(
-      () => new DynamicModalManager(modalManager),
-      [modalManager]
-    );
-
-    dynamicModalManager.setOptions(options);
-
     return (
       <DynamicModalProvider modalManager={modalManager} options={options}>
         {children}

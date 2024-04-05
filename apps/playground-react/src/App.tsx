@@ -50,9 +50,18 @@ function App() {
                   );
                 },
                 duration: 1500,
-                position: "bottom",
+                position: "bottom-bottom",
               }
             );
+
+            modalCtrl.pending({
+              position: "bottom-bottom-center",
+              payload: 1,
+            });
+
+            modalCtrl.alert({
+              payload: "",
+            });
           }}
         >
           모달 열기
