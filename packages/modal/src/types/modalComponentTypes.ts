@@ -17,9 +17,11 @@ export interface ModalComponentProps<T = any> {
 export type ModalComponent<T = any> = React.FC<ModalComponentProps<T>>;
 
 export interface ModalState {
-  Component: ModalComponent;
+  component: ModalComponent;
   isActive: boolean;
   modalStyle: CSSProperties;
   backCoverStyle: CSSProperties;
   componentProps: ModalComponentProps;
+  isEscKeyActive: boolean;
+  isEnterKeyActive: boolean;
 }

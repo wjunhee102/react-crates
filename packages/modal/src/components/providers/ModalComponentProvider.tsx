@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Modal } from "../../services/modal";
 import { ModalState } from "../../types";
 import { ModalComponentPropsContext } from "../../hooks/useModalComponentProps";
@@ -6,28 +6,48 @@ import { ModalComponentPropsContext } from "../../hooks/useModalComponentProps";
 interface ModalComponentProviderProps {
   breakPoint: number;
   modal: Modal;
+  isCurrent: boolean;
 }
 
 const ModalComponentProvider = ({
   breakPoint,
   modal,
+  isCurrent,
 }: ModalComponentProviderProps) => {
   const [state, setState] = useState(modal.getState());
 
-  const { Component, componentProps, backCoverStyle, modalStyle, isActive } =
-    state;
+  const modalContentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    modal.setBreakPoint(breakPoint);
-  }, [breakPoint]);
+  const {
+    component: Component,
+    componentProps,
+    backCoverStyle,
+    modalStyle,
+    isActive,
+    isEnterKeyActive,
+    isEscKeyActive,
+  } = state;
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     if (modal.options.backCoverConfirm === null) {
       return;
     }
 
     modal.action(modal.options.backCoverConfirm);
-  };
+  }, []);
+
+  const actionToKeyUp = useCallback((event: KeyboardEvent<HTMLDivElement>) => {
+    switch (event.key) {
+      case "Enter":
+        isEnterKeyActive && modal.action(true);
+        return;
+      case "Escape":
+        isEscKeyActive && modal.action(modal.options.backCoverConfirm);
+        return;
+      default:
+        return;
+    }
+  }, []);
 
   useEffect(() => {
     const listener = (modalState: ModalState) => {
@@ -42,6 +62,16 @@ const ModalComponentProvider = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (isCurrent && modalContentRef.current) {
+      modalContentRef.current.focus();
+    }
+  }, [isCurrent]);
+
+  useEffect(() => {
+    modal.setBreakPoint(breakPoint);
+  }, [breakPoint]);
+
   return (
     <div className="modalWrapper">
       <button
@@ -51,7 +81,13 @@ const ModalComponentProvider = ({
         onClick={closeModal}
       />
       <div className="modalContentContainer">
-        <div className="modalContent" style={modalStyle}>
+        <div
+          ref={modalContentRef}
+          tabIndex={-1}
+          className="modalContent"
+          style={modalStyle}
+          onKeyUp={actionToKeyUp}
+        >
           <ModalComponentPropsContext.Provider value={componentProps}>
             <Component {...componentProps} />
           </ModalComponentPropsContext.Provider>

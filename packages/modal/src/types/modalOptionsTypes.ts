@@ -15,6 +15,8 @@ export interface ModalDispatchOptions<T = any, P extends string = string> {
   backCoverConfirm?: ModalConfirmType;
   backCoverColor?: string;
   backCoverOpacity?: number;
+  escKeyActive?: boolean;
+  enterKeyActive?: boolean;
   title?: React.ReactNode;
   subTitle?: React.ReactNode;
   content?: React.ReactNode;

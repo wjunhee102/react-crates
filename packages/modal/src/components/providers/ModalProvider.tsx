@@ -16,7 +16,7 @@ function ModalProviderCore({
   disableScroll = true,
 }: ModalProviderCoreProps) {
   const [
-    { modalStack, transactionState, isOpen, breakPoint },
+    { modalStack, transactionState, isOpen, breakPoint, currentModalId },
     setModalManagerState,
   ] = useState<ModalManagerState>(modalManager.getState());
   const disableBodyScroll = useMemo(() => setDisableBodyScroll(), []);
@@ -81,6 +81,7 @@ function ModalProviderCore({
           key={modal.id}
           breakPoint={breakPoint}
           modal={modal}
+          isCurrent={modal.id === currentModalId}
         />
       ))}
     </div>

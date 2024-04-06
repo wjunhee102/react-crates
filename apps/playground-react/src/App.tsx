@@ -27,6 +27,9 @@ function App() {
           Learn React
         </a>
         <button
+          onKeyDown={(event) => {
+            console.log(event);
+          }}
           onClick={() => {
             modalCtrl.open(
               () => (

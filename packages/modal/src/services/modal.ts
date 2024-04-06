@@ -33,8 +33,8 @@ interface ModalProps {
 export class Modal {
   private lifecycleState: ModalLifecycleState = MODAL_LIFECYCLE_STATE.open;
   private actionState: ModalActionState = MODAL_ACTION_STATE.initial;
-  private actionCallback: ModalCallback = () => {};
-  private afterCloseCallback: () => unknown = () => {};
+  private actionCallback: ModalCallback = () => { };
+  private afterCloseCallback: () => unknown = () => { };
   private listeners: ((state: ModalState) => void)[] = [];
   private breakPoint = 0;
   private isInitial = false;
@@ -42,6 +42,8 @@ export class Modal {
   private initialComponent: ModalComponent;
   private currentComponent: ModalComponent;
   private componentProps!: ModalComponentProps;
+  private escKeyActive: boolean = false;
+  private enterKeyActive: boolean = false;
 
   private _id: number;
   private _modalKey: string | null;
@@ -84,7 +86,7 @@ export class Modal {
   }
 
   private setOption() {
-    const { closeDelay, callback, stateResponsiveComponent } = this.options;
+    const { closeDelay, callback, stateResponsiveComponent, escKeyActive, enterKeyActive } = this.options;
 
     if (closeDelay) {
       this._closeDelayDuration = closeDelay;
@@ -96,6 +98,14 @@ export class Modal {
 
     if (stateResponsiveComponent) {
       this.stateResponsive = stateResponsiveComponent;
+    }
+
+    if (escKeyActive) {
+      this.escKeyActive = true;
+    }
+
+    if (enterKeyActive) {
+      this.enterKeyActive = true;
     }
   }
 
@@ -336,10 +346,12 @@ export class Modal {
   getState(): ModalState {
     return {
       isActive: this.lifecycleState === "active",
-      Component: this.currentComponent,
+      component: this.currentComponent,
       componentProps: this.componentProps,
       modalStyle: this.getModalStyle(),
       backCoverStyle: this.getBackCoverStyle(),
+      isEscKeyActive: this.escKeyActive,
+      isEnterKeyActive: this.enterKeyActive
     };
   }
 
