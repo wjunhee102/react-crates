@@ -1,36 +1,64 @@
-# @react-libs/modal
+# React-Modal
 
-## ModalManager
+React-Modal을 이용하면 모달을 쉽게 관리하고 사용할 수 있습니다.
 
-### 기능
+## Installation
 
-1. 모달 시트 데이터 저장
-1. 모달 default options 저장
-1. 모달 시드 add
-1. 모달 시드 remove
-1. 모달 시드 불러오기
-1. 모달 생성
-1. 모달 transaction
-1. 모달 push 후 modal id 전달.
-1. 모달 pop
-1. component에 modal stack을 전달.
-
-## Modal
-
-1. 모달 상태 관리
-1. component에 모달 state 전달
-
-## modal
-
-1. 모달 key값에 따라 만들어짐
-
-```javascript
-modal;
-
-modal("alert");
-modal.alert();
-modal.warn();
-modal.call();
+```
+$ npm install --save @junhee_h/react-modal
+$ yarn add @junhee_h/react-modal
+$ pnpm add @junhee_h/react-modal
 ```
 
-call은 pending 상태와 success, error 상태의 컴포넌트를 입력받게 할 것.
+## Features
+
+- 모달을 쉽게 개발하고 재사용할 수 있습니다..
+- 모달을 사용하는 쪽에서 실행 결과를 결정합니다.
+- 원하는 애니메이션을 쉽게 관리하고 사용할 수 있습니다.
+- 화면사이즈에 따라 포지션을
+- React Component 외부에서 실행할 수 있습니다.
+
+## The gist
+
+```javascript
+import React from "react";
+
+import { generatorModal, Modal } from "@junhee_h/react-modal";
+
+const { modalCtrl, ModalProvider } = generatorModal({
+  alert: {
+    component: () => (
+      <div>
+        <Modal.Content />
+        <Modal.Action>확인</Modal.Action>
+      </div>
+    ),
+    defaultOptions: {
+      position: (breakPoint) => (breakPoint > 480 ? "center" : "bottom"),
+    },
+  },
+});
+
+function App() {
+  const alert = () => modalCtrl.alert({ content: "알림" });
+
+  return (
+    <div>
+      <button onClick={alert}>알림</button>
+      <ModalProvider />
+    </div>
+  );
+}
+```
+
+## Documentation
+
+시작하려면 [설명서](https://wood-prince-6dc.notion.site/React-Modal-Documentation-c8a27e83a5aa4be9bc50e3adf4289ebd?pvs=4)를 확인해주세요.
+
+## Demo
+
+준비중입니다!
+
+## License
+
+Licensed under MIT
