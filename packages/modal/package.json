@@ -1,6 +1,6 @@
 {
   "name": "@junhee_h/react-modal",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "리액트 모달을 쉽게 등록하고 사용가능한 라이브러리입니다.",
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs",
@@ -8,12 +8,11 @@
     "test": "jest"
   },
   "keywords": [
-    "lib",
-    "react-modal",
     "react",
+    "react-modal",
     "modal",
-    "ui",
-    "util"
+    "alert",
+    "dialog"
   ],
   "author": "wjunhee102",
   "main": "dist/cjs/index.js",
@@ -70,5 +69,5 @@
   "bugs": {
     "url": "https://github.com/wjunhee102/react-libraries/issues"
   },
-  "homepage": "https://github.com/wjunhee102/react-libraries/tree/main#readme"
+  "homepage": "https://github.com/wjunhee102/react-libraries/tree/main/packages/modal"
 }

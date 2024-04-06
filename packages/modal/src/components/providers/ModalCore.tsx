@@ -69,18 +69,18 @@ const ModalCore = ({ breakPoint, modal, isCurrent }: ModalCoreProps) => {
   }, [breakPoint]);
 
   return (
-    <div className="modalWrapper">
+    <div className="modalWrapper_rm">
       <button
-        className={`closeModalCover ${isActive ? "" : "close"}`}
+        className={`closeModalCover_rm ${isActive ? "" : "close_rm"}`}
         style={backCoverStyle}
         type="button"
         onClick={closeModal}
       />
-      <div className="modalContentContainer">
+      <div className="modalContentContainer_rm">
         <div
           ref={modalContentRef}
           tabIndex={-1}
-          className="modalContent"
+          className="modalContent_rm"
           style={modalStyle}
           onKeyUp={actionToKeyUp}
         >

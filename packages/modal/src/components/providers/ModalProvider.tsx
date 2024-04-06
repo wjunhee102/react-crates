@@ -72,8 +72,8 @@ function ModalProviderCore({
   }, [isOpen]);
 
   return (
-    <div className={`modalProvider ${isOpen ? "open" : ""}`}>
-      <button type="button" className="modalClearBtn" onClick={onClearModal}>
+    <div className={`modalProvider_rm ${isOpen ? "open_rm" : ""}`}>
+      <button type="button" className="modalClearBtn_rm" onClick={onClearModal}>
         {" "}
       </button>
       {modalStack.map((modal) => (
