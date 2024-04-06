@@ -3,17 +3,13 @@ import { Modal } from "../../services/modal";
 import { ModalState } from "../../types";
 import { ModalComponentPropsContext } from "../../hooks/useModalComponentProps";
 
-interface ModalComponentProviderProps {
+interface ModalCoreProps {
   breakPoint: number;
   modal: Modal;
   isCurrent: boolean;
 }
 
-const ModalComponentProvider = ({
-  breakPoint,
-  modal,
-  isCurrent,
-}: ModalComponentProviderProps) => {
+const ModalCore = ({ breakPoint, modal, isCurrent }: ModalCoreProps) => {
   const [state, setState] = useState(modal.getState());
 
   const modalContentRef = useRef<HTMLDivElement>(null);
@@ -97,4 +93,4 @@ const ModalComponentProvider = ({
   );
 };
 
-export default ModalComponentProvider;
+export default ModalCore;
