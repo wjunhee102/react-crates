@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode } from "react";
+import { CSSProperties, ReactNode, FC } from "react";
 import { ModalActionState } from ".";
 
 export interface ModalComponentProps<T = any> {
@@ -14,7 +14,7 @@ export interface ModalComponentProps<T = any> {
   payload?: T;
 }
 
-export type ModalComponent<T = any> = React.FC<ModalComponentProps<T>>;
+export type ModalComponent<T = any> = FC<ModalComponentProps<T>>;
 
 export interface ModalState {
   component: ModalComponent;

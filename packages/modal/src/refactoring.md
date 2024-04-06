@@ -154,3 +154,5 @@ componentProps가 아니라 component가 바뀌어야 함.
 - focus를 div에 걸기 위해 tabIndex=-1이라는 property를 설정했음. 왜냐면 div에는 그냥 focus가 되지 않기 때문
 - 그리고 동시에 여러 모달이 켜져서 다른 모달이 아직 열리고 있는 상태면 키보드를 눌러도 열리지 않을때가 있음.
 - modal component를 등록할 때 action 같은 기본 키워드를 제외하는 타입을 만드려고 했는데 string에서는 제외를 해도 string이기 때문에 되지 않음.
+- package에 src도 포함하니 src에 있는 모든 소스 코드까지 포함해서 전달함. 이것을 수정해야할 것 같음.
+- src를 포함하지 않고는 당장 "Failed to parse source map" 문제를 해결하기는 어려운 것 같음. 일단 완성되지 않는 패키지니 소스맵이 필요해서 src를 포함하는 방향으로 작업을 해야할 것 같음.

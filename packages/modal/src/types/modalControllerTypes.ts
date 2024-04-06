@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { Modal } from "../services/modal";
 import {
   ModalActionState,
@@ -8,13 +9,13 @@ import { ModalComponent } from "./modalComponentTypes";
 import { ModalTransactionState } from "./modalManagerTypes";
 
 export interface ComponentPropsOptions {
-  title?: React.ReactNode;
-  subTitle?: React.ReactNode;
-  content?: React.ReactNode;
-  subContent?: React.ReactNode;
-  confirmContent?: React.ReactNode;
-  cancelContent?: React.ReactNode;
-  customContent?: React.ReactNode;
+  title?: ReactNode;
+  subTitle?: ReactNode;
+  content?: ReactNode;
+  subContent?: ReactNode;
+  confirmContent?: ReactNode;
+  cancelContent?: ReactNode;
+  customContent?: ReactNode;
 }
 
 export interface StateControllerOptions {

@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import {
   ModalConfirmType,
   ModalPosition,
@@ -17,13 +18,13 @@ export interface ModalDispatchOptions<T = any, P extends string = string> {
   backCoverOpacity?: number;
   escKeyActive?: boolean;
   enterKeyActive?: boolean;
-  title?: React.ReactNode;
-  subTitle?: React.ReactNode;
-  content?: React.ReactNode;
-  subContent?: React.ReactNode;
-  confirmContent?: React.ReactNode;
-  cancelContent?: React.ReactNode;
-  customActionContent?: React.ReactNode;
+  title?: ReactNode;
+  subTitle?: ReactNode;
+  content?: ReactNode;
+  subContent?: ReactNode;
+  confirmContent?: ReactNode;
+  cancelContent?: ReactNode;
+  customActionContent?: ReactNode;
   payload?: T;
   closeDelay?: number;
   duration?: number;
