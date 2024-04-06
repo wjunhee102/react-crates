@@ -105,6 +105,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
       transactionState: this.transactionState,
       isOpen: this.modalStack.length > 0 ? true : false,
       breakPoint: this.breakPoint,
+      currentModalId: this.getCurrentModalId()
     };
   }
 

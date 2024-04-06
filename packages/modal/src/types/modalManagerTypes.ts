@@ -8,6 +8,7 @@ export interface ModalManagerState {
   breakPoint: number;
   isOpen: boolean;
   transactionState: ModalTransactionState;
+  currentModalId: number;
 }
 
 export interface ModalListenerProps {
@@ -23,7 +24,9 @@ export type ReservedModalName =
   | "open"
   | "close"
   | "edit"
-  | "remove";
+  | "remove"
+  | "action"
+  ;
 
 export type ModalRemovedName = ReservedModalName | string | string[];
 

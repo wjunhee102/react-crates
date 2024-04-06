@@ -3,7 +3,7 @@ import ModalManager from "../../services/modalManager";
 import { ModalManagerState } from "../../types";
 import { MODAL_TRANSACTION_STATE } from "../../contants";
 import { setDisableBodyScroll } from "../../utils/disableBodyScroll";
-import ModalComponentProvider from "./ModalComponentProvider";
+import ModalCore from "./ModalCore";
 
 import "./modalProvider.css";
 
@@ -16,7 +16,7 @@ function ModalProviderCore({
   disableScroll = true,
 }: ModalProviderCoreProps) {
   const [
-    { modalStack, transactionState, isOpen, breakPoint },
+    { modalStack, transactionState, isOpen, breakPoint, currentModalId },
     setModalManagerState,
   ] = useState<ModalManagerState>(modalManager.getState());
   const disableBodyScroll = useMemo(() => setDisableBodyScroll(), []);
@@ -77,10 +77,11 @@ function ModalProviderCore({
         {" "}
       </button>
       {modalStack.map((modal) => (
-        <ModalComponentProvider
+        <ModalCore
           key={modal.id}
           breakPoint={breakPoint}
           modal={modal}
+          isCurrent={modal.id === currentModalId}
         />
       ))}
     </div>
