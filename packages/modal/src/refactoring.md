@@ -147,3 +147,10 @@ componentProps가 아니라 component가 바뀌어야 함.
 - ModalMeta를 사용하면 component의 payload는 동시에 추론이 되지만 ctrl에서는 추론이 안되서 일단 빼버림.
 - readme는 오늘도 작성못함. 아마 내일 해야할 것 같음.
 - 키보드 기능도 추가해야 하는데 readme를 작성하고 해야할 것 같음.
+
+## 2024년 4월 6일 토요일
+
+- keyboad 옵션을 추가함.
+- focus를 div에 걸기 위해 tabIndex=-1이라는 property를 설정했음. 왜냐면 div에는 그냥 focus가 되지 않기 때문
+- 그리고 동시에 여러 모달이 켜져서 다른 모달이 아직 열리고 있는 상태면 키보드를 눌러도 열리지 않을때가 있음.
+- modal component를 등록할 때 action 같은 기본 키워드를 제외하는 타입을 만드려고 했는데 string에서는 제외를 해도 string이기 때문에 되지 않음.
