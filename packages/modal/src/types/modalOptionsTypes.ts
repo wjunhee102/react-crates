@@ -12,7 +12,7 @@ export interface ModalDispatchOptions<T = any, P extends string = string> {
   modalKey?: string;
   callback?: ModalCallback;
   middleware?: ModalMiddleware;
-  backCoverConfirm?: ModalConfirmType;
+  backCoverConfirm?: ModalConfirmType | null;
   backCoverColor?: string;
   backCoverOpacity?: number;
   escKeyActive?: boolean;

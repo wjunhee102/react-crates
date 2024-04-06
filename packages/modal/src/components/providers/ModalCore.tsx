@@ -38,7 +38,7 @@ const ModalCore = ({ breakPoint, modal, isCurrent }: ModalCoreProps) => {
         isEnterKeyActive && modal.action(true);
         return;
       case "Escape":
-        isEscKeyActive && modal.action(modal.options.backCoverConfirm);
+        isEscKeyActive && modal.action(false);
         return;
       default:
         return;
