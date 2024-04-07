@@ -11,7 +11,7 @@ import { ModalCallback, ModalMiddleware } from "./modalControllerTypes";
  */
 export interface ModalDispatchOptions<T = any, P extends string = string> {
   modalKey?: string;
-  callback?: ModalCallback;
+  action?: ModalCallback;
   middleware?: ModalMiddleware;
   backCoverConfirm?: ModalConfirmType | null;
   backCoverColor?: string;

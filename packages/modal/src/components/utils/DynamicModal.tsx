@@ -20,7 +20,7 @@ import {
 
 type DynamicModalOptions = Omit<
   ModalDispatchOptions,
-  | keyof ModalComponentProps
+  | keyof Omit<ModalComponentProps, "action">
   | "middleware"
   | "modalKey"
   | "required"
@@ -46,13 +46,13 @@ class DynamicModalManager {
 
   setOptions(options: DynamicModalOptions = {}) {
     const callback: ModalCallback = (...props) => {
-      options.callback && options.callback(...props);
+      options.action && options.action(...props);
       this.isOpen = false;
     };
 
     this.options = {
       ...options,
-      callback,
+      action: callback,
     };
 
     return this;

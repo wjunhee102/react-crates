@@ -3,16 +3,20 @@ import { Modal } from "../../services/modal";
 import { ModalState } from "../../types";
 import { ModalComponentPropsContext } from "../../hooks/useModalComponentProps";
 
-interface ModalCoreProps {
+interface ModalComponentProviderProps {
   breakPoint: number;
   modal: Modal;
   isCurrent: boolean;
 }
 
-const ModalCore = ({ breakPoint, modal, isCurrent }: ModalCoreProps) => {
+const ModalComponentProvider = ({
+  breakPoint,
+  modal,
+  isCurrent,
+}: ModalComponentProviderProps) => {
   const [state, setState] = useState(modal.getState());
 
-  const modalContentRef = useRef<HTMLDivElement>(null);
+  const modalBackCoverRef = useRef<HTMLButtonElement>(null);
 
   const {
     component: Component,
@@ -32,18 +36,21 @@ const ModalCore = ({ breakPoint, modal, isCurrent }: ModalCoreProps) => {
     modal.action(modal.options.backCoverConfirm);
   }, []);
 
-  const actionToKeyUp = useCallback((event: KeyboardEvent<HTMLDivElement>) => {
-    switch (event.key) {
-      case "Enter":
-        isEnterKeyActive && modal.action(true);
-        return;
-      case "Escape":
-        isEscKeyActive && modal.action(false);
-        return;
-      default:
-        return;
-    }
-  }, []);
+  const actionToKeyUp = useCallback(
+    (event: KeyboardEvent<HTMLButtonElement>) => {
+      switch (event.key) {
+        case "Enter":
+          isEnterKeyActive && modal.action(true);
+          return;
+        case "Escape":
+          isEscKeyActive && modal.action(false);
+          return;
+        default:
+          return;
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     const listener = (modalState: ModalState) => {
@@ -59,8 +66,8 @@ const ModalCore = ({ breakPoint, modal, isCurrent }: ModalCoreProps) => {
   }, []);
 
   useEffect(() => {
-    if (isCurrent && modalContentRef.current) {
-      modalContentRef.current.focus();
+    if (isCurrent && modalBackCoverRef.current) {
+      modalBackCoverRef.current.focus();
     }
   }, [isCurrent]);
 
@@ -71,19 +78,15 @@ const ModalCore = ({ breakPoint, modal, isCurrent }: ModalCoreProps) => {
   return (
     <div className="modalWrapper_rm">
       <button
+        ref={modalBackCoverRef}
         className={`closeModalCover_rm ${isActive ? "" : "close_rm"}`}
         style={backCoverStyle}
         type="button"
         onClick={closeModal}
+        onKeyUp={actionToKeyUp}
       />
       <div className="modalContentContainer_rm">
-        <div
-          ref={modalContentRef}
-          tabIndex={-1}
-          className="modalContent_rm"
-          style={modalStyle}
-          onKeyUp={actionToKeyUp}
-        >
+        <div className="modalContent_rm" style={modalStyle}>
           <ModalComponentPropsContext.Provider value={componentProps}>
             <Component {...componentProps} />
           </ModalComponentPropsContext.Provider>
@@ -93,4 +96,4 @@ const ModalCore = ({ breakPoint, modal, isCurrent }: ModalCoreProps) => {
   );
 };
 
-export default ModalCore;
+export default ModalComponentProvider;

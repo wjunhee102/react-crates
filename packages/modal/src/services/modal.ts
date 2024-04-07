@@ -86,14 +86,14 @@ export class Modal {
   }
 
   private setOption() {
-    const { closeDelay, callback, stateResponsiveComponent, escKeyActive, enterKeyActive } = this.options;
+    const { closeDelay, action, stateResponsiveComponent, escKeyActive, enterKeyActive } = this.options;
 
     if (closeDelay) {
       this._closeDelayDuration = closeDelay;
     }
 
-    if (callback) {
-      this.actionCallback = callback;
+    if (action) {
+      this.actionCallback = action;
     }
 
     if (stateResponsiveComponent) {
@@ -159,7 +159,7 @@ export class Modal {
 
   /* 컴포넌트 및 상태 관리 */
 
-  private setComponentProps(options: ModalDispatchOptions = {}) {
+  private setComponentProps(options: Omit<Partial<ModalComponentProps>, "action" | "actionState" | "payload"> = {}) {
     const {
       title,
       subTitle,

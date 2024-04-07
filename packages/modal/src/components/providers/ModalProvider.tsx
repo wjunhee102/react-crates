@@ -3,7 +3,7 @@ import ModalManager from "../../services/modalManager";
 import { ModalManagerState } from "../../types";
 import { MODAL_TRANSACTION_STATE } from "../../contants";
 import { setDisableBodyScroll } from "../../utils/disableBodyScroll";
-import ModalCore from "./ModalCore";
+import ModalComponentProvider from "./ModalComponentProvider";
 
 import "./modalProvider.css";
 
@@ -77,7 +77,7 @@ function ModalProviderCore({
         {" "}
       </button>
       {modalStack.map((modal) => (
-        <ModalCore
+        <ModalComponentProvider
           key={modal.id}
           breakPoint={breakPoint}
           modal={modal}
