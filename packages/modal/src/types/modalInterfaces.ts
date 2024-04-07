@@ -38,8 +38,8 @@ export type Controller<
     [K in keyof T]: (
       options:
         | (T[K]["defaultOptions"] extends { payload: infer R }
-          ? ModalDispatchOptions<R, Exclude<Extract<keyof P, string>, "backCover" | "default">>
-          : ModalDispatchOptions<any, Exclude<Extract<keyof P, string>, "backCover" | "default">>)
+          ? Omit<ModalDispatchOptions<R, Exclude<Extract<keyof P, string>, "backCover" | "default">>, "required">
+          : Omit<ModalDispatchOptions<any, Exclude<Extract<keyof P, string>, "backCover" | "default">>, "required">)
         | ModalCallback
     ) => number;
   };
@@ -50,7 +50,7 @@ export type ModalController<
 > = {
   open: <K = any>(
     name: string | ModalComponent | ReactElement,
-    options?: ModalDispatchOptions<K, Exclude<Extract<keyof P, string>, "backCover" | "default">> | ModalCallback
+    options?: Omit<ModalDispatchOptions<K, Exclude<Extract<keyof P, string>, "backCover" | "default">>, "required"> | ModalCallback
   ) => number;
   remove: (removedName?: CloseModalProps) => number;
   action: (targetModalId: number, confirm?: boolean | string) => void;
