@@ -23,9 +23,9 @@ $ pnpm add @junhee_h/react-modal
 ```javascript
 import React from "react";
 
-import { generatorModal, Modal } from "@junhee_h/react-modal";
+import { generateModal, Modal } from "@junhee_h/react-modal";
 
-const { modalCtrl, ModalProvider } = generatorModal({
+const { modalCtrl, ModalProvider } = generateModal({
   alert: {
     component: () => (
       <div>
