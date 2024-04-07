@@ -57,7 +57,7 @@ function App() {
 
 ## Demo
 
-준비중입니다!
+설명서에 나와있는 내용을 [데모](https://codesandbox.io/p/sandbox/junhee-h-react-modal-cd4j7m?file=%2Fsrc%2FApp.tsx)에서 확인해보세요.
 
 ## License
 
