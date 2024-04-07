@@ -191,7 +191,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
     const mergedOptions: ModalOptions<any> = {
       stateResponsiveComponent: this.stateResponsiveComponent,
       ...options,
-      callback: options.callback,
+      action: options.action,
       closeModal,
       middleware,
     };
@@ -549,11 +549,11 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
    */
   open<P = any>(
     name: string | ModalComponent | ReactElement,
-    callback:
+    action:
       | ModalDispatchOptions<P, Extract<keyof T, string>>
       | ModalCallback = {}
   ) {
-    const options = typeof callback === "function" ? { callback } : callback;
+    const options = typeof action === "function" ? { action } : action;
     const modalKey = options.modalKey || null;
 
     if (modalKey) {
