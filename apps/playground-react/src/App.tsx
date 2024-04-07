@@ -42,7 +42,7 @@ function App() {
                 backCoverColor: "#fff",
                 closeDelay: 1000,
                 stateResponsiveComponent: true,
-                callback: async (confirm, { pending, success }) => {
+                action: async (confirm, { pending, success }) => {
                   pending();
                   await delay(1000);
 
@@ -59,7 +59,6 @@ function App() {
 
             modalCtrl.pending({
               position: "bottom-bottom-center",
-              payload: 1,
             });
 
             modalCtrl.alert({

@@ -550,7 +550,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
   open<P = any>(
     name: string | ModalComponent | ReactElement,
     action:
-      | ModalDispatchOptions<P, Extract<keyof T, string>>
+      | Omit<ModalDispatchOptions<P, Extract<keyof T, string>>, "required">
       | ModalCallback = {}
   ) {
     const options = typeof action === "function" ? { action } : action;

@@ -38,8 +38,8 @@ function generateModalController<
           | (T[typeof modalName]["defaultOptions"] extends {
             payload: infer R;
           }
-            ? ModalDispatchOptions<R, Extract<keyof P, string>>
-            : ModalDispatchOptions<any, Extract<keyof P, string>>)
+            ? Omit<ModalDispatchOptions<R, Extract<keyof P, string>>, "required">
+            : Omit<ModalDispatchOptions<any, Extract<keyof P, string>>, "required">)
           | ModalCallback
       ) => modalManager.open(modalName, options);
 
