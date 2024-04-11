@@ -64,27 +64,6 @@ module.exports = {
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/array-type": ["error", { default: "array" }],
     "@typescript-eslint/no-unused-vars": "warn",
-    "@typescript-eslint/member-ordering": [
-      "warn",
-      {
-        default: [
-          "public-static-field",
-          "protected-static-field",
-          "private-static-field",
-          "public-instance-field",
-          "protected-instance-field",
-          "private-instance-field",
-          "constructor",
-          "public-static-method",
-          "protected-static-method",
-          "private-static-method",
-          "public-instance-method",
-          "protected-instance-method",
-          "private-instance-method",
-        ],
-      },
-    ],
-
     "import/order": [
       "error",
       {
@@ -110,7 +89,7 @@ module.exports = {
     "prettier/prettier": [
       "error",
       {
-        endOfLine: "auto",
+        endOfLine: "flow",
       },
     ],
   },
