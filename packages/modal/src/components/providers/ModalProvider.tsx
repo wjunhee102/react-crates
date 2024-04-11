@@ -7,6 +7,10 @@ import ModalComponentProvider from "./ModalComponentProvider";
 
 import "./modalProvider.css";
 
+let overflow = "";
+let height = "";
+let width = "";
+
 interface ModalProviderCoreProps extends ModalProviderProps {
   modalManager: ModalManager;
 }
@@ -19,7 +23,6 @@ function ModalProviderCore({
     { modalStack, transactionState, isOpen, breakPoint, currentModalId },
     setModalManagerState,
   ] = useState<ModalManagerState>(modalManager.getState());
-  const disableBodyScroll = useMemo(() => setDisableBodyScroll(), []);
 
   const onClearModal = () => {
     if (
@@ -49,25 +52,38 @@ function ModalProviderCore({
       modalManager.unsubscribe(setModalManagerState);
       document.documentElement.style.setProperty("--vh", originVh);
       window.removeEventListener("resize", listener);
-      disableBodyScroll(false);
     };
   }, []);
 
   useEffect(() => {
-    let asyncOpenModal: NodeJS.Timeout | null = null;
+    if (isOpen && disableScroll) {
+      overflow = document.body.style.overflow;
+      height = document.body.style.height;
+      width = document.body.style.width;
 
-    if (isOpen) {
-      disableBodyScroll(disableScroll);
-    } else {
-      asyncOpenModal = setTimeout(() => {
-        disableBodyScroll(false);
-      }, 0);
+      document.body.style.overflow = "hidden";
+      document.body.style.height = "100vh";
+      document.body.style.width = "100vw";
+
+      return () => {
+        document.body.style.overflow = overflow;
+        document.body.style.height = height;
+        document.body.style.width = width;
+
+        overflow = "";
+        height = "";
+        width = "";
+      };
     }
 
+    document.body.style.overflow = overflow;
+    document.body.style.height = height;
+    document.body.style.width = width;
+
     return () => {
-      if (asyncOpenModal) {
-        clearTimeout(asyncOpenModal);
-      }
+      overflow = "";
+      height = "";
+      width = "";
     };
   }, [isOpen]);
 

@@ -156,3 +156,14 @@ componentProps가 아니라 component가 바뀌어야 함.
 - modal component를 등록할 때 action 같은 기본 키워드를 제외하는 타입을 만드려고 했는데 string에서는 제외를 해도 string이기 때문에 되지 않음.
 - package에 src도 포함하니 src에 있는 모든 소스 코드까지 포함해서 전달함. 이것을 수정해야할 것 같음.
 - src를 포함하지 않고는 당장 "Failed to parse source map" 문제를 해결하기는 어려운 것 같음. 일단 완성되지 않는 패키지니 소스맵이 필요해서 src를 포함하는 방향으로 작업을 해야할 것 같음.
+
+## 2024년 4월 12일 금요일
+
+- nextjs에서 document가 없는데 사용한다는 에러가 발생함.
+- ✓ Compiled in 265ms (755 modules)
+  ⨯ node_modules/.pnpm/@junhee_h+react-modal@0.3.3_react-dom@18.0.0_react@18.0.0/node_modules/@junhee_h/react-modal/dist/esm/index.js (1:6647) @ eval
+  ⨯ Internal error: ReferenceError: document is not defined
+- 그래서 해당 문제를 해결하기 위해 "use client"를 입력해봤지만 rollup에서는 지시어가 다 사라짐.
+- 이걸 해결하기 위해 rollup plugin "rollup-plugin-preserve-directives"을 설치해봤는데 제대로 동작하지 않았고 이것이 문제가 아니였음
+- 문제는 useMemo에 작성한 disableBodyScroll인데 이 로직이 useMemo에서 작동하는 것이 문제였음. 왜냐면 useMemo는 서버사이드에서도 동작하기 때문에 document가 정의 자체가 안되어있는 상태에서는 오류가 나기 때문.
+- 그래서 해당 문제는 무식하지만 외부 변수를 두고 해당 문제를 해결함. 일단 잘 작동하는 것을 확인함.
