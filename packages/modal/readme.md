@@ -236,11 +236,11 @@ function App() {
 import { ModalFC } from "@junhee_h/react-modal";
 
 const ExampleModal: ModalFC = ({
-	title,
-	content,
-	confirmContent,
-	cancelContent,
-	action
+  title,
+  content,
+  confirmContent,
+  cancelContent,
+  action
 }) => {
   return (
     <div>
@@ -468,7 +468,7 @@ function Example() {
 import { generateModal } from "@junhee_h/react-modal";
 
 export const { modalCtrl } = generatorModal({
-	...modalComponentTable
+  ...modalComponentTable
 }, {
   position: {
     // 사용자에 맞춘 커스텀 position을 만들 수 있습니다.

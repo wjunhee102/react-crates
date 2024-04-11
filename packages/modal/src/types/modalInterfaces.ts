@@ -36,11 +36,24 @@ export type Controller<
   P extends ModalPositionTable
 > = {
     [K in keyof T]: (
-      options:
+      options?:
         | (T[K]["defaultOptions"] extends { payload: infer R }
-          ? Omit<ModalDispatchOptions<R, Exclude<Extract<keyof P, string>, "backCover" | "default">>, "required">
-          : Omit<ModalDispatchOptions<any, Exclude<Extract<keyof P, string>, "backCover" | "default">>, "required">)
+          ? Omit<
+            ModalDispatchOptions<
+              R,
+              Exclude<Extract<keyof P, string>, "backCover" | "default">
+            >,
+            "required"
+          >
+          : Omit<
+            ModalDispatchOptions<
+              any,
+              Exclude<Extract<keyof P, string>, "backCover" | "default">
+            >,
+            "required"
+          >)
         | ModalCallback
+        | string
     ) => number;
   };
 
@@ -50,7 +63,16 @@ export type ModalController<
 > = {
   open: <K = any>(
     name: string | ModalComponent | ReactElement,
-    options?: Omit<ModalDispatchOptions<K, Exclude<Extract<keyof P, string>, "backCover" | "default">>, "required"> | ModalCallback
+    options?:
+      | Omit<
+        ModalDispatchOptions<
+          K,
+          Exclude<Extract<keyof P, string>, "backCover" | "default">
+        >,
+        "required"
+      >
+      | ModalCallback
+      | string
   ) => number;
   remove: (removedName?: CloseModalProps) => number;
   action: (targetModalId: number, confirm?: boolean | string) => void;

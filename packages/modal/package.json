@@ -1,6 +1,6 @@
 {
   "name": "@junhee_h/react-modal",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "리액트 모달을 쉽게 등록하고 사용가능한 라이브러리입니다.",
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs",

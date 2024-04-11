@@ -33,8 +33,8 @@ interface ModalProps {
 export class Modal {
   private lifecycleState: ModalLifecycleState = MODAL_LIFECYCLE_STATE.open;
   private actionState: ModalActionState = MODAL_ACTION_STATE.initial;
-  private actionCallback: ModalCallback = () => { };
-  private afterCloseCallback: () => unknown = () => { };
+  private actionCallback: ModalCallback = () => {};
+  private afterCloseCallback: () => unknown = () => {};
   private listeners: ((state: ModalState) => void)[] = [];
   private breakPoint = 0;
   private isInitial = false;
@@ -86,7 +86,13 @@ export class Modal {
   }
 
   private setOption() {
-    const { closeDelay, action, stateResponsiveComponent, escKeyActive, enterKeyActive } = this.options;
+    const {
+      closeDelay,
+      action,
+      stateResponsiveComponent,
+      escKeyActive,
+      enterKeyActive,
+    } = this.options;
 
     if (closeDelay) {
       this._closeDelayDuration = closeDelay;
@@ -159,7 +165,12 @@ export class Modal {
 
   /* 컴포넌트 및 상태 관리 */
 
-  private setComponentProps(options: Omit<Partial<ModalComponentProps>, "action" | "actionState" | "payload"> = {}) {
+  private setComponentProps(
+    options: Omit<
+      Partial<ModalComponentProps>,
+      "action" | "actionState" | "payload"
+    > = {}
+  ) {
     const {
       title,
       subTitle,
@@ -351,7 +362,7 @@ export class Modal {
       modalStyle: this.getModalStyle(),
       backCoverStyle: this.getBackCoverStyle(),
       isEscKeyActive: this.escKeyActive,
-      isEnterKeyActive: this.enterKeyActive
+      isEnterKeyActive: this.enterKeyActive,
     };
   }
 

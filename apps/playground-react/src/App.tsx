@@ -93,6 +93,14 @@ function App() {
         >
           알림
         </button>
+
+        <button
+          onClick={() => {
+            modalCtrl.alert("잘되나?후...");
+          }}
+        >
+          알림2
+        </button>
         <DynamicModal options={{ duration: 1500, position: "center" }}>
           <DynamicModal.Trigger>다이나믹 모달</DynamicModal.Trigger>
           <DynamicModal.Element>

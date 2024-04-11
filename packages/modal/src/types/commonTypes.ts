@@ -11,7 +11,6 @@ export type ModalTransitionProps = {
   [key in keyof ModalTransition]?: ModalTransition[key];
 };
 
-
 export type DefaultModalPosition =
   | "default"
   | "bottom"
@@ -25,8 +24,8 @@ export type DefaultModalPosition =
   | "rightBottom";
 
 export type DefaultModalPositionAddBackCover =
-  | "backCover" | DefaultModalPosition;
-
+  | "backCover"
+  | DefaultModalPosition;
 
 export interface PositionStyle {
   left?: string;
