@@ -34,13 +34,20 @@ function generateModalController<
       const modalName = modalEntry[0] as Extract<keyof T, string>;
 
       controller[modalName] = (
-        options:
+        options?:
           | (T[typeof modalName]["defaultOptions"] extends {
             payload: infer R;
           }
-            ? Omit<ModalDispatchOptions<R, Extract<keyof P, string>>, "required">
-            : Omit<ModalDispatchOptions<any, Extract<keyof P, string>>, "required">)
+            ? Omit<
+              ModalDispatchOptions<R, Extract<keyof P, string>>,
+              "required"
+            >
+            : Omit<
+              ModalDispatchOptions<any, Extract<keyof P, string>>,
+              "required"
+            >)
           | ModalCallback
+          | string
       ) => modalManager.open(modalName, options);
 
       return controller;
@@ -104,7 +111,9 @@ export function generateModal<
     string,
     Extract<keyof ExtractPositionType<P>, string>
   >,
-  P extends ModalManagerOptionsProps = ModalManagerOptionsProps<ModalPositionTable<DefaultModalPosition>>
+  P extends ModalManagerOptionsProps = ModalManagerOptionsProps<
+    ModalPositionTable<DefaultModalPosition>
+  >
 >(modalComponentSeedTable: T = {} as T, options: P = {} as P) {
   const modalComponentSeedEntries = Object.entries(modalComponentSeedTable);
   const modalComponentSeedList = modalComponentSeedEntries.map(

@@ -6,6 +6,7 @@ export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
       component: ({ payload }) => (
         <div className="w-[200px] h-[200px] bg-white">
           안녕하세요 {payload}
+          <Modal.Content />
           <div>
             <Modal.Action.Confirm>반가워요</Modal.Action.Confirm>
             <Modal.Action.Cancel>취소</Modal.Action.Cancel>

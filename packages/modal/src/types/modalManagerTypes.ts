@@ -25,8 +25,7 @@ export type ReservedModalName =
   | "close"
   | "edit"
   | "remove"
-  | "action"
-  ;
+  | "action";
 
 export type ModalRemovedName = ReservedModalName | string | string[];
 

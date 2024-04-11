@@ -23,8 +23,11 @@ export interface ModalSeed<T extends ModalDispatchOptions = ModalOptions> {
 export type ModalMeta<T, P extends string = DefaultModalPosition> = {
   component: ModalComponent<T>;
   defaultOptions?: ModalDispatchOptions<T, P>;
-}
+};
 
-export type ModalComponentSeedTable<T extends string = string, P extends string = string> = {
+export type ModalComponentSeedTable<
+  T extends string = string,
+  P extends string = string
+> = {
   [name in T]: ModalMeta<any, P>;
 };

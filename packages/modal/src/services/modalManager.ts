@@ -1,3 +1,4 @@
+import { isValidElement, ReactElement } from "react";
 import {
   DEFAULT_DURATION,
   DEFAULT_POSITION,
@@ -33,12 +34,10 @@ import { defaultMiddleware } from "../utils/defaultMiddleware";
 import { getCloseModal } from "../utils/getCloseModal";
 import { getPositionKey } from "../utils/getPositionKey";
 import { Modal } from "./modal";
-import { isValidElement, ReactElement } from "react";
 
-class ModalManager<T extends ModalPositionTable = ModalPositionTable>
-  implements ModalManagerInterface {
-  private currentId: number = 0;
-  private transactionCount: number = 0;
+class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements ModalManagerInterface {
+  private currentId = 0;
+  private transactionCount = 0;
   private transactionState: ModalTransactionState =
     MODAL_TRANSACTION_STATE.idle;
   private modalStack: Modal[] = [];
@@ -47,8 +46,8 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
   private modalPositionMap: ModalPositionMap = new Map();
   private modalTransition: ModalTransition = DEFAULT_TRANSITION;
   private modalDuration: number = DEFAULT_DURATION;
-  private stateResponsiveComponent: boolean = false;
-  private breakPoint: number = 0;
+  private stateResponsiveComponent = false;
+  private breakPoint = 0;
   private modalManagerState!: ModalManagerState;
 
   constructor(
@@ -105,7 +104,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
       transactionState: this.transactionState,
       isOpen: this.modalStack.length > 0 ? true : false,
       breakPoint: this.breakPoint,
-      currentModalId: this.getCurrentModalId()
+      currentModalId: this.getCurrentModalId(),
     };
   }
 
@@ -114,7 +113,10 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
   private setModalComponentSeedMap(componentSeed: ModalComponentSeed) {
     const { name, component, defaultOptions } = componentSeed;
 
-    if (component === undefined || Object.prototype.hasOwnProperty.call(RESERVED_MODAL_NAME, name)) {
+    if (
+      component === undefined ||
+      Object.prototype.hasOwnProperty.call(RESERVED_MODAL_NAME, name)
+    ) {
       return;
     }
 
@@ -293,7 +295,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
     return this;
   }
 
-  setModalDuration(duration: number = -1) {
+  setModalDuration(duration = -1) {
     if (duration < 0) {
       return this;
     }
@@ -333,7 +335,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
   }
 
   getModalTransition(
-    duration: number = -1,
+    duration = -1,
     options: ModalTransitionOptions = {}
   ): ModalTransition {
     if (duration < 0) {
@@ -551,9 +553,21 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable>
     name: string | ModalComponent | ReactElement,
     action:
       | Omit<ModalDispatchOptions<P, Extract<keyof T, string>>, "required">
-      | ModalCallback = {}
+      | ModalCallback
+      | string = {}
   ) {
-    const options = typeof action === "function" ? { action } : action;
+    const options = (() => {
+      if (typeof action === "function") {
+        return { action };
+      }
+
+      if (typeof action === "string") {
+        return { content: action };
+      }
+
+      return action;
+    })();
+
     const modalKey = options.modalKey || null;
 
     if (modalKey) {
