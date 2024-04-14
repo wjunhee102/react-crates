@@ -122,7 +122,9 @@ function TestDynamicModal() {
   const [count, setCount] = useState(1);
 
   return (
-    <DynamicModal options={{ duration: 300, position: "center" }}>
+    <DynamicModal
+      options={{ duration: 250, position: "leftBottom-center-bottom" }}
+    >
       <DynamicModal.Trigger onClick={() => setCount((state) => state + 1)}>
         다이나믹 모달 {count}
       </DynamicModal.Trigger>

@@ -45,9 +45,15 @@ export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
     stateResponsiveComponent: true,
     position: {
       test: {
-        open: {},
-        active: {},
-        close: {},
+        open: {
+          className: "open",
+        },
+        active: {
+          className: "active",
+        },
+        close: {
+          className: "close",
+        },
       },
     },
   }

@@ -22,6 +22,7 @@ export type ModalComponent<T = any> = FC<ModalComponentProps<T>>;
 export interface ModalState {
   component: ModalComponent;
   isActive: boolean;
+  modalClassName?: string;
   modalStyle: CSSProperties;
   backCoverStyle: CSSProperties;
   componentProps: ModalComponentProps;
