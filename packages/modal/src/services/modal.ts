@@ -18,6 +18,7 @@ import {
   ModalOptions,
   ModalState,
   StateControllerOptions,
+  ModalEditOptions,
 } from "../types";
 import { delay } from "../utils/delay";
 
@@ -288,6 +289,17 @@ export class Modal {
     }
 
     this.changeStateResponsiveComponent({ component, options });
+  }
+
+  edit({ component, ...contents }: ModalEditOptions) {
+    if (component) {
+      this.initialComponent = component;
+      this.currentComponent = component;
+    }
+
+    this._options = { ...this._options, ...contents };
+    this.setOption();
+    this.notify();
   }
 
   /* 상태 조회 */

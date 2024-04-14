@@ -28,6 +28,7 @@ import {
   ModalLifecycleState,
   ModalComponent,
   ModalCallback,
+  ModalEditOptions,
 } from "../types";
 import { ModalManagerInterface } from "../types/modalInterfaces";
 import { defaultMiddleware } from "../utils/defaultMiddleware";
@@ -673,6 +674,18 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
     this.notify();
 
     return this.getCurrentModalId();
+  }
+
+  edit(id: number, options: ModalEditOptions<Extract<keyof T, string>>) {
+    const targetModal = this.modalStack.filter(modal => modal.id === id)[0];
+
+    if (!targetModal) {
+      return false;
+    }
+
+    targetModal.edit(options);
+
+    return true;
   }
 
   setBreakPoint(breakPoint: number) {

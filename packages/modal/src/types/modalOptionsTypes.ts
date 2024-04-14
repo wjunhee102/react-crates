@@ -1,15 +1,15 @@
-import { ReactNode } from "react";
 import {
   ModalConfirmType,
   ModalPosition,
   ModalTransitionOptions,
 } from "./commonTypes";
 import { ModalCallback, ModalMiddleware } from "./modalControllerTypes";
+import { ComponentPropsOptions, ModalComponent } from "./modalComponentTypes";
 
 /**
  * modalKey는 중복 방지
  */
-export interface ModalDispatchOptions<T = any, P extends string = string> {
+export interface ModalDispatchOptions<T = any, P extends string = string> extends ComponentPropsOptions {
   modalKey?: string;
   action?: ModalCallback;
   middleware?: ModalMiddleware;
@@ -18,13 +18,6 @@ export interface ModalDispatchOptions<T = any, P extends string = string> {
   backCoverOpacity?: number;
   escKeyActive?: boolean;
   enterKeyActive?: boolean;
-  title?: ReactNode;
-  subTitle?: ReactNode;
-  content?: ReactNode;
-  subContent?: ReactNode;
-  confirmContent?: ReactNode;
-  cancelContent?: ReactNode;
-  customActionContent?: ReactNode;
   payload?: T;
   closeDelay?: number;
   duration?: number;
@@ -43,4 +36,20 @@ export interface ModalOptions<T = any, P extends string = string>
   extends ModalDispatchOptions<T, P> {
   closeModal: ModalClose;
   middleware: ModalMiddleware;
+}
+
+export interface ModalEditOptions<T extends string = string> extends ComponentPropsOptions {
+  component?: ModalComponent;
+  action?: ModalCallback;
+  backCoverConfirm?: ModalConfirmType | null;
+  backCoverColor?: string;
+  backCoverOpacity?: number;
+  escKeyActive?: boolean;
+  enterKeyActive?: boolean;
+  closeDelay?: number;
+  duration?: number;
+  transitionOptions?: ModalTransitionOptions;
+  position?: ModalPosition<T>;
+  stateResponsiveComponent?: boolean;
+  payload?: any;
 }

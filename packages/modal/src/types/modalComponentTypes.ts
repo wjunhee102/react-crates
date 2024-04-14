@@ -1,7 +1,7 @@
 import { CSSProperties, ReactNode, FC } from "react";
-import { ModalActionState } from ".";
+import { ModalActionState } from "./commonTypes";
 
-export interface ModalComponentProps<T = any> {
+export interface ComponentPropsOptions {
   title?: ReactNode;
   subTitle?: ReactNode;
   content?: ReactNode;
@@ -9,6 +9,9 @@ export interface ModalComponentProps<T = any> {
   confirmContent?: ReactNode;
   cancelContent?: ReactNode;
   customActionContent?: ReactNode;
+}
+
+export interface ModalComponentProps<T = any> extends ComponentPropsOptions {
   action: (confirm?: string | boolean) => void;
   actionState: ModalActionState;
   payload?: T;
