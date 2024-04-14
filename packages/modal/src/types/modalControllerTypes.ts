@@ -1,22 +1,11 @@
-import { ReactNode } from "react";
 import { Modal } from "../services/modal";
 import {
   ModalActionState,
   ModalConfirmType,
   ModalLifecycleState,
 } from "./commonTypes";
-import { ModalComponent } from "./modalComponentTypes";
+import { ComponentPropsOptions, ModalComponent } from "./modalComponentTypes";
 import { ModalTransactionState } from "./modalManagerTypes";
-
-export interface ComponentPropsOptions {
-  title?: ReactNode;
-  subTitle?: ReactNode;
-  content?: ReactNode;
-  subContent?: ReactNode;
-  confirmContent?: ReactNode;
-  cancelContent?: ReactNode;
-  customContent?: ReactNode;
-}
 
 export interface StateControllerOptions {
   afterCloseCallback?: (confirm?: ModalConfirmType) => void;

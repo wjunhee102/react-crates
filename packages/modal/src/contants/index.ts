@@ -50,7 +50,7 @@ export const RESERVED_MODAL_NAME: {
   action: "action",
 };
 
-export const DEFAULT_DURATION = 300;
+export const DEFAULT_DURATION = 200;
 
 export const DEFAULT_TRANSITION: ModalTransition = {
   transitionProperty:
@@ -92,7 +92,7 @@ export const DEFAULT_POSITION: ModalPositionTable = {
     [MODAL_LIFECYCLE_STATE.open]: {
       left: "50%",
       top: "50%",
-      transform: "translate(-50%, -50%) scale(0)",
+      transform: "translate(-50%, -50%) scale(0.95)",
     },
     [MODAL_LIFECYCLE_STATE.active]: {
       left: "50%",
@@ -102,7 +102,7 @@ export const DEFAULT_POSITION: ModalPositionTable = {
     [MODAL_LIFECYCLE_STATE.close]: {
       left: "50%",
       top: "50%",
-      transform: "translate(-50%, -50%) scale(0)",
+      transform: "translate(-50%, -50%) scale(0.95)",
     },
   },
   [MODAL_POSITION.bottom]: {

@@ -18,6 +18,7 @@ import {
   ModalOptions,
   ModalState,
   StateControllerOptions,
+  ModalEditOptions,
 } from "../types";
 import { delay } from "../utils/delay";
 
@@ -290,6 +291,17 @@ export class Modal {
     this.changeStateResponsiveComponent({ component, options });
   }
 
+  edit({ component, ...contents }: ModalEditOptions) {
+    if (component) {
+      this.initialComponent = component;
+      this.currentComponent = component;
+    }
+
+    this._options = { ...this._options, ...contents };
+    this.setOption();
+    this.notify();
+  }
+
   /* 상태 조회 */
 
   getActionState() {
@@ -354,11 +366,14 @@ export class Modal {
   /* 상태 업데이트 및 리스너 관리 */
 
   getState(): ModalState {
+    const { className, style } = this.getModalStyle();
+
     return {
       isActive: this.lifecycleState === "active",
       component: this.currentComponent,
       componentProps: this.componentProps,
-      modalStyle: this.getModalStyle(),
+      modalClassName: className,
+      modalStyle: style,
       backCoverStyle: this.getBackCoverStyle(),
       isEscKeyActive: this.escKeyActive,
       isEnterKeyActive: this.enterKeyActive,
@@ -476,13 +491,13 @@ export class Modal {
 
   /* 스타일 및 렌더링 */
 
-  getModalStyle(): CSSProperties {
+  getModalStyle(): { className?: string; style: CSSProperties } {
     const { position, duration, transitionOptions } = this.options;
 
     const mergedPosition =
       typeof position === "function" ? position(this.breakPoint) : position;
     const isAciveState = this.lifecycleState === MODAL_LIFECYCLE_STATE.active;
-    const modalPosition = this.manager.getCurrentModalPosition(
+    const { className, ...modalPosition } = this.manager.getCurrentModalPosition(
       this.lifecycleState,
       mergedPosition
     );
@@ -492,9 +507,12 @@ export class Modal {
     );
 
     return {
-      pointerEvents: isAciveState ? "auto" : "none",
-      ...transition,
-      ...modalPosition,
+      className,
+      style: {
+        pointerEvents: isAciveState ? "auto" : "none",
+        ...transition,
+        ...modalPosition,
+      }
     };
   }
 

@@ -1,6 +1,7 @@
 import logo from "./logo.svg";
 import "./App.css";
 import { DynamicModal, ModalProvider, modalCtrl } from "./modal";
+import { useState } from "react";
 
 export function delay(duration: number = 0) {
   return new Promise((resolve) => {
@@ -109,10 +110,33 @@ function App() {
             </div>
           </DynamicModal.Element>
         </DynamicModal>
+        <TestDynamicModal />
       </header>
       <div className="w-full h-[500px]"></div>
       <ModalProvider />
     </div>
+  );
+}
+
+function TestDynamicModal() {
+  const [count, setCount] = useState(1);
+
+  return (
+    <DynamicModal
+      options={{ duration: 250, position: "leftBottom-center-bottom" }}
+    >
+      <DynamicModal.Trigger onClick={() => setCount((state) => state + 1)}>
+        다이나믹 모달 {count}
+      </DynamicModal.Trigger>
+      <DynamicModal.Element>
+        <div className="bg-white w-[200px] h-[300px]">
+          <p className="block font-bold">{count}</p>
+          <DynamicModal.Action onClick={() => setCount((state) => state + 1)}>
+            실행
+          </DynamicModal.Action>
+        </div>
+      </DynamicModal.Element>
+    </DynamicModal>
   );
 }
 

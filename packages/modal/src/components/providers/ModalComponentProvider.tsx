@@ -22,6 +22,7 @@ const ModalComponentProvider = ({
     component: Component,
     componentProps,
     backCoverStyle,
+    modalClassName,
     modalStyle,
     isActive,
     isEnterKeyActive,
@@ -86,7 +87,10 @@ const ModalComponentProvider = ({
         onKeyUp={actionToKeyUp}
       />
       <div className="modalContentContainer_rm">
-        <div className="modalContent_rm" style={modalStyle}>
+        <div
+          className={`modalContent_rm ${modalClassName || ""}`}
+          style={modalStyle}
+        >
           <ModalComponentPropsContext.Provider value={componentProps}>
             <Component {...componentProps} />
           </ModalComponentPropsContext.Provider>

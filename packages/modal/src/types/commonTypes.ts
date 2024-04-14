@@ -35,6 +35,7 @@ export interface PositionStyle {
   transform?: string;
   opacity?: number;
   background?: string;
+  className?: string;
 }
 
 export type ModalPositionStyle = {

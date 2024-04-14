@@ -12,21 +12,13 @@ import {
 import ModalManager from "../../services/modalManager";
 import { Modal } from "../../components/modal";
 import {
-  ModalComponentProps,
   ModalConfirmType,
   ModalDispatchOptions,
   ModalCallback,
+  ModalEditOptions,
 } from "../../types";
 
-type DynamicModalOptions = Omit<
-  ModalDispatchOptions,
-  | keyof Omit<ModalComponentProps, "action">
-  | "middleware"
-  | "modalKey"
-  | "required"
-  | "isClose"
-  | "payload"
->;
+type DynamicModalOptions = Omit<ModalEditOptions, "payload">;
 
 class DynamicModalManager {
   private modalId: number | null = null;
@@ -36,10 +28,23 @@ class DynamicModalManager {
 
   constructor(private modalManager: ModalManager) {}
 
+  editModal() {
+    if (!this.isOpen || !this.modalId || !this.element) {
+      return;
+    }
+
+    this.modalManager.edit(this.modalId, {
+      component: () => this.element,
+      ...this.options,
+    });
+  }
+
   setElement(element: ReactElement) {
     if (isValidElement(element)) {
       this.element = element;
     }
+
+    this.editModal();
 
     return this;
   }
