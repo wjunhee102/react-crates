@@ -1,6 +1,6 @@
 # React-Modal
 
-React-Modal을 이용하면 모달을 쉽게 관리하고 사용할 수 있습니다.
+React-Modal은 React 프로젝트에서 기본 JavaScript modal을 효과적으로 대체하고, 사용자의 요구에 맞춰 모달의 위치, 애니메이션, 및 실행 결과를 맞춤 설정할 수 있는 강력한 라이브러리입니다.
 
 ## Installation
 
@@ -21,11 +21,11 @@ $ pnpm add @junhee_h/react-modal
 
 ## Features
 
-- 이 모달 라이브러리는 개발 효율성을 높이기 위해 `모달의 쉬운 생성 및 재사용`을 가능하게 합니다.
-- React 프로젝트에 `window.alert`, `window.confirm`을 효과적으로 대체할 수 있습니다.
-- 실행 결과의 사용자 정의 가능성을 제공하며, 원하는 애니메이션을 쉽게 통합하고 화면 크기에 따라 위치를 조정할 수 있습니다.
-- React Component 외부에서 실행할 수 있습니다.
-- `제로 의존성(zero dependencies)` 라이브러리입니다.
+- **효율적 개발**: 본 라이브러리는 모달의 간편한 생성과 재사용을 통해 개발 효율성을 극대화합니다.
+- **기본 dialog 대체**: window.alert와 window.confirm 같은 기본 JavaScript modal을 React 프로젝트 내에서 효과적으로 대체할 수 있습니다.
+- **유연한 사용자 정의**: 실행 결과를 사용자가 원하는 대로 맞춤 설정할 수 있으며, 애니메이션 통합과 화면 크기에 따른 위치 조정이 가능합니다.
+- **React 컨텍스트 내 독립 실행**: 이 라이브러리는 React 애플리케이션 내에서 컴포넌트의 상위 계층과 독립적으로 모달을 생성하고 관리할 수 있는 기능을 제공합니다. 이를 통해 React-toastify와 유사하게, 애플리케이션의 어느 곳에서나 간편하게 모달을 호출하고 활용할 수 있습니다.
+- **제로 의존성(zero dependencies)**: 제로 의존성으로 인해 보안 리스크를 최소화하고, 프로젝트의 복잡성 없이 안정적으로 통합할 수 있습니다.
 
 ## The gist
 
@@ -94,8 +94,8 @@ const {
       escKeyActive?: boolean; // esc 버튼으로 cancel action을 실행시킬 수 있습니다.
       enterKeyActive?: boolean; // enter 버튼으로 enter action을 실행시킬 수 있습니다.
       closeDelay?: number; // modal이 설정한 delay후 close 됩니다.
-      duration?: number; // modal이 생성, 닫힐 때 실행되는 애니메이션 속도입니다.
-      transitionOptions?: {
+      duration?: number; // modal이 생성, 닫힐 때 실행되는 transition의 속도입니다.
+      transitionOptions?: { // modal이 생성, 닫힐 때 실행되는 transition의 옵션입니다.
         transitionProperty?: string;
         transitionTimingFunction?: string;
         transitionDelay?: string;
@@ -442,9 +442,9 @@ function Example() {
 
 ### Modal Positioning
 
-- `position`을 원하는 위치에 따라 불러올 수 있습니다.
-- `position`을 조합하여 사용할 수 있습니다.
-- `breakPoint(width)`에 따라 `position`을 다르게 위치시킬 수 있습니다.
+- 유동적 위치 지정: `position` 속성을 사용하여 modal의 위치를 동적으로 조정할 수 있습니다.
+- 복합 위치 설정: 여러 `position` 값들을 조합하여 modal의 생성 및 소멸 위치를 세밀하게 설정할 수 있습니다.
+- 조건부 위치 설정: `breakPoint(width)` 값을 기반으로 화면 크기에 따라 modal의 위치를 조정할 수 있습니다. 이를 통해 반응형 디자인에 적합하게 모달을 위치시킬 수 있습니다.
 
 ```tsx
 import { modalCtrl } from "./modal";
@@ -748,8 +748,8 @@ modalCtrl.confirm(async (confirm, { success, error, end }) => {
 
 ### DynamicModal
 
-- `React Component 내부에 code에 흐름`따라 작성하여 사용할 수 있는 Modal입니다.
-- 일반적인 Modal의 개발 방식대로 사용할 수 있습니다.
+- `DynamicModal`은 `React 컴포넌트`의 `자연스러운 흐름에 따라 구현`할 수 있는 모달입니다.
+- 기존의 모달 개발 방식을 활용하여 직관적으로 모달을 구성하고 관리할 수 있습니다.
 
 ```tsx
 import { generateModal } from "@junhee_h/react-modal";
