@@ -10,13 +10,22 @@ $ yarn add @junhee_h/react-modal
 $ pnpm add @junhee_h/react-modal
 ```
 
+## Table of Contents
+
+- [Features](#features)
+- [The gist](#the-gist)
+- [Demo](#demo)
+- [API](#api)
+- [Documentation](#documentation)
+- [License](#license)
+
 ## Features
 
-- 이 모달 라이브러리는 개발 효율성을 높이기 위해 모달의 쉬운 생성 및 재사용을 가능하게 합니다.
+- 이 모달 라이브러리는 개발 효율성을 높이기 위해 `모달의 쉬운 생성 및 재사용`을 가능하게 합니다.
 - React 프로젝트에 `window.alert`, `window.confirm`을 효과적으로 대체할 수 있습니다.
 - 실행 결과의 사용자 정의 가능성을 제공하며, 원하는 애니메이션을 쉽게 통합하고 화면 크기에 따라 위치를 조정할 수 있습니다.
 - React Component 외부에서 실행할 수 있습니다.
-- 제로 의존성(zero dependencies) 라이브러리입니다.
+- `제로 의존성(zero dependencies)` 라이브러리입니다.
 
 ## The gist
 
@@ -71,13 +80,13 @@ const {
 } = generateModal({
   [Name: string]: {
     component: ModalFC<T = any, string = string>;
-    // modal의 기본 설정을 등록할 수 있습니다.
+    /* modal의 기본 설정을 등록할 수 있습니다. */
     defaultOptions?: {
       payload?: T; // modal과 통신이 필요할 때 사용할 수 있습니다.
       modalKey?: string; // 동일한 modal이 동시에 실행되지 않게 할 수 있습니다.
-      // modal의 action을 실행시켰을때 동작할 callback 입니다.
+      /* action: modal의 action을 실행시켰을때 동작할 callback 입니다. */
       action?: (confirm?: boolean | string) => void | Promise<void>;
-      // action callback을 인터셉터하여 원하는 로직을 수행하게 할 수 있습니다.
+      /* ModalMiddleware: action callback을 인터셉터하여 원하는 로직을 수행하게 할 수 있습니다. */
       middleware?: ModalMiddleware;
       backCoverConfirm?: boolean | string | null //null 일 경우 동작하지 않습니다.
       backCoverColor?: string;
@@ -91,13 +100,13 @@ const {
         transitionTimingFunction?: string;
         transitionDelay?: string;
       };
-      // modal의 위치를 설정할 수 있습니다.
+      /* modal의 위치를 설정할 수 있습니다. */
       position?: string | ((breakPoint: number) => string);
-      // modalActionState에 따라 자동으로 Modal Componet가 변경됩니다.
+      /* modalActionState에 따라 자동으로 Modal Componet가 변경됩니다. */
       stateResponsiveComponent?: boolean;
-      // 등록된 modal이 덮혀씌워지지 않거나 지워지지 않습니다.
+      /* 등록된 modal이 덮혀씌워지지 않거나 지워지지 않습니다. */
       required?: boolean;
-      // 동적으로 modal의 내용을 입력할 수 있습니다.
+      /* 동적으로 modal의 내용을 입력할 수 있습니다. */
       title?: React.ReactNode;
       subTitle?: React.ReactNode;
       content?: React.ReactNode;
@@ -108,7 +117,7 @@ const {
     }
   }
 },
-// 등록한 모달 전체의 default 값을 설정할 수 있습니다.
+/* 등록한 모달 전체의 default 값을 설정할 수 있습니다. */
 {
   stateResponsiveComponent?: boolean; // modal이 actionState에 따라 자동으로 변경
   backCoverColor?: string;
@@ -119,7 +128,7 @@ const {
     transitionTimingFunction?: string;
     transitionDelay?: string;
   };
-  // modal의 position을 등록할 수 있습니다.
+  /* modal의 position을 등록할 수 있습니다. */
   position?: {
     [Name: string]: {
       [open | active | close]: {
@@ -141,9 +150,7 @@ const {
 ```tsx
 import { modalCtrl } from "./modal.ts";
 
-/*
-  modalCtrl.open의 첫번째 인자
-*/
+/* modalCtrl.open의 첫번째 인자 */
 
 // modal name
 modalCtrl.open("alert");
@@ -151,9 +158,7 @@ modalCtrl.open("alert");
 // 동적 modal 생성
 modalCtrl.open(() => <div>alert</div>);
 
-/*
-  modalCtrl.open의 두번째 인자
-*/
+/* modalCtrl.open의 두번째 인자 */
 
 // modal action
 modalCtrl.open("alert", (confirm?: boolean | string) => {
@@ -299,7 +304,11 @@ const ExampleModal = () => {
 <Modal.Action.Confirm />
 <Modal.Action.Cancel />
 <Modal.Action.Custom />
+```
 
+### Modal 등록
+
+```tsx
 // modal.ts
 import { generateModal } from "@junhee_h/react-modal";
 import ExampleModal from "./ExampleModal";
@@ -516,6 +525,57 @@ type DefaultModalPosition =
   | "rightBottom";
 ```
 
+### Modal Payload
+
+- Modal과 통신이 필요한 경우 `payload` option을 사용할 수 있습니다.
+- payload는 항상 `undefined`일 수 있습니다.
+- payload의 타입을 `defaultOptions`에 적용하면 `modalCtrl`에서 `IntelliSense`가 활성화 됩니다.
+
+```tsx
+import { ModalFC } from "@junhee_h/react-modal";
+
+export interface ExamplePayload {
+  foo: string;
+  bar: number;
+}
+
+export const ExampleModal: ModalFC<ExamplePayload> = ({
+  payload /* type: ExamplePayload | undefined */
+}) => {
+  return (
+    <div>
+      ...
+    </div>
+  );
+}
+
+--
+// modal.ts
+import { ExampleModal, ExamplePayload } from "./ExampleModal";
+
+const { modalCtrl } = generateModal({
+  confirm: {
+    component: ExampleModal,
+    defaultOptions: {
+      // case 1
+      payload: {
+        foo: "foo",
+        bar: 1,
+      }
+      // case 2
+      payload: undefined as ExamplePayload | undefined
+    }
+  }
+});
+
+//
+modalCtrl.confirm({
+  payload: {
+    ... // IntelliSense 활성화
+  }
+});
+```
+
 ### Modal Active State
 
 - `Modal action` 실행 중에 상태를 변경하여 `Modal의 Component`를 변경할 수 있습니다.
@@ -652,7 +712,7 @@ const ExampleModal: ModalFC = ({ actionState }) => {
 ### AfterCloseCallback
 
 - `modal이 close`되고 나서 실행되는 함수입니다.
-- `AfterCloseCallback`은 `“success”, “error”, “end”` 메소드만 등록할 수 있습니다.
+- `AfterCloseCallback`은 `success`, `error`, `end` 메소드만 등록할 수 있습니다.
 
 ```tsx
 modalCtrl.confirm(async (confirm, { success, error, end }) => {
@@ -715,6 +775,96 @@ function Example() {
       </DynamicModal>
     </div>
   );
+}
+```
+
+### Modal Middleware
+
+- Modal의 action을 가로채어 원하는 로직을 구현할 수 있습니다.
+- 다음의 코드는 default로 동작하는 middleware입니다.
+
+```tsx
+async function defaultMiddleware({ modalState }: ModalMiddlewareProps) {
+  if (modalState.isAwaitingConfirm) {
+    return modalState.close();
+  }
+
+  await modalState.callback(modalState.confirm, modalState);
+
+  if (modalState.isCloseDelay) {
+    await delay(modalState.closeDelayDuration);
+
+    return modalState.close();
+  }
+
+  if (modalState.isAwaitingConfirm) {
+    return false;
+  }
+
+  return modalState.close();
+}
+
+// types
+
+interface ModalMiddlewareProps {
+  modalState: Modal;
+}
+
+class Modal {
+  get id(): number;
+  get options(): ModalOptions<any, string>;
+  get modalKey(): string | null;
+  get name(): string;
+  get component(): ModalComponent;
+  get confirm(): ModalConfirmType | undefined;
+  get isAwaitingConfirm(): boolean;
+  get isCloseDelay(): boolean;
+  get closeDelayDuration(): number;
+  get callback(): ModalCallback;
+
+  getActionState(): ModalActionState;
+  getLifecycleState(): ModalLifecycleState;
+  active(): void;
+  close(): Promise<boolean>;
+  init(): Promise<void>;
+  blockCloseDelay(): this;
+  setCloseDelay(duration: number): this;
+  getState(): ModalState;
+  subscribe(listener: (state: ModalState) => void): this;
+  unsubscribe(listener: (state: ModalState) => void): this;
+  notify(): this;
+  getMiddlewareProps(): ModalMiddlewareProps;
+  action(
+    confirm?: ModalConfirmType,
+    callback?: ModalCallback
+  ): Promise<boolean>;
+  initial(): this;
+  pending(
+    message?:
+      | string
+      | Omit<StateControllerOptions, "afterCloseCallback" | "isAwaitingConfirm">
+  ): this;
+  success(
+    message?:
+      | string
+      | StateControllerOptions
+      | ((confirm?: ModalConfirmType) => void)
+  ): this;
+  error(
+    message?:
+      | string
+      | StateControllerOptions
+      | ((confirm?: ModalConfirmType) => void)
+  ): this;
+  end(
+    message?:
+      | string
+      | StateControllerOptions
+      | ((confirm?: ModalConfirmType) => void)
+  ): this;
+  getModalStyle(): CSSProperties;
+  getBackCoverStyle(): CSSProperties;
+  setBreakPoint(breakPoint: number): void;
 }
 ```
 
