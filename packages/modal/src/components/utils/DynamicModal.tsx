@@ -53,6 +53,7 @@ class DynamicModalManager {
     const callback: ModalCallback = (...props) => {
       options.action && options.action(...props);
       this.isOpen = false;
+      this.modalId = null;
     };
 
     this.options = {

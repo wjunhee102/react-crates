@@ -22,7 +22,7 @@ $ pnpm add @junhee_h/react-modal
 ## Features
 
 - **효율적 개발**: 본 라이브러리는 모달의 간편한 생성과 재사용을 통해 개발 효율성을 극대화합니다.
-- **기본 dialog 대체**: window.alert와 window.confirm 같은 기본 JavaScript modal을 React 프로젝트 내에서 효과적으로 대체할 수 있습니다.
+- **기본 modal 대체**: window.alert와 window.confirm 같은 기본 JavaScript modal을 React 프로젝트 내에서 효과적으로 대체할 수 있습니다.
 - **유연한 사용자 정의**: 실행 결과를 사용자가 원하는 대로 맞춤 설정할 수 있으며, 애니메이션 통합과 화면 크기에 따른 위치 조정이 가능합니다.
 - **React 컨텍스트 내 독립 실행**: 이 라이브러리는 React 애플리케이션 내에서 컴포넌트의 상위 계층과 독립적으로 모달을 생성하고 관리할 수 있는 기능을 제공합니다. 이를 통해 React-toastify와 유사하게, 애플리케이션의 어느 곳에서나 간편하게 모달을 호출하고 활용할 수 있습니다.
 - **제로 의존성(zero dependencies)**: 제로 의존성으로 인해 보안 리스크를 최소화하고, 프로젝트의 복잡성 없이 안정적으로 통합할 수 있습니다.
@@ -750,6 +750,7 @@ modalCtrl.confirm(async (confirm, { success, error, end }) => {
 
 - `DynamicModal`은 `React 컴포넌트`의 `자연스러운 흐름에 따라 구현`할 수 있는 모달입니다.
 - 기존의 모달 개발 방식을 활용하여 직관적으로 모달을 구성하고 관리할 수 있습니다.
+- `options`을 통해 기존 modal처럼 설정할 수 있습니다.
 
 ```tsx
 import { generateModal } from "@junhee_h/react-modal";
@@ -759,7 +760,16 @@ export const { DynamicModal } = generateModal();
 function Example() {
   return (
     <div>
-      <DynamicModal>
+      <DynamicModal
+        options={{
+          duration: 250,
+          position: "center",
+          action: (confirm?: boolean | string) => {
+            ...
+            return;
+          }
+        }}
+      >
         {/* trigger는 모달을 open하는 버튼입니다. */}
         <DynamicModal.Trigger>confirm</DynamicModal.Trigger>
 
@@ -768,13 +778,31 @@ function Example() {
           <div>
             <h2>타이틀</h2>
             <p>내용</p>
-            <DynamicModal.Action.Confirm>취소</DynamicModal.Action.Confirm>
+            <DynamicModal.Action.Cancel>취소</DynamicModal.Action.Cancel>
             <DynamicModal.Action.Confirm>확인</DynamicModal.Action.Confirm>
           </div>
         </DynamicModal.Element>
       </DynamicModal>
     </div>
   );
+}
+
+/** DynamicModal Options **/
+interface DynamicModalOptions {
+  backCoverConfirm?: string | boolean | null;
+  backCoverColor?: string;
+  backCoverOpacity?: number;
+  escKeyActive?: boolean;
+  enterKeyActive?: boolean;
+  closeDelay?: number;
+  duration?: number;
+  transitionOptions?: {
+    transitionProperty: string;
+    transitionTimingFunction: string;
+    transitionDelay: string;
+  };
+  position?: string;
+  stateResponsiveComponent?: boolean;
 }
 ```
 

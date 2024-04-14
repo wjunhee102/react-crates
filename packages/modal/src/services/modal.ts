@@ -294,7 +294,11 @@ export class Modal {
   edit({ component, ...contents }: ModalEditOptions) {
     if (component) {
       this.initialComponent = component;
-      this.currentComponent = component;
+
+      if (!this._options.stateResponsiveComponent || this.actionState === "initial") {
+        this.currentComponent = component;
+      }
+
     }
 
     this._options = { ...this._options, ...contents };

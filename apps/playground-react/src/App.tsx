@@ -123,7 +123,17 @@ function TestDynamicModal() {
 
   return (
     <DynamicModal
-      options={{ duration: 250, position: "leftBottom-center-bottom" }}
+      options={{
+        duration: 250,
+        position: "leftBottom-center-bottom",
+        stateResponsiveComponent: true,
+        action: async (confirm, { pending, end }) => {
+          pending();
+          await delay(1000);
+          end();
+        },
+        closeDelay: 2000,
+      }}
     >
       <DynamicModal.Trigger onClick={() => setCount((state) => state + 1)}>
         다이나믹 모달 {count}
@@ -131,7 +141,12 @@ function TestDynamicModal() {
       <DynamicModal.Element>
         <div className="bg-white w-[200px] h-[300px]">
           <p className="block font-bold">{count}</p>
-          <DynamicModal.Action onClick={() => setCount((state) => state + 1)}>
+          <DynamicModal.Action
+            onClick={() => {
+              console.log("sadasd");
+              setCount((state) => state + 1);
+            }}
+          >
             실행
           </DynamicModal.Action>
         </div>

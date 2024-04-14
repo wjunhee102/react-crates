@@ -177,6 +177,7 @@ componentProps가 아니라 component가 바뀌어야 함.
 - Modal edit 기능으로 element가 계속 바뀌면 modal도 업데이트 되도록 수정함.
 - 성능에 어느정도 영향을 미칠지는 확인을 해봐야할 것 같음.
 - Modal의 position에 사용자가 애니메이션을 활용하고 싶으면 활용할 수 있게 className을 추가 함.
+- DynamicModal에 closeDelay 상태시 종료된 것으로 간주되어 state가 업데이트 되지 않음.
 
 ### TODO
 
