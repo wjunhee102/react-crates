@@ -13,7 +13,6 @@ import {
   ModalComponent,
   ModalComponentProps,
   ModalConfirmType,
-  ModalDispatchOptions,
   ModalLifecycleState,
   ModalMiddlewareProps,
   ModalOptions,
@@ -33,8 +32,8 @@ interface ModalProps {
 export class Modal {
   private lifecycleState: ModalLifecycleState = MODAL_LIFECYCLE_STATE.open;
   private actionState: ModalActionState = MODAL_ACTION_STATE.initial;
-  private actionCallback: ModalCallback = () => {};
-  private afterCloseCallback: () => unknown = () => {};
+  private actionCallback: ModalCallback = () => { };
+  private afterCloseCallback: () => unknown = () => { };
   private listeners: ((state: ModalState) => void)[] = [];
   private breakPoint = 0;
   private isInitial = false;
