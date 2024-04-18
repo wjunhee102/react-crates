@@ -1,0 +1,75 @@
+.modal-template-rm {
+  width: fit-content;
+  min-width: 200px;
+  max-width: 32rem;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  display: block;
+  box-sizing: border-box;
+  padding: 1.5rem;
+}
+
+.modal-template-trigger-rm {
+  display: block;
+  margin: 0px;
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-template-trigger-box-rm {
+  width: 100%;
+  display: flex;
+  box-sizing: border-box;
+  height: fit-content;
+  justify-content: center;
+  padding: 20px;
+  gap: 10px;
+}
+
+.modal-template-title-rm {
+  font-size: 18px;
+  font-weight: 700;
+  text-align: left;
+  padding: 0px 16px;
+}
+
+.modal-template-content-rm {
+  font-size: 15px;
+  color: #6b7280;
+  padding: 16px;
+  text-align: left;
+}
+
+.modal-template-footer-rm {
+  width: 100%;
+  display: flex;
+  box-sizing: border-box;
+  height: fit-content;
+  justify-content: end;
+  padding: 20px;
+  gap: 10px;
+}
+
+.modal-template-action-rm {
+  display: block;
+  width: fit-content;
+  height: fit-content;
+  margin: 0px;
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.modal-template-action-confirm-rm {
+  background-color: #030712;
+  border: 1px solid #030712;
+  color: #fff;
+}
