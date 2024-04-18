@@ -1,9 +1,17 @@
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Modal } from "../modal";
 import { ModalTemplate } from "./ModalTemplate";
+import { useModalComponentProps } from "../../hooks/useModalComponentProps";
 
 const Alert = () => (
-  <ModalTemplate>
+  <ModalTemplate className="modal-template-bg-rm">
     <ModalTemplate.Header>
       <Modal.Title className="modal-collection-title-rm">Alert</Modal.Title>
       <Modal.Title.Sub className="modal-collection-sub-title-rm" />
@@ -25,7 +33,7 @@ const Alert = () => (
 Alert.displayName = "ModalCollection.Alert";
 
 const Confirm = () => (
-  <ModalTemplate>
+  <ModalTemplate className="modal-template-bg-rm">
     <ModalTemplate.Header>
       <Modal.Title className="modal-collection-title-rm">Confirm</Modal.Title>
       <Modal.Title.Sub className="modal-collection-sub-title-rm" />
@@ -52,6 +60,20 @@ Confirm.displayName = "ModalCollection.Confirm";
 const Prompt = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [state, setState] = useState("");
+  const { action } = useModalComponentProps();
+
+  const actionToKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
+    switch (event.key) {
+      case "Enter":
+        action(state);
+        return;
+      case "Escape":
+        action(false);
+        return;
+      default:
+        return;
+    }
+  };
 
   const onChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setState(event.target.value);
@@ -64,7 +86,7 @@ const Prompt = () => {
   }, [inputRef.current]);
 
   return (
-    <ModalTemplate>
+    <ModalTemplate className="modal-template-bg-rm">
       <ModalTemplate.Header>
         <Modal.Title className="modal-collection-title-rm">Prompt</Modal.Title>
         <Modal.Title.Sub className="modal-collection-sub-title-rm" />
@@ -77,6 +99,7 @@ const Prompt = () => {
           <input
             ref={inputRef}
             onChange={onChange}
+            onKeyUp={actionToKeyUp}
             className="modal-collection-prompt-input-rm"
           />
         </div>

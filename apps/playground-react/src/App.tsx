@@ -117,8 +117,10 @@ function App() {
           <button
             onClick={() => {
               modalCtrl.confirm({
+                subTitle: "confirm",
                 content:
                   "modal-collection-action-rm modal-collection-confirm-rm modal-collection-action-rm modal-collection-confirm-rmmodal-collection-action-rm modal-collection-confirm-rmmodal-collection-action-rm modal-collection-confirm-rm",
+                subContent: "asdasd",
                 action: (confirm) => {
                   console.log(confirm);
                 },

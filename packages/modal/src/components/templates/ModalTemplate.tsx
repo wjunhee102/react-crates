@@ -24,8 +24,14 @@ const TemplateFooter = ({ children }: TemplateProps) => {
 
 TemplateFooter.displayName = "ModalTemplate.Footer";
 
-export const ModalTemplate = ({ children }: TemplateProps) => {
-  return <div className="modal-template-rm">{children}</div>;
+interface ModalTemplateProps extends TemplateProps {
+  className?: string;
+}
+
+export const ModalTemplate = ({ className, children }: ModalTemplateProps) => {
+  return (
+    <div className={`modal-template-rm ${className || ""}`}>{children}</div>
+  );
 };
 
 ModalTemplate.Header = TemplateHeader;
