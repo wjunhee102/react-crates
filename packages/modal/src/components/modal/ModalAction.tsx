@@ -1,5 +1,4 @@
-import { ReactNode } from "react";
-import { ButtonHTMLAttributes, MouseEvent } from "react";
+import { forwardRef, ReactNode, ButtonHTMLAttributes, MouseEvent } from "react";
 import { useModalComponentProps } from "../../hooks/useModalComponentProps";
 import { ModalComponentProps, ModalConfirmType } from "../../types";
 
@@ -54,14 +53,10 @@ const ModalAction = ({
   );
 };
 
-export interface ModalConfirmProps
-  extends ButtonHTMLAttributes<HTMLButtonElement> {}
-
-const ModalConfirm = ({
-  onClick,
-  children,
-  ...restProps
-}: ModalConfirmProps) => {
+const ModalConfirm = forwardRef<
+  HTMLButtonElement,
+  ButtonHTMLAttributes<HTMLButtonElement>
+>(({ onClick, children, type = "button", ...restProps }, ref) => {
   const { action, confirmContent } = useModalComponentProps();
 
   const onClickConfirm = (e: MouseEvent<HTMLButtonElement>) => {
@@ -70,16 +65,16 @@ const ModalConfirm = ({
   };
 
   return (
-    <button {...restProps} onClick={onClickConfirm} type="button">
+    <button ref={ref} onClick={onClickConfirm} type={type} {...restProps}>
       {confirmContent || children || "확인"}
     </button>
   );
-};
+});
 
-export interface ModalCancelProps
-  extends ButtonHTMLAttributes<HTMLButtonElement> {}
-
-const ModalCancel = ({ onClick, children, ...restProps }: ModalCancelProps) => {
+const ModalCancel = forwardRef<
+  HTMLButtonElement,
+  ButtonHTMLAttributes<HTMLButtonElement>
+>(({ onClick, children, type = "button", ...restProps }, ref) => {
   const { action, cancelContent } = useModalComponentProps();
 
   const onClickCancel = (e: MouseEvent<HTMLButtonElement>) => {
@@ -88,36 +83,33 @@ const ModalCancel = ({ onClick, children, ...restProps }: ModalCancelProps) => {
   };
 
   return (
-    <button {...restProps} onClick={onClickCancel} type="button">
+    <button ref={ref} onClick={onClickCancel} type={type} {...restProps}>
       {cancelContent || children || "취소"}
     </button>
   );
-};
+});
 
 export interface ModalCustomActionProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
   confirmType: ModalConfirmType;
 }
 
-const ModalCustomAction = ({
-  onClick,
-  children,
-  confirmType,
-  ...restProps
-}: ModalCustomActionProps) => {
-  const { action, customActionContent } = useModalComponentProps();
+const ModalCustomAction = forwardRef<HTMLButtonElement, ModalCustomActionProps>(
+  ({ onClick, children, confirmType, type = "button", ...restProps }, ref) => {
+    const { action, customActionContent } = useModalComponentProps();
 
-  const onClickSub = (e: MouseEvent<HTMLButtonElement>) => {
-    onClick && onClick(e);
-    action(confirmType);
-  };
+    const onClickSub = (e: MouseEvent<HTMLButtonElement>) => {
+      onClick && onClick(e);
+      action(confirmType);
+    };
 
-  return (
-    <button {...restProps} onClick={onClickSub} type="button">
-      {customActionContent || children || "커스텀"}
-    </button>
-  );
-};
+    return (
+      <button ref={ref} onClick={onClickSub} type={type} {...restProps}>
+        {customActionContent || children || "커스텀"}
+      </button>
+    );
+  }
+);
 
 ModalAction.displayName = "Modal.Action";
 ModalConfirm.displayName = "Modal.Action.Confirm";

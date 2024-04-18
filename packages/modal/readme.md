@@ -23,6 +23,7 @@ $ pnpm add @junhee_h/react-modal
 
 - **효율적 개발**: 본 라이브러리는 모달의 간편한 생성과 재사용을 통해 개발 효율성을 극대화합니다.
 - **기본 modal 대체**: window.alert와 window.confirm 같은 기본 JavaScript modal을 React 프로젝트 내에서 효과적으로 대체할 수 있습니다.
+- **사전 구성된 컴포넌트**: 미리 정의된 컴포넌트들을 제공하여, 개발자가 손쉽고 빠르게 모달을 사용할 수 있도록 합니다.
 - **유연한 사용자 정의**: 실행 결과를 사용자가 원하는 대로 맞춤 설정할 수 있으며, 애니메이션 통합과 화면 크기에 따른 위치 조정이 가능합니다.
 - **React 컨텍스트 내 독립 실행**: 이 라이브러리는 React 애플리케이션 내에서 컴포넌트의 상위 계층과 독립적으로 모달을 생성하고 관리할 수 있는 기능을 제공합니다. 이를 통해 React-toastify와 유사하게, 애플리케이션의 어느 곳에서나 간편하게 모달을 호출하고 활용할 수 있습니다.
 - **제로 의존성(zero dependencies)**: 제로 의존성으로 인해 보안 리스크를 최소화하고, 프로젝트의 복잡성 없이 안정적으로 통합할 수 있습니다.
@@ -32,24 +33,25 @@ $ pnpm add @junhee_h/react-modal
 ```javascript
 import React from "react";
 
-import { generateModal, Modal } from "@junhee_h/react-modal";
+import { generateModal, ModalCollection } from "@junhee_h/react-modal";
 
 const { modalCtrl, ModalProvider } = generateModal({
   alert: {
-    component: () => (
-      <div>
-        <Modal.Content />
-        <Modal.Action>확인</Modal.Action>
-      </div>
-    ),
-    defaultOptions: {
-      position: (breakPoint) => (breakPoint > 480 ? "center" : "bottom"),
-    },
+    component: ModalCollection.Alert,
+    defaultOptions: {},
+  },
+  confirm: {
+    component: ModalCollection.Confirm,
+    defaultOptions: {},
+  },
+  prompt: {
+    component: ModalCollection.Prompt,
+    defaultOptions: {},
   },
 });
 
 function App() {
-  const alert = () => modalCtrl.alert({ content: "알림" });
+  const alert = () => modalCtrl.alert("알림");
 
   return (
     <div>
@@ -139,6 +141,7 @@ const {
         transform?: string;
         opacity?: number;
         background?: string;
+        className?: string;
       }
     }
   };
@@ -277,7 +280,34 @@ interface ModalComponentProps<T> {
   payload?: T; // modal 통신이 필요하면 해당 프로퍼티를 활용해보세요.
 }
 
---
+//useModalComponentProps를 이용한 ModalComponent 만들기
+import { useModalComponentProps } from "@junhee_h/react-modal";
+
+const ExampleModal = () => {
+
+  const {
+    title,
+    content,
+    confirmContent,
+    cancelContent,
+    action
+  } = useModalComponentProps();
+
+  return (
+   <div>
+      <h2>{title || "타이틀"}</h2>
+      <p>{content || "내용"}</p>
+      <button onClick={() => action(false)}>
+        {confirmContent || "취소"}
+      </button>
+      <button onClick={() => action(true)}>
+        {cancelContent || "확인"}
+      </button>
+    </div>
+  );
+}
+
+
 // Modal을 이용한 ModalComponent 만들기
 
 import { Modal } from "@junhee_h/react-modal";
@@ -304,6 +334,40 @@ const ExampleModal = () => {
 <Modal.Action.Confirm />
 <Modal.Action.Cancel />
 <Modal.Action.Custom />
+```
+
+### Modal Template 이용
+
+- ModalTemplate은 style이 적용 되어있는 preset Component입니다.
+- ModalTemplate을 활용하여 쉽게 Modal의 레이아웃을 쉽게 구성할 수 있습니다.
+
+```tsx
+import { ModalTemplate, Modal } from "@junhee_h/react-modal";
+
+const ExampleModal = () => {
+  return (
+    <ModalTemplate>
+      <ModalTemplate.Header>
+        <Modal.Title>타이틀</Modal.Title>
+      </ModalTemplate.Header>
+
+      <ModalTemplate.Main>
+        <Modal.Content>내용</Modal.Content>
+      </ModalTemplate.Main>
+
+      <ModalTemplate.Footer>
+        <Modal.Action.Cancel>취소</Modal.Action.Cancel>
+        <Modal.Action.Confirm>확인</Modal.Action.Confirm>
+      </ModalTemplate.Footer>
+    </ModalTemplate>
+  );
+};
+
+// Modal Template 목록
+<ModalTemplate>
+<ModalTemplate.Header>
+<ModalTemplate.Main>
+<ModalTemplate.Footer>
 ```
 
 ### Modal 등록
@@ -336,6 +400,64 @@ type ReservedModalName =
   | "remove"
   | "action"
   ;
+
+```
+
+### Modal Collection 이용
+
+- Modal Collection은 style이 적용 되어있는 preset Modal Component입니다.
+- Modal Collection을 이용하면 별도의 Modal Component 개발 없이도 바로 사용할 수 있습니다.
+- defaultOptions을 통해 제목, 내용, 버튼 등의 콘텐츠를 개별적으로 설정할 수 있습니다.
+
+```tsx
+// modal.ts
+import { generateModal, ModalCollection } from "@junhee_h/react-modal";
+
+export const { modalCtrl } = generateModal({
+  confirm: {
+    component: ModalCollection.Confirm,
+    defaultOptions: {},
+  },
+  alert: {
+    component: ModalCollection.Alert,
+    defaultOptions: {
+      title: "알림",
+      content: "알림",
+      confirmContent: "확인",
+    },
+  },
+  prompt: {
+    component: ModalCollection.Prompt,
+    defaultOptions: {},
+  },
+});
+
+// Modal Collection Confirm의 구성
+<ModalTemplate>
+  <ModalTemplate.Header>
+    <Modal.Title className="modal-collection-title-rm">Confirm</Modal.Title>
+    <Modal.Title.Sub className="modal-collection-sub-title-rm" />
+  </ModalTemplate.Header>
+
+  <ModalTemplate.Main>
+    <Modal.Content className="modal-collection-content-rm" />
+    <Modal.Content.Sub className="modal-collection-sub-content-rm" />
+  </ModalTemplate.Main>
+
+  <ModalTemplate.Footer>
+    <Modal.Action.Cancel className="modal-collection-action-rm modal-collection-cancel-rm">
+      Cancel
+    </Modal.Action.Cancel>
+    <Modal.Action.Confirm className="modal-collection-action-rm modal-collection-confirm-rm">
+      Confirm
+    </Modal.Action.Confirm>
+  </ModalTemplate.Footer>
+</ModalTemplate>
+
+// Modal Collection 목록
+<ModalCollection.Confirm>
+<ModalCollection.Alert>
+<ModalCollection.Prompt>
 ```
 
 ### Modal 사용
@@ -411,6 +533,93 @@ function Example() {
     <button>확인 버튼</button> <- Modal.Action.Confirm
   </div>
 */
+```
+
+### Modal Collection Prompt 사용자 입력값 가져오기
+
+```tsx
+import { modalCtrl } from "./modal";
+
+function Example() {
+  const prompt = () => {
+    modalCtrl.prompt();
+
+    modalCtrl.prompt((confirm) => {
+      console.log(confirm /* 사용자 입력값 확인 가능 */);
+    });
+  };
+
+  return (
+    <div>
+      <button onClick={prompt}>prompt</button>
+    </div>
+  );
+}
+
+// ModalCollection.Prompt Component
+
+const Prompt = () => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [state, setState] = useState("");
+  const { action } = useModalComponentProps();
+
+  const actionToKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
+    switch (event.key) {
+      case "Enter":
+        action(state);
+        return;
+      case "Escape":
+        action(false);
+        return;
+      default:
+        return;
+    }
+  };
+
+  const onChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setState(event.target.value);
+  }, []);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [inputRef.current]);
+
+  return (
+    <ModalTemplate>
+      <ModalTemplate.Header>
+        <Modal.Title className="modal-collection-title-rm">Prompt</Modal.Title>
+        <Modal.Title.Sub className="modal-collection-sub-title-rm" />
+      </ModalTemplate.Header>
+
+      <ModalTemplate.Main>
+        <Modal.Content className="modal-collection-content-rm" />
+        <Modal.Content.Sub className="modal-collection-sub-content-rm" />
+        <div className="modal-collection-prompt-rm">
+          <input
+            ref={inputRef}
+            onChange={onChange}
+            onKeyUp={actionToKeyUp}
+            className="modal-collection-prompt-input-rm"
+          />
+        </div>
+      </ModalTemplate.Main>
+
+      <ModalTemplate.Footer>
+        <Modal.Action.Cancel className="modal-collection-action-rm modal-collection-cancel-rm">
+          Cancel
+        </Modal.Action.Cancel>
+        <Modal.Action.Custom
+          className="modal-collection-action-rm modal-collection-confirm-rm"
+          confirmType={state}
+        >
+          Confirm
+        </Modal.Action.Custom>
+      </ModalTemplate.Footer>
+    </ModalTemplate>
+  );
+};
 ```
 
 ### Modal 동적 생성

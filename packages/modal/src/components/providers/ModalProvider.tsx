@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import ModalManager from "../../services/modalManager";
 import { ModalManagerState } from "../../types";
 import { MODAL_TRANSACTION_STATE } from "../../contants";
-import { setDisableBodyScroll } from "../../utils/disableBodyScroll";
 import ModalComponentProvider from "./ModalComponentProvider";
+import { Modal } from "../../services/modal";
 
 import "./modalProvider.css";
 
@@ -15,10 +15,11 @@ interface ModalProviderCoreProps extends ModalProviderProps {
   modalManager: ModalManager;
 }
 
-function ModalProviderCore({
+const ModalProviderCore = ({
   modalManager,
   disableScroll = true,
-}: ModalProviderCoreProps) {
+  children,
+}: ModalProviderCoreProps) => {
   const [
     { modalStack, transactionState, isOpen, breakPoint, currentModalId },
     setModalManagerState,
@@ -87,25 +88,59 @@ function ModalProviderCore({
     };
   }, [isOpen]);
 
-  return (
-    <div className={`modalProvider_rm ${isOpen ? "open_rm" : ""}`}>
-      <button type="button" className="modalClearBtn_rm" onClick={onClearModal}>
-        {" "}
-      </button>
-      {modalStack.map((modal) => (
-        <ModalComponentProvider
-          key={modal.id}
-          breakPoint={breakPoint}
-          modal={modal}
-          isCurrent={modal.id === currentModalId}
-        />
-      ))}
-    </div>
-  );
+  const props = {
+    isOpen,
+    modalStack,
+    breakPoint,
+    currentModalId,
+    onClearModal,
+  };
+
+  if (children) {
+    return (
+      <>
+        {children}
+        <ModalProviderView {...props} />
+      </>
+    );
+  }
+
+  return <ModalProviderView {...props} />;
+};
+
+interface ModalProviderViewProps {
+  isOpen: boolean;
+  modalStack: Modal[];
+  breakPoint: number;
+  currentModalId: number;
+  onClearModal: () => void;
 }
+
+const ModalProviderView = ({
+  isOpen,
+  modalStack,
+  breakPoint,
+  currentModalId,
+  onClearModal,
+}: ModalProviderViewProps) => (
+  <div className={`modalProvider_rm ${isOpen ? "open_rm" : ""}`}>
+    <button type="button" className="modalClearBtn_rm" onClick={onClearModal}>
+      {" "}
+    </button>
+    {modalStack.map((modal) => (
+      <ModalComponentProvider
+        key={modal.id}
+        breakPoint={breakPoint}
+        modal={modal}
+        isCurrent={modal.id === currentModalId}
+      />
+    ))}
+  </div>
+);
 
 export interface ModalProviderProps {
   disableScroll?: boolean;
+  children?: ReactNode;
 }
 
 function setModalProvider(modalManager: ModalManager) {

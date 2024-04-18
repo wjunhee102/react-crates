@@ -1,11 +1,20 @@
-import { ElementType, HTMLAttributes } from "react";
+import { Fragment } from "react";
 import { useModalComponentProps } from "../../hooks/useModalComponentProps";
+import { PolymorphicComponentPropsWithoutRef } from "./type";
 
-export interface ModalTitleProps extends HTMLAttributes<HTMLHeadingElement> {
-  as?: ElementType;
-}
+export type ModalTitleElement =
+  | "div"
+  | "h1"
+  | "h2"
+  | "h3"
+  | "h4"
+  | typeof Fragment;
 
-const ModalTitle = ({ as, children, ...restProps }: ModalTitleProps) => {
+const ModalTitle = <T extends ModalTitleElement = "h2">({
+  as,
+  children,
+  ...restProps
+}: PolymorphicComponentPropsWithoutRef<T>) => {
   const { title } = useModalComponentProps();
 
   if (!title && !children) {
@@ -17,7 +26,11 @@ const ModalTitle = ({ as, children, ...restProps }: ModalTitleProps) => {
   return <Component {...restProps}>{title || children}</Component>;
 };
 
-const ModalSubTitle = ({ as, children, ...restProps }: ModalTitleProps) => {
+const ModalSubTitle = <T extends ModalTitleElement = "h3">({
+  as,
+  children,
+  ...restProps
+}: PolymorphicComponentPropsWithoutRef<T>) => {
   const { subTitle } = useModalComponentProps();
 
   if (!subTitle && !children) {
