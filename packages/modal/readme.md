@@ -38,15 +38,12 @@ import { generateModal, ModalCollection } from "@junhee_h/react-modal";
 const { modalCtrl, ModalProvider } = generateModal({
   alert: {
     component: ModalCollection.Alert,
-    defaultOptions: {},
   },
   confirm: {
     component: ModalCollection.Confirm,
-    defaultOptions: {},
   },
   prompt: {
     component: ModalCollection.Prompt,
-    defaultOptions: {},
   },
 });
 
