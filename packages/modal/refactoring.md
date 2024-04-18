@@ -184,3 +184,14 @@ componentProps가 아니라 component가 바뀌어야 함.
 - [ ] 테스트 코드 작성
 - [ ] 데모사이트 만들기
 - [ ] 문서 계속 작성
+
+## 2024년 4월 17일 수요일
+
+- modal의 기본 프리셋을 만드려고 함.
+- 그런데 기본 Modal들에 as로 Fragment를 받아야 하나 고민중임.
+
+## 2024년 4월 18일 목요일
+
+- 사용자에게 익숙한 DX 제공하기 위해서 modal provider에 children도 받을 수 있게 함.
+- Modal util 컴포넌트에 Fragment 타입 추가하고 ModalAction들에 ref를 받을 수 있게 설정함.
+- ModalAction 자체는 합성 컴포넌트 때문에 ref를 받을 수 없음.

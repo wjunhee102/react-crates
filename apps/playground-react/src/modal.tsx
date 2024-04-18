@@ -1,4 +1,4 @@
-import { generateModal, Modal } from "@junhee_h/react-modal";
+import { generateModal, Modal, ModalCollection } from "@junhee_h/react-modal";
 
 export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
   {
@@ -39,6 +39,15 @@ export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
         <div className="bg-cyan-400 w-[200px] h-[300px]">테스트</div>
       ),
       defaultOptions: {},
+    },
+    confirm: {
+      component: ModalCollection.Confirm,
+      defaultOptions: {
+        title: "테스트",
+        content: "콘텐트",
+        confirmContent: "확인",
+        cancelContent: "취소",
+      },
     },
   },
   {

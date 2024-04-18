@@ -1,12 +1,14 @@
-import { ElementType, HTMLAttributes } from "react";
+import { Fragment } from "react";
 import { useModalComponentProps } from "../../hooks/useModalComponentProps";
+import { PolymorphicComponentPropsWithoutRef } from "./type";
 
-export interface ModalContentProps
-  extends HTMLAttributes<HTMLDivElement | HTMLParagraphElement> {
-  as?: ElementType;
-}
+export type ModalContentElement = "div" | "p" | typeof Fragment;
 
-const ModalContent = ({ as, children, ...restProps }: ModalContentProps) => {
+const ModalContent = <T extends ModalContentElement = "div">({
+  as,
+  children,
+  ...restProps
+}: PolymorphicComponentPropsWithoutRef<T>) => {
   const { content } = useModalComponentProps();
 
   if (!content && !children) {
@@ -18,7 +20,11 @@ const ModalContent = ({ as, children, ...restProps }: ModalContentProps) => {
   return <Component {...restProps}>{content || children}</Component>;
 };
 
-const ModalSubContent = ({ as, children, ...restProps }: ModalContentProps) => {
+const ModalSubContent = <T extends ModalContentElement = "div">({
+  as,
+  children,
+  ...restProps
+}: PolymorphicComponentPropsWithoutRef<T>) => {
   const { subContent } = useModalComponentProps();
 
   if (!subContent && !children) {
