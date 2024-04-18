@@ -116,10 +116,29 @@ function App() {
           <TestDynamicModal />
           <button
             onClick={() => {
-              modalCtrl.confirm("되나?");
+              modalCtrl.confirm({
+                content:
+                  "modal-collection-action-rm modal-collection-confirm-rm modal-collection-action-rm modal-collection-confirm-rmmodal-collection-action-rm modal-collection-confirm-rmmodal-collection-action-rm modal-collection-confirm-rm",
+                action: (confirm) => {
+                  console.log(confirm);
+                },
+              });
             }}
           >
             confirm
+          </button>
+
+          <button
+            onClick={() => {
+              modalCtrl.prompt({
+                content: "입력",
+                action: (confirm) => {
+                  console.log(confirm);
+                },
+              });
+            }}
+          >
+            confirm2
           </button>
         </header>
         <div className="w-full h-[500px]"></div>

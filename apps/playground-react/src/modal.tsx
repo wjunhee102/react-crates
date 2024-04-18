@@ -49,6 +49,9 @@ export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
         cancelContent: "취소",
       },
     },
+    prompt: {
+      component: ModalCollection.Prompt,
+    },
   },
   {
     stateResponsiveComponent: true,
