@@ -422,7 +422,7 @@ export class Modal {
 
     this.manager.stanbyTransaction();
 
-    if (confirm) {
+    if (confirm !== undefined) {
       this._confirm = confirm;
     }
 
