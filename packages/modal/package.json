@@ -12,7 +12,9 @@
     "react-modal",
     "modal",
     "alert",
-    "dialog"
+    "dialog",
+    "window.alert",
+    "window.confirm"
   ],
   "author": "wjunhee102",
   "main": "dist/cjs/index.js",
