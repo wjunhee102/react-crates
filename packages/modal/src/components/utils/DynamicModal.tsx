@@ -12,7 +12,6 @@ import {
 import ModalManager from "../../services/modalManager";
 import { Modal } from "../../components/modal";
 import {
-  ModalConfirmType,
   ModalDispatchOptions,
   ModalCallback,
   ModalEditOptions,
@@ -50,7 +49,7 @@ class DynamicModalManager {
   }
 
   setOptions(options: DynamicModalOptions = {}) {
-    const callback: ModalCallback = (...props) => {
+    const action: ModalCallback = (...props) => {
       options.action && options.action(...props);
       this.isOpen = false;
       this.modalId = null;
@@ -58,7 +57,7 @@ class DynamicModalManager {
 
     this.options = {
       ...options,
-      action: callback,
+      action,
     };
 
     return this;
@@ -71,23 +70,6 @@ class DynamicModalManager {
 
     this.isOpen = true;
     this.modalId = this.modalManager.open(this.element, this.options);
-  }
-
-  async action(confirm?: ModalConfirmType) {
-    if (!this.modalId) {
-      return;
-    }
-
-    const result = await this.modalManager.action(this.modalId, confirm);
-
-    if (!result) {
-      return;
-    }
-
-    this.isOpen = false;
-    this.modalId = null;
-
-    return;
   }
 }
 
