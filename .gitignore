@@ -35,7 +35,5 @@ yarn-error.log*
 # vercel
 .vercel
 
-
-packages/temp
-
+# bundle
 dist

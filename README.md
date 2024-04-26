@@ -15,16 +15,18 @@ pnpm build
 ## 구성
 
 ### Apps
-- `docs`: 라이브러리 문서입니다.
-- `playground-react`: React playground 입니다.
-- `playground-next`: Next.js playground 입니다.
+
+개발된 라이브러리 문서를 담고 있는 app입니다.
+
 ### Packages
 
-- `modal`: 간단하게 사용이 가능한 React modal 라이브러리입니다.
+- `modal`: 간단하게 사용이 가능한 React modal 라이브러리입니다. [이동하기](/tree/main/packages/modal)
+
+### Playgrounds
+
+라이브러리를 테스트하기 위한 앱입니다.
 
 ### common
+
 - `eslint-config-custom`: turbo repo 기본 eslint config.
-- `tsconfig`: tsconfig  
-- `ui`: 공통으로 사용될 React ui component입니다.
-
-
+- `tsconfig`: tsconfig
