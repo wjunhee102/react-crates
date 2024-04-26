@@ -18,5 +18,5 @@
     "turbo": "latest"
   },
   "packageManager": "pnpm@7.15.0",
-  "name": "react-libraries"
+  "name": "react-crates"
 }
