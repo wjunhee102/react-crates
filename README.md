@@ -1,4 +1,4 @@
-# @react-libs
+# @react-crates
 
 리액트 라이브러리입니다.
 
@@ -7,7 +7,7 @@
 ```sh
 pnpm install
 
-pnpm watch  // @react-libs를 빌드하고 playground를 실행합니다.
+pnpm watch  // @react-crates를 빌드하고 playground를 실행합니다.
 
 pnpm build
 ```

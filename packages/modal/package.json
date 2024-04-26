@@ -1,6 +1,6 @@
 {
-  "name": "@junhee_h/react-modal",
-  "version": "0.4.1",
+  "name": "@react-crates/modal",
+  "version": "0.4.2",
   "description": "리액트 모달을 쉽게 등록하고 사용가능한 라이브러리입니다.",
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs",
@@ -64,10 +64,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wjunhee102/react-libraries.git"
+    "url": "git+https://github.com/wjunhee102/react-crates.git"
   },
   "bugs": {
-    "url": "https://github.com/wjunhee102/react-libraries/issues"
+    "url": "https://github.com/wjunhee102/react-crates/issues"
   },
-  "homepage": "https://github.com/wjunhee102/react-libraries/tree/main/packages/modal"
+  "homepage": "https://github.com/wjunhee102/react-crates/tree/main/packages/modal"
 }

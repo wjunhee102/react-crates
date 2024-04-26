@@ -1,4 +1,4 @@
-import { generateModal, Modal, ModalCollection } from "@junhee_h/react-modal";
+import { generateModal, Modal, ModalCollection } from "@react-crates/modal";
 
 export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
   {

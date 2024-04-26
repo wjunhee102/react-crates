@@ -1,13 +1,13 @@
-# React-Modal
+# @react-crates/modal
 
-React-Modal은 React 프로젝트에서 기본 JavaScript modal을 효과적으로 대체하고, 사용자의 요구에 맞춰 모달의 위치, 애니메이션, 및 실행 결과를 맞춤 설정할 수 있는 강력한 라이브러리입니다.
+**@react-crates/modal**은 React 프로젝트에서 기본 JavaScript modal을 효과적으로 대체하고, 사용자의 요구에 맞춰 모달의 위치, 애니메이션, 및 실행 결과를 맞춤 설정할 수 있는 강력한 라이브러리입니다.
 
 ## Installation
 
 ```
-$ npm install --save @junhee_h/react-modal
-$ yarn add @junhee_h/react-modal
-$ pnpm add @junhee_h/react-modal
+$ npm install --save @react-crates/modal
+$ yarn add @react-crates/modal
+$ pnpm add @react-crates/modal
 ```
 
 ## Table of Contents
@@ -33,7 +33,7 @@ $ pnpm add @junhee_h/react-modal
 ```javascript
 import React from "react";
 
-import { generateModal, ModalCollection } from "@junhee_h/react-modal";
+import { generateModal, ModalCollection } from "@react-crates/modal";
 
 const { modalCtrl, ModalProvider } = generateModal({
   alert: {
@@ -69,7 +69,7 @@ function App() {
 
 ```tsx
 // modal.ts
-import { generateModal } from "@junhee_h/react-modal";
+import { generateModal } from "@react-crates/modal";
 
 const {
   modalCtrl, // modal을 실행시키기 위한 ctrl입니다.
@@ -205,9 +205,9 @@ modalCtrl.open("alert", {
 ### 설치
 
 ```markdown
-$ npm install --save @junhee_h/react-modal
-$ yarn add @junhee_h/react-modal
-$ pnpm add @junhee_h/react-modal
+$ npm install --save @react-crates/modal
+$ yarn add @react-crates/modal
+$ pnpm add @react-crates/modal
 ```
 
 ### 초기 설정
@@ -216,7 +216,7 @@ $ pnpm add @junhee_h/react-modal
 
 ```tsx
 // modal.ts
-import { generateModal } from "@junhee_h/react-modal";
+import { generateModal } from "@react-crates/modal";
 
 export const { modalCtrl, ModalProvider, DynamicModal, useInOpenModal } =
   generateModal(...modalComponents, ...defaultOptions);
@@ -238,7 +238,7 @@ function App() {
 
 ```tsx
 // ExampleModal.tsx
-import { ModalFC } from "@junhee_h/react-modal";
+import { ModalFC } from "@react-crates/modal";
 
 const ExampleModal: ModalFC = ({
   title,
@@ -278,7 +278,7 @@ interface ModalComponentProps<T> {
 }
 
 //useModalComponentProps를 이용한 ModalComponent 만들기
-import { useModalComponentProps } from "@junhee_h/react-modal";
+import { useModalComponentProps } from "@react-crates/modal";
 
 const ExampleModal = () => {
 
@@ -307,7 +307,7 @@ const ExampleModal = () => {
 
 // Modal을 이용한 ModalComponent 만들기
 
-import { Modal } from "@junhee_h/react-modal";
+import { Modal } from "@react-crates/modal";
 
 const ExampleModal = () => {
   return (
@@ -339,7 +339,7 @@ const ExampleModal = () => {
 - ModalTemplate을 활용하여 쉽게 Modal의 레이아웃을 쉽게 구성할 수 있습니다.
 
 ```tsx
-import { ModalTemplate, Modal } from "@junhee_h/react-modal";
+import { ModalTemplate, Modal } from "@react-crates/modal";
 
 const ExampleModal = () => {
   return (
@@ -371,7 +371,7 @@ const ExampleModal = () => {
 
 ```tsx
 // modal.ts
-import { generateModal } from "@junhee_h/react-modal";
+import { generateModal } from "@react-crates/modal";
 import ExampleModal from "./ExampleModal";
 
 export const { modalCtrl } = generateModal({
@@ -408,7 +408,7 @@ type ReservedModalName =
 
 ```tsx
 // modal.ts
-import { generateModal, ModalCollection } from "@junhee_h/react-modal";
+import { generateModal, ModalCollection } from "@react-crates/modal";
 
 export const { modalCtrl } = generateModal({
   confirm: {
@@ -680,7 +680,7 @@ function Example() {
 
 ```tsx
 // modal.ts
-import { generateModal } from "@junhee_h/react-modal";
+import { generateModal } from "@react-crates/modal";
 
 export const { modalCtrl } = generatorModal({
   ...modalComponentTable
@@ -738,7 +738,7 @@ type DefaultModalPosition =
 - payload의 타입을 `defaultOptions`에 적용하면 `modalCtrl`에서 `IntelliSense`가 활성화 됩니다.
 
 ```tsx
-import { ModalFC } from "@junhee_h/react-modal";
+import { ModalFC } from "@react-crates/modal";
 
 export interface ExamplePayload {
   foo: string;
@@ -838,7 +838,7 @@ type ModalActionState =
 
 ```tsx
 // modal.ts
-import { generateModal } from "@junhee_h/react-modal";
+import { generateModal } from "@react-crates/modal";
 
 const { modalCtrl } = generateModal({
   confirm: {
@@ -896,7 +896,7 @@ modalCtrl.confirm(async (confirm, { pending }) => {
 });
 
 // Modal Component에 직접 actionState를 활용할 수 있습니다.
-import { ModalFC } from "@junhee_h/react-modal";
+import { ModalFC } from "@react-crates/modal";
 
 const ExampleModal: ModalFC = ({ actionState }) => {
   if (actionState === "initial") {
@@ -959,7 +959,7 @@ modalCtrl.confirm(async (confirm, { success, error, end }) => {
 - `options`을 통해 기존 modal처럼 설정할 수 있습니다.
 
 ```tsx
-import { generateModal } from "@junhee_h/react-modal";
+import { generateModal } from "@react-crates/modal";
 
 export const { DynamicModal } = generateModal();
 

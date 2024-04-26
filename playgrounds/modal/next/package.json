@@ -1,5 +1,5 @@
 {
-  "name": "playground-next",
+  "name": "@modal/playground-next",
   "version": "1.0.0",
   "private": true,
   "scripts": {
