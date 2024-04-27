@@ -204,3 +204,4 @@ componentProps가 아니라 component가 바뀌어야 함.
   - React가 정의되지 않는 문제는 CRA에서 eject해서 jest에서 자동으로 React를 import하게 하는 `babelTransform.js`를 가져와 해결하였음.
   - `@testing-library/jest-dom`가 적용되지 않는 문제는 여러 방법으로 해결을 해볼려고 하는데 안됐다가 pnpm의 문제라는 글을 보았고 거기서 해법은 `@testing-library/jest-dom": "^6.1.3`로 설치하는 것이였음. 그래서 잘 해결 됨.
 - 추가적으로 tsconfig에 include를 건드리면 build가 되지 않는 문제가 있는데 후에 파악을 해봐야 할 것 같음.
+- ModalClear 버튼을 제거 함. 어차피 있어서 누가 강제로 끄게 한다면 그것도 문제이고 실질적으로 활용되기가 어렵기 때문.
