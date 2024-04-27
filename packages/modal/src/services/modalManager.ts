@@ -71,7 +71,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
 
     this.executeAsync = this.executeAsync.bind(this);
     this.open = this.open.bind(this);
-    this.remove = this.remove.bind(this);
+    this.close = this.close.bind(this);
     this.action = this.action.bind(this);
 
     this.getModalComponentSeed = this.getModalComponentSeed.bind(this);
@@ -179,7 +179,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
     const closeModal = createModalCloser({
       id,
       duration: options.duration,
-      closeModal: this.remove,
+      closeModal: this.close,
       getTransactionState: this.getTransactionState,
       startTransaction: this.startTransaction,
       endTransaction: this.endTransaction,
@@ -645,30 +645,30 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
   }
 
   /**
-   * @param removedName
+   * @param closeTarget
    * @returns 마지막으로 등록된 모달의 id를 반환합니다. 만약 등록된 모달이 없다면 0을 반환합니다.
    */
-  remove(removedName?: CloseModalProps) {
-    if (typeof removedName === "number") {
+  close(closeTarget?: CloseModalProps) {
+    if (typeof closeTarget === "number") {
       this.modalStack = this.modalStack.filter(
-        (modal) => modal.id !== removedName
+        (modal) => modal.id !== closeTarget
       );
       this.notify();
 
       return this.getCurrentModalId();
     }
 
-    if (Array.isArray(removedName)) {
+    if (Array.isArray(closeTarget)) {
       this.modalStack = this.modalStack.filter(
-        (modal) => modal.id !== removedName[0]
+        (modal) => modal.id !== closeTarget[0]
       );
 
-      this.popModal(removedName[1]);
+      this.popModal(closeTarget[1]);
 
       return this.getCurrentModalId();
     }
 
-    this.popModal(removedName);
+    this.popModal(closeTarget);
     this.notify();
 
     return this.getCurrentModalId();

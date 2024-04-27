@@ -28,7 +28,7 @@ function generateModalController<
 ): ModalController<T, P> {
   return {
     open: modalManager.open,
-    remove: modalManager.remove,
+    close: modalManager.close,
     action: modalManager.action,
     ...modalComponentSeedEntries.reduce((controller, modalEntry) => {
       const modalName = modalEntry[0] as Extract<keyof T, string>;

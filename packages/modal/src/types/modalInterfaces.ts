@@ -74,6 +74,6 @@ export type ModalController<
       | ModalCallback
       | string
   ) => number;
-  remove: (removedName?: CloseModalProps) => number;
+  close: (closeTarget?: CloseModalProps) => number;
   action: (targetModalId: number, confirm?: boolean | string) => void;
 } & Controller<T, P>;
