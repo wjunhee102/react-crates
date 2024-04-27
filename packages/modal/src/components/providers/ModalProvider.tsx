@@ -77,15 +77,17 @@ const ModalProviderCore = ({
       };
     }
 
-    document.body.style.overflow = overflow;
-    document.body.style.height = height;
-    document.body.style.width = width;
+    if (disableScroll) {
+      document.body.style.overflow = overflow;
+      document.body.style.height = height;
+      document.body.style.width = width;
 
-    return () => {
-      overflow = "";
-      height = "";
-      width = "";
-    };
+      return () => {
+        overflow = "";
+        height = "";
+        width = "";
+      };
+    }
   }, [isOpen]);
 
   const props = {
@@ -124,9 +126,7 @@ const ModalProviderView = ({
   onClearModal,
 }: ModalProviderViewProps) => (
   <div className={`modalProvider_rm ${isOpen ? "open_rm" : ""}`}>
-    <button type="button" className="modalClearBtn_rm" onClick={onClearModal}>
-      {" "}
-    </button>
+    <button type="button" className="modalClearBtn_rm" onClick={onClearModal} />
     {modalStack.map((modal) => (
       <ModalComponentProvider
         key={modal.id}
