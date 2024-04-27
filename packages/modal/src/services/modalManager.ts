@@ -1,4 +1,6 @@
 import { isValidElement, ReactElement } from "react";
+import { defaultMiddleware, getPositionKey, createModalCloser } from "../utils";
+import { Modal } from "./modal";
 import {
   DEFAULT_DURATION,
   DEFAULT_POSITION,
@@ -29,12 +31,8 @@ import {
   ModalComponent,
   ModalCallback,
   ModalEditOptions,
+  ModalManagerInterface
 } from "../types";
-import { ModalManagerInterface } from "../types/modalInterfaces";
-import { defaultMiddleware } from "../utils/defaultMiddleware";
-import { getCloseModal } from "../utils/getCloseModal";
-import { getPositionKey } from "../utils/getPositionKey";
-import { Modal } from "./modal";
 
 class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements ModalManagerInterface {
   private currentId = 0;
@@ -178,7 +176,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
   private createModal(modalSeed: ModalSeed<ModalDispatchOptions>): Modal {
     const { id, options, name, modalKey, component } = modalSeed;
 
-    const closeModal = getCloseModal({
+    const closeModal = createModalCloser({
       id,
       duration: options.duration,
       closeModal: this.remove,
