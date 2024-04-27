@@ -195,3 +195,8 @@ componentProps가 아니라 component가 바뀌어야 함.
 - 사용자에게 익숙한 DX 제공하기 위해서 modal provider에 children도 받을 수 있게 함.
 - Modal util 컴포넌트에 Fragment 타입 추가하고 ModalAction들에 ref를 받을 수 있게 설정함.
 - ModalAction 자체는 합성 컴포넌트 때문에 ref를 받을 수 없음.
+
+## 2024년 4월 27일 토요일
+
+- 테스트를 작성하려고 함.
+- \*\*.test.tsx에 jest 테스트 코드가 작성이 안됐는 데, tsconfig.json에 exclude에 .test.tsx가 제외되서 그랬음.
