@@ -5,7 +5,6 @@ import {
   ModalLifecycleState,
 } from "./commonTypes";
 import { ComponentPropsOptions, ModalComponent } from "./modalComponentTypes";
-import { ModalTransactionState } from "./modalManagerTypes";
 
 export interface StateControllerOptions {
   afterCloseCallback?: (confirm?: ModalConfirmType) => void;
@@ -42,14 +41,6 @@ export interface StateController {
   getLifecycleState: () => ModalLifecycleState;
   getActionState: () => ModalActionState;
 }
-
-export interface ModalTransctionController {
-  getTransactionState: () => ModalTransactionState;
-  stanbyTransaction: () => number;
-  startTransaction: () => number;
-  endTransaction: () => number;
-}
-
 export interface ModalMiddlewareProps {
   modalState: Modal;
 }

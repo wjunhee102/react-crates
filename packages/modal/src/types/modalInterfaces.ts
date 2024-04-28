@@ -9,13 +9,13 @@ import {
 import { ModalComponent } from "./modalComponentTypes";
 import {
   ModalCallback,
-  ModalTransctionController,
 } from "./modalControllerTypes";
-import { CloseModalProps } from "./modalManagerTypes";
+import { CloseModalProps, ModalTransactionState } from "./modalManagerTypes";
 import { ModalDispatchOptions } from "./modalOptionsTypes";
 import { ModalComponentSeed, ModalComponentSeedTable } from "./modalSeedTypes";
 
-export interface ModalManagerInterface extends ModalTransctionController {
+export interface ModalManagerInterface {
+  getTransactionState: () => ModalTransactionState;
   getCurrentModalPosition: (
     positionState: ModalLifecycleState,
     position?: string
@@ -29,6 +29,8 @@ export interface ModalManagerInterface extends ModalTransctionController {
     asyncCallback: (props: P) => Promise<F>,
     asyncCallbackProps: P
   ) => Promise<F>;
+  executeWithTransaction: <T = any>(asyncCallback: (props: T) => Promise<boolean>,
+    asyncCallbackProps: T) => Promise<boolean>
 }
 
 export type Controller<

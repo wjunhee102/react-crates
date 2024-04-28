@@ -1,5 +1,5 @@
 import { isValidElement, ReactElement } from "react";
-import { defaultMiddleware, getPositionKey, createModalCloser } from "../utils";
+import { defaultMiddleware, getPositionKey, delay } from "../utils";
 import { Modal } from "./modal";
 import {
   DEFAULT_DURATION,
@@ -31,7 +31,8 @@ import {
   ModalComponent,
   ModalCallback,
   ModalEditOptions,
-  ModalManagerInterface
+  ModalManagerInterface,
+  ModalClose
 } from "../types";
 
 class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements ModalManagerInterface {
@@ -68,6 +69,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
 
   private bind() {
     this.setModalComponentSeedMap = this.setModalComponentSeedMap.bind(this);
+    this.createModalCloser = this.createModalCloser.bind(this);
 
     this.executeAsync = this.executeAsync.bind(this);
     this.open = this.open.bind(this);
@@ -77,7 +79,6 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
     this.getModalComponentSeed = this.getModalComponentSeed.bind(this);
     this.getCurrentModalPosition = this.getCurrentModalPosition.bind(this);
     this.getTransactionState = this.getTransactionState.bind(this);
-    this.stanbyTransaction = this.stanbyTransaction.bind(this);
     this.startTransaction = this.startTransaction.bind(this);
     this.endTransaction = this.endTransaction.bind(this);
   }
@@ -171,110 +172,17 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
     return this.modalComponentSeedMap.get(name);
   }
 
-  /* 모달 인스턴스 관리 */
+  private createModalCloser(id: number, duration?: number): ModalClose {
+    return async (callback, confirm) => {
 
-  private createModal(modalSeed: ModalSeed<ModalDispatchOptions>): Modal {
-    const { id, options, name, modalKey, component } = modalSeed;
+      duration && await delay(duration);
 
-    const closeModal = createModalCloser({
-      id,
-      duration: options.duration,
-      closeModal: this.close,
-      getTransactionState: this.getTransactionState,
-      startTransaction: this.startTransaction,
-      endTransaction: this.endTransaction,
-    });
+      callback && await callback(confirm);
 
-    const middleware = options.middleware
-      ? options.middleware
-      : defaultMiddleware;
+      this.close(id);
 
-    const mergedOptions: ModalOptions<any> = {
-      stateResponsiveComponent: this.stateResponsiveComponent,
-      ...options,
-      action: options.action,
-      closeModal,
-      middleware,
+      return true;
     };
-
-    return new Modal(
-      {
-        id,
-        name,
-        modalKey,
-        component,
-        options: mergedOptions,
-      },
-      this
-    );
-  }
-
-  filterModalByName(name: string | string[]) {
-    if (Array.isArray(name)) {
-      this.modalStack = this.modalStack.filter(
-        (modal) => !name.includes(modal.name)
-      );
-    } else {
-      this.modalStack = this.modalStack.filter((modal) => modal.name !== name);
-    }
-
-    return this;
-  }
-
-  pushModal(
-    modalSeed:
-      | ModalSeed<ModalDispatchOptions>
-      | ModalSeed<ModalDispatchOptions>[]
-  ) {
-    let newModalStack: Modal[];
-
-    if (Array.isArray(modalSeed)) {
-      newModalStack = modalSeed.map((seed) => this.createModal(seed));
-    } else {
-      newModalStack = [this.createModal(modalSeed)];
-    }
-
-    this.modalStack = [...this.modalStack, ...newModalStack];
-
-    this.notify();
-  }
-
-  popModal(removedName?: ModalRemovedName) {
-    if (this.modalStack.length === 0) {
-      this.currentId = 0;
-      return this;
-    }
-
-    if (removedName === undefined) {
-      this.modalStack = this.modalStack.slice(0, -1);
-
-      return this;
-    }
-
-    if (removedName === RESERVED_MODAL_NAME.clear) {
-      this.clearModalStack();
-
-      return this;
-    }
-
-    this.filterModalByName(removedName);
-
-    return this;
-  }
-
-  clearModalStack() {
-    this.modalStack = [];
-    this.currentId = 0;
-
-    return this;
-  }
-
-  getCurrentModalId() {
-    if (this.modalStack.length === 0) {
-      return 0;
-    }
-
-    return this.modalStack[this.modalStack.length - 1].id;
   }
 
   /* 모달 transition, position 관리 */
@@ -424,16 +332,8 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
     return this.transactionCount;
   }
 
-  stanbyTransaction() {
-    this.transactionCount += 1;
-
-    return this.setTransactionState(MODAL_TRANSACTION_STATE.standby);
-  }
-
   startTransaction() {
-    if (this.transactionState !== MODAL_TRANSACTION_STATE.standby) {
-      this.transactionCount += 1;
-    }
+    this.transactionCount += 1;
 
     return this.setTransactionState(MODAL_TRANSACTION_STATE.active);
   }
@@ -489,6 +389,15 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
     }
   }
 
+  async executeWithTransaction<T = any>(callback: (props: T) => Promise<boolean>,
+    callbackProps: T): Promise<boolean> {
+    if (this.transactionState !== MODAL_TRANSACTION_STATE.idle) {
+      return false;
+    }
+
+    return this.executeAsync(callback, callbackProps);
+  }
+
   /* 상태 및 이벤트 리스너 관리 */
 
   subscribe(listener: ModalListener) {
@@ -513,6 +422,105 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
 
   getModalStack() {
     return this.modalStack;
+  }
+
+  /* 모달 인스턴스 관리 */
+
+  private createModal(modalSeed: ModalSeed<ModalDispatchOptions>): Modal {
+    const { id, options, name, modalKey, component } = modalSeed;
+
+    const closeModal = this.createModalCloser(id, options.duration);
+
+    const middleware = options.middleware
+      ? options.middleware
+      : defaultMiddleware;
+
+    const mergedOptions: ModalOptions<any> = {
+      stateResponsiveComponent: this.stateResponsiveComponent,
+      ...options,
+      action: options.action,
+      closeModal,
+      middleware,
+    };
+
+    return new Modal(
+      {
+        id,
+        name,
+        modalKey,
+        component,
+        options: mergedOptions,
+      },
+      this
+    );
+  }
+
+  filterModalByName(name: string | string[]) {
+    if (Array.isArray(name)) {
+      this.modalStack = this.modalStack.filter(
+        (modal) => !name.includes(modal.name)
+      );
+    } else {
+      this.modalStack = this.modalStack.filter((modal) => modal.name !== name);
+    }
+
+    return this;
+  }
+
+  pushModal(
+    modalSeed:
+      | ModalSeed<ModalDispatchOptions>
+      | ModalSeed<ModalDispatchOptions>[]
+  ) {
+    let newModalStack: Modal[];
+
+    if (Array.isArray(modalSeed)) {
+      newModalStack = modalSeed.map((seed) => this.createModal(seed));
+    } else {
+      newModalStack = [this.createModal(modalSeed)];
+    }
+
+    this.modalStack = [...this.modalStack, ...newModalStack];
+
+    this.notify();
+  }
+
+  popModal(removedName?: ModalRemovedName) {
+    if (this.modalStack.length === 0) {
+      this.currentId = 0;
+      return this;
+    }
+
+    if (removedName === undefined) {
+      this.modalStack = this.modalStack.slice(0, -1);
+
+      return this;
+    }
+
+    if (removedName === RESERVED_MODAL_NAME.clear) {
+      this.clearModalStack();
+
+      return this;
+    }
+
+    this.filterModalByName(removedName);
+
+    return this;
+  }
+
+  clearModalStack() {
+    this.modalStack = [];
+    this.currentId = 0;
+
+    return this;
+  }
+
+  getCurrentModalId() {
+    if (this.modalStack.length === 0) {
+      return 0;
+    }
+
+    return this.modalStack[this.modalStack.length - 1].id;
   }
 
   /* 모달 액션 관련 */
