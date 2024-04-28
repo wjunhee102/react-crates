@@ -49,6 +49,7 @@ export class Modal {
   private _modalKey: string | null;
   private _name: string;
   private _options: ModalOptions<any>;
+  private _isCurrent: boolean = false;
   private _isAwaitingConfirm = false;
   private _isCloseDelay = true;
   private _closeDelayDuration = -1;
@@ -145,6 +146,10 @@ export class Modal {
 
   get confirm() {
     return this._confirm;
+  }
+
+  get isCurrent() {
+    return this._isCurrent;
   }
 
   get isAwaitingConfirm() {
@@ -370,6 +375,18 @@ export class Modal {
 
     this._isCloseDelay = true;
     this._closeDelayDuration = duration;
+
+    return this;
+  }
+
+  updateIsCurrent(isCurrent: boolean) {
+    if (this._isCurrent === isCurrent) {
+      return this;
+    }
+
+    this._isCurrent = isCurrent;
+
+    this.notify();
 
     return this;
   }

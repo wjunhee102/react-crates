@@ -205,3 +205,12 @@ componentProps가 아니라 component가 바뀌어야 함.
   - `@testing-library/jest-dom`가 적용되지 않는 문제는 여러 방법으로 해결을 해볼려고 하는데 안됐다가 pnpm의 문제라는 글을 보았고 거기서 해법은 `@testing-library/jest-dom": "^6.1.3`로 설치하는 것이였음. 그래서 잘 해결 됨.
 - 추가적으로 tsconfig에 include를 건드리면 build가 되지 않는 문제가 있는데 후에 파악을 해봐야 할 것 같음.
 - ModalClear 버튼을 제거 함. 어차피 있어서 누가 강제로 끄게 한다면 그것도 문제이고 실질적으로 활용되기가 어렵기 때문.
+
+## 2024년 4월 28일 일요일
+
+- modalManager transaction 관리 문제
+  - modalManager의 transaction이 파편화 되고 또 외부에서만 transaction을 관리하고 있었음.
+  - 그래서 내부에 transaction을 관리하는 메소드를 만들고 closeModal을 한눈에 볼 수 있도록 내부 로직으로 변경하였음.
+- ModalProvider current backcover cursor 문제
+  - 모달이 동시에 여러개가 open 됐을 때 그 뒤에 있는 모달의 백커버의 cursor가 `default`에서 `pointer`로 변경되지 않는 문제가 있었음.
+  - `current`인지 파악하는 로직은 modal 객체에 없기 때문에 modal에도 `current`를 확인하는 프로퍼티를 만들고 변경시 notifty를 하게 업데이트 하였음.

@@ -70,6 +70,8 @@ const ModalComponentProvider = ({
     if (isCurrent && modalBackCoverRef.current) {
       modalBackCoverRef.current.focus();
     }
+
+    modal.updateIsCurrent(isCurrent);
   }, [isCurrent]);
 
   useEffect(() => {
