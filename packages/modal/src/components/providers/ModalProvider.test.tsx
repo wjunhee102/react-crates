@@ -1,9 +1,10 @@
 import { act, cleanup, render, screen } from "@testing-library/react";
 import ModalManager from "../../services/modalManager";
 import setModalProvider from "./ModalProvider";
+import { delay } from "../../utils";
 
 describe("ModalProvider", () => {
-  const modalManager = new ModalManager();
+  const modalManager = new ModalManager([], { duration: 0 });
   const ModalProvider = setModalProvider(modalManager);
 
   beforeEach(() => {
@@ -30,7 +31,7 @@ describe("ModalProvider", () => {
     expect(screen.getByText("Test Modal")).toBeInTheDocument();
   });
 
-  it("modal을 오픈하고 제거 되는지 확인합니다.", () => {
+  it("modal을 오픈하고 제거 되는지 확인", () => {
     act(() => {
       modalManager.open(<div>Test Modal1</div>);
       modalManager.open(<div>Test Modal2</div>);
@@ -51,6 +52,28 @@ describe("ModalProvider", () => {
 
     expect(screen.queryByText("Test Modal1")).toBeNull();
     expect(screen.queryByText("Test Modal3")).toBeNull();
+  });
+
+  it("modal이 오픈 중일 때 action이 실행되지 않는지 확인", async () => {
+    act(() => {
+      modalManager.open(<div>Test Modal1</div>, { duration: 200 });
+    });
+
+    expect(screen.getByText("Test Modal1")).toBeInTheDocument();
+
+    await act(async () => {
+      const result = await modalManager.action();
+
+      expect(result).toBeFalsy();
+    });
+
+    await act(async () => {
+      await delay(200);
+
+      const result = await modalManager.action();
+
+      expect(result).toBeTruthy();
+    });
   });
 });
 
