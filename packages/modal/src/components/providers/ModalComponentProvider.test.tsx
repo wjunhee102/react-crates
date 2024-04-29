@@ -6,8 +6,7 @@ import {
   waitFor,
 } from "@testing-library/react";
 import ModalComponentProvider from "./ModalComponentProvider";
-import { Modal } from "../../services/modal";
-import ModalManager from "../../services/modalManager";
+import { ModalManager, Modal } from "../../services";
 import setModalProvider from "./ModalProvider";
 import { ModalConfirmType } from "../../types";
 

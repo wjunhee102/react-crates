@@ -1,8 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
-import ModalManager from "../../services/modalManager";
+import { ModalManager, Modal } from "../../services";
 import { ModalManagerState } from "../../types";
 import ModalComponentProvider from "./ModalComponentProvider";
-import { Modal } from "../../services/modal";
 
 import "./modalProvider.css";
 

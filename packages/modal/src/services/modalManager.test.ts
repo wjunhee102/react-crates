@@ -1,6 +1,6 @@
 import { waitFor } from "@testing-library/react";
 import { delay } from "../utils";
-import ModalManager from "./modalManager";
+import { ModalManager } from "./modalManager";
 
 describe("ModalManager", () => {
   let modalManager: ModalManager = new ModalManager();;
@@ -43,7 +43,7 @@ describe("ModalManager", () => {
     expect(modalManager.getModalStack().length).toBe(initialCount - 2);
   });
 
-  it("should edit modal options correctly", () => {
+  it("modal을 edit이 정확하게 되는지 확인", () => {
     const modalId = modalManager.open("test", { content: "Hello World" });
 
     modalManager.edit(modalId, { content: "Updated Content" });

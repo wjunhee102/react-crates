@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ModalManager from "../services/modalManager";
+import { ModalManager } from "../services";
 import { ModalListener } from "../types";
 
 function setUseIsOpenModal(modalManager: ModalManager) {

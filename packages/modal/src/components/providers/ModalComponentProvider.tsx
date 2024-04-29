@@ -6,7 +6,7 @@ import {
   useCallback,
   useEffect,
 } from "react";
-import { Modal } from "../../services/modal";
+import { Modal } from "../../services";
 import { ModalState } from "../../types";
 import { ModalComponentPropsContext } from "../../hooks/useModalComponentProps";
 

@@ -9,7 +9,7 @@ import {
   useCallback,
   MouseEvent,
 } from "react";
-import ModalManager from "../../services/modalManager";
+import { ModalManager } from "../../services";
 import { Modal } from "../../components/modal";
 import {
   ModalDispatchOptions,

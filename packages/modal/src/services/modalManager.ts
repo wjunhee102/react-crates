@@ -36,7 +36,7 @@ import {
   ModalConfirmType
 } from "../types";
 
-class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements ModalManagerInterface {
+export class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements ModalManagerInterface {
   private currentId = 0;
   private transactionCount = 0;
   private transactionState: ModalTransactionState =
@@ -687,5 +687,3 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
     this.notify();
   }
 }
-
-export default ModalManager;

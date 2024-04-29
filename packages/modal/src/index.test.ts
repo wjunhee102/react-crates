@@ -1,4 +1,4 @@
-import ModalManager from "./services/modalManager";
+import { ModalManager } from "./services";
 import { generateModal } from "./generate";
 
 describe("ModalManager class", () => {

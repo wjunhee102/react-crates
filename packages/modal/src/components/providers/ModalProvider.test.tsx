@@ -1,5 +1,5 @@
 import { act, cleanup, render, screen } from "@testing-library/react";
-import ModalManager from "../../services/modalManager";
+import { ModalManager } from "../../services";
 import setModalProvider from "./ModalProvider";
 import { delay } from "../../utils";
 

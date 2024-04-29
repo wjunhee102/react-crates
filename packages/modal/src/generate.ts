@@ -1,6 +1,6 @@
+import { ModalManager } from "./services";
 import { setModalProvider, setDynamicModal } from "./components";
 import setUseIsOpenModal from "./hooks/useIsOpenModal";
-import ModalManager from "./services/modalManager";
 import type {
   Controller,
   DefaultModalPosition,
