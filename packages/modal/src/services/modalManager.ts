@@ -32,7 +32,8 @@ import {
   ModalCallback,
   ModalEditOptions,
   ModalManagerInterface,
-  ModalClose
+  ModalClose,
+  ModalConfirmType
 } from "../types";
 
 class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements ModalManagerInterface {
@@ -73,7 +74,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
 
     this.executeAsync = this.executeAsync.bind(this);
     this.open = this.open.bind(this);
-    this.close = this.close.bind(this);
+    this.remove = this.remove.bind(this);
     this.action = this.action.bind(this);
 
     this.getModalComponentSeed = this.getModalComponentSeed.bind(this);
@@ -179,7 +180,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
 
       callback && await callback(confirm);
 
-      this.close(id);
+      this.remove(id);
 
       return true;
     };
@@ -533,22 +534,20 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
    * @returns
    */
   async action(
-    targetModalId: number,
-    confirm?: boolean | string
+    targetModalId?: number,
+    confirm?: ModalConfirmType
   ): Promise<boolean> {
+    const modalId = targetModalId || this.getCurrentModalId();
+
     const targetModal = this.modalStack.filter(
-      (modal) => targetModalId === modal.id
+      (modal) => modalId === modal.id
     )[0];
 
     if (!targetModal) {
       return false;
     }
 
-    const result = await targetModal.action(confirm);
-
-    this.notify();
-
-    return result;
+    return targetModal.action(confirm);
   }
 
   /**
@@ -656,7 +655,7 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
    * @param closeTarget
    * @returns 마지막으로 등록된 모달의 id를 반환합니다. 만약 등록된 모달이 없다면 0을 반환합니다.
    */
-  close(closeTarget?: CloseModalProps) {
+  remove(closeTarget?: CloseModalProps) {
     if (typeof closeTarget === "number") {
       this.modalStack = this.modalStack.filter(
         (modal) => modal.id !== closeTarget
