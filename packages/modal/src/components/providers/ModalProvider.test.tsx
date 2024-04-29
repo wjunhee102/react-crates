@@ -18,11 +18,11 @@ describe("ModalProvider", () => {
     cleanup();
   });
 
-  it("renders without crashing", () => {
+  it("ModalProvider가 렌더링 되었는지 확인", () => {
     expect(document.querySelector(".modalProvider_rm")).not.toBeNull();
   });
 
-  it("renders modal", async () => {
+  it("modal이 렌더링 되었는지 확인", async () => {
     act(() => {
       modalManager.open(<div>Test Modal</div>);
     });
@@ -30,7 +30,7 @@ describe("ModalProvider", () => {
     expect(screen.getByText("Test Modal")).toBeInTheDocument();
   });
 
-  it("modal open and clear correctly", () => {
+  it("modal을 오픈하고 제거 되는지 확인합니다.", () => {
     act(() => {
       modalManager.open(<div>Test Modal1</div>);
       modalManager.open(<div>Test Modal2</div>);
@@ -58,7 +58,7 @@ describe("ModalProvider scrolling block", () => {
   const modalManager = new ModalManager();
   const ModalProvider = setModalProvider(modalManager);
 
-  it("prevents scrolling when modal is open", () => {
+  it("disableScroll을 활성화 했을 때 scroll이 막히는지 확인", () => {
     const { unmount } = render(<ModalProvider disableScroll={true} />);
 
     expect(document.body.style.width).toBe("");
@@ -92,7 +92,7 @@ describe("ModalProvider scrolling block", () => {
     expect(document.body.style.overflow).toBe("");
   });
 
-  it("allows scrolling.", () => {
+  it("disableScroll을 활성화 했을 때 scroll이 되는지 확인", () => {
     render(<ModalProvider disableScroll={false} />);
 
     act(() => {
