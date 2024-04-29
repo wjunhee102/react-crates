@@ -58,7 +58,7 @@ function App() {
                     );
                   },
                   duration: 1500,
-                  position: "bottom-bottom",
+                  position: "bottom-center",
                 }
               );
 

@@ -1,7 +1,6 @@
 import {
-  DEFAULT_POSITION,
   MODAL_LIFECYCLE_STATE,
-  MODAL_LIFECYCLE_STATE_LIST,
+  MODAL_POSITION,
 } from "../contants";
 import { ModalLifecycleState } from "../types";
 
@@ -11,29 +10,29 @@ const POSITION_STATE_VALUE = {
   [MODAL_LIFECYCLE_STATE.close]: 2,
 };
 
-export function getPositionKeyByState(
-  positionList: string[]
-): string | [ModalLifecycleState, string] {
-  if (
-    positionList.length < 1 ||
-    !MODAL_LIFECYCLE_STATE_LIST.includes(positionList[0])
-  ) {
-    return positionList[0] ?? DEFAULT_POSITION.center;
+function covertPositionList(position: string) {
+  const positionList = position.split("-");
+
+  if (positionList.length < 1) {
+    return Array.from({ length: 3 }).map(_ => MODAL_POSITION.center);
   }
 
-  return positionList as [ModalLifecycleState, string];
+  const lastIndex = positionList.length - 1;
+
+  return Array.from({ length: 3 }).map((_, index) => {
+    return positionList[index] || positionList[lastIndex];
+  });
 }
 
 export function getPositionKey(
   position: string,
   positionState: ModalLifecycleState
-): string | [ModalLifecycleState, string] {
-  const positionList = position.split("-");
-
-  if (positionList.length < 3) {
-    return getPositionKeyByState(positionList);
+): string {
+  if (typeof position !== "string") {
+    return MODAL_POSITION.center;
   }
 
+  const positionList = covertPositionList(position);
   const positionStateValue = POSITION_STATE_VALUE[positionState];
 
   return positionList[positionStateValue];

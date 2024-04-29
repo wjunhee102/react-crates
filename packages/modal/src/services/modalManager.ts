@@ -282,34 +282,23 @@ class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements
     positionState: ModalLifecycleState,
     position: string = MODAL_POSITION.center
   ) {
-    let state: ModalLifecycleState = positionState;
-    let key: string = position;
-
-    const positionKey = getPositionKey(position, state);
-
-    if (Array.isArray(positionKey)) {
-      state = positionKey[0];
-      key = positionKey[1];
-    } else {
-      key = positionKey;
-    }
-
+    const positionKey = getPositionKey(position, positionState);
     const {
       open: defaultInitial,
       active: defaultActive,
       close: defautFinal,
     } = this.getModalPosition(MODAL_POSITION.default);
 
-    const { open, active, close } = this.getModalPosition(key);
+    const { open, active, close } = this.getModalPosition(positionKey);
 
-    if (state === MODAL_LIFECYCLE_STATE.open) {
+    if (positionState === MODAL_LIFECYCLE_STATE.open) {
       return {
         ...defaultInitial,
         ...open,
       };
     }
 
-    if (state === MODAL_LIFECYCLE_STATE.active) {
+    if (positionState === MODAL_LIFECYCLE_STATE.active) {
       return {
         ...defaultActive,
         ...active,
