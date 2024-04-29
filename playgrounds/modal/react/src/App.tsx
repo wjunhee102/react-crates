@@ -110,7 +110,10 @@ function App() {
                         <Modal.Content />
                       </div>
                     ),
-                    "새모달 4"
+                    {
+                      content: "새모달 4",
+                      backCoverConfirm: "test",
+                    }
                   );
                 });
               });

@@ -17,6 +17,7 @@ export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
         payload: "잘된다!",
         position: "test-bottom-bottom",
         enterKeyActive: true,
+        backCoverConfirm: "alert",
       },
     },
     success: {

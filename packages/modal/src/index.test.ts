@@ -30,7 +30,7 @@ describe("ModalManager class", () => {
     const mockOptions = { duration: 300 };
 
     modalManager.open("mockType", mockOptions);
-    modalManager.close();
+    modalManager.remove();
 
     expect(modalManager.getModalStack().length).toBe(0);
   });
