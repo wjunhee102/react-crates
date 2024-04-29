@@ -2,6 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import { DynamicModal, ModalProvider, modalCtrl } from "./modal";
 import { useState } from "react";
+import { Modal } from "@react-crates/modal";
 
 export function delay(duration: number = 0) {
   return new Promise((resolve) => {
@@ -57,7 +58,7 @@ function App() {
                     );
                   },
                   duration: 1500,
-                  position: "bottom-bottom",
+                  position: "bottom-center",
                 }
               );
 
@@ -79,18 +80,41 @@ function App() {
                 await delay(1000);
 
                 success(() => {
-                  modalCtrl.open(() => (
-                    <div className="bg-white w-[200px] h-[300px]">새모달1</div>
-                  ));
-                  modalCtrl.open(() => (
-                    <div className="bg-white w-[200px] h-[300px]">새모달2</div>
-                  ));
-                  modalCtrl.open(() => (
-                    <div className="bg-white w-[200px] h-[300px]">새모달3</div>
-                  ));
-                  modalCtrl.open(() => (
-                    <div className="bg-white w-[200px] h-[300px]">새모달4</div>
-                  ));
+                  modalCtrl.open(
+                    () => (
+                      <div className="bg-white w-[200px] h-[300px]">
+                        <Modal.Content />
+                      </div>
+                    ),
+                    "새모달 1"
+                  );
+                  modalCtrl.open(
+                    () => (
+                      <div className="bg-white w-[200px] h-[300px]">
+                        <Modal.Content />
+                      </div>
+                    ),
+                    "새모달 2"
+                  );
+                  modalCtrl.open(
+                    () => (
+                      <div className="bg-white w-[200px] h-[300px]">
+                        <Modal.Content />
+                      </div>
+                    ),
+                    "새모달 3"
+                  );
+                  modalCtrl.open(
+                    () => (
+                      <div className="bg-white w-[200px] h-[300px]">
+                        <Modal.Content />
+                      </div>
+                    ),
+                    {
+                      content: "새모달 4",
+                      backCoverConfirm: "test",
+                    }
+                  );
                 });
               });
             }}

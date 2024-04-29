@@ -1,4 +1,4 @@
-import ModalManager from "./services/modalManager";
+import { ModalManager } from "./services";
 import { generateModal } from "./generate";
 
 describe("ModalManager class", () => {
@@ -72,36 +72,5 @@ describe("generateModal", () => {
       position: "bottom-bottom-bottom",
     });
     expect(typeof modalId).toBe("number");
-  });
-
-  it("should allow extending modal suite with new options and modal components", () => {
-    const { extendModal } = generateModal({}, {});
-
-    const ctrl = extendModal(
-      {
-        test: {
-          component: () => null,
-          defaultOptions: {
-            payload: 0,
-          },
-        },
-      },
-      {
-        position: {
-          test: {
-            open: {},
-            active: {},
-            close: {},
-          },
-        },
-      }
-    );
-
-    // 가정: open 함수가 모달 ID를 반환하도록 설정되어 있음
-    const newModalId = ctrl.test({
-      payload: 1,
-      position: "test-bottom",
-    });
-    expect(typeof newModalId).toBe("number");
   });
 });

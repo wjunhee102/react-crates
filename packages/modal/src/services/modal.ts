@@ -49,6 +49,7 @@ export class Modal {
   private _modalKey: string | null;
   private _name: string;
   private _options: ModalOptions<any>;
+  private _isCurrent: boolean = false;
   private _isAwaitingConfirm = false;
   private _isCloseDelay = true;
   private _closeDelayDuration = -1;
@@ -147,6 +148,10 @@ export class Modal {
     return this._confirm;
   }
 
+  get isCurrent() {
+    return this._isCurrent;
+  }
+
   get isAwaitingConfirm() {
     return this._isAwaitingConfirm;
   }
@@ -198,6 +203,10 @@ export class Modal {
     this.componentProps = { ...componentProps, ...options };
   }
 
+  /**
+   * TO-DO
+   * modal에서는 그냥 바꾸는 로직만 있고 modalManager에서 처리할 것.
+  */
   private changeComponent(
     component: string | ModalComponent,
     options: ComponentPropsOptions = {}
@@ -318,6 +327,25 @@ export class Modal {
 
   /* 생명주기 */
 
+  async init() {
+    if (this.isInitial) {
+      return;
+    }
+
+    this.isInitial = true;
+
+    /* 애니메이션을 위한 로직
+     * init 스타일로 렌더하고 난 뒤에 active로 변경함.
+    */
+    setTimeout(() => {
+      this.active();
+    }, 0);
+
+    await this.manager.executeAsync(delay, this.options.duration ?? 0);
+
+    this.notify();
+  }
+
   active() {
     this.lifecycleState = "active";
 
@@ -330,22 +358,6 @@ export class Modal {
     this.notify();
 
     return this.options.closeModal(this.afterCloseCallback, this.confirm);
-  }
-
-  async init() {
-    if (this.isInitial) {
-      return;
-    }
-
-    this.isInitial = true;
-
-    setTimeout(() => {
-      this.active();
-    }, 10);
-
-    await this.manager.executeAsync(delay, this.options.duration ?? 0);
-
-    this.notify();
   }
 
   blockCloseDelay() {
@@ -363,6 +375,18 @@ export class Modal {
 
     this._isCloseDelay = true;
     this._closeDelayDuration = duration;
+
+    return this;
+  }
+
+  updateIsCurrent(isCurrent: boolean) {
+    if (this._isCurrent === isCurrent) {
+      return this;
+    }
+
+    this._isCurrent = isCurrent;
+
+    this.notify();
 
     return this;
   }
@@ -413,24 +437,17 @@ export class Modal {
   }
 
   async action(confirm?: ModalConfirmType, callback?: ModalCallback) {
-    if (
-      !this._isAwaitingConfirm &&
-      this.manager.getTransactionState() !== MODAL_TRANSACTION_STATE.idle
-    ) {
-      return false;
-    }
+    return this.manager.executeWithTransaction(() => {
+      if (confirm !== undefined) {
+        this._confirm = confirm;
+      }
 
-    this.manager.stanbyTransaction();
+      if (callback) {
+        this.actionCallback = callback;
+      }
 
-    if (confirm !== undefined) {
-      this._confirm = confirm;
-    }
-
-    if (callback) {
-      this.actionCallback = callback;
-    }
-
-    return this.options.middleware(this.getMiddlewareProps());
+      return this.options.middleware(this.getMiddlewareProps());
+    }, undefined);
   }
 
   initial() {

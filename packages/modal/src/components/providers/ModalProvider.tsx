@@ -1,9 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
-import ModalManager from "../../services/modalManager";
+import { ModalManager, Modal } from "../../services";
 import { ModalManagerState } from "../../types";
-import { MODAL_TRANSACTION_STATE } from "../../contants";
 import ModalComponentProvider from "./ModalComponentProvider";
-import { Modal } from "../../services/modal";
 
 import "./modalProvider.css";
 
@@ -24,16 +22,6 @@ const ModalProviderCore = ({
     { modalStack, transactionState, isOpen, breakPoint, currentModalId },
     setModalManagerState,
   ] = useState<ModalManagerState>(modalManager.getState());
-
-  const onClearModal = () => {
-    if (
-      isOpen &&
-      modalStack.length > 0 &&
-      transactionState === MODAL_TRANSACTION_STATE.idle
-    ) {
-      modalManager.popModal("clear");
-    }
-  };
 
   useEffect(() => {
     modalManager.subscribe(setModalManagerState);
@@ -77,15 +65,17 @@ const ModalProviderCore = ({
       };
     }
 
-    document.body.style.overflow = overflow;
-    document.body.style.height = height;
-    document.body.style.width = width;
+    if (disableScroll) {
+      document.body.style.overflow = overflow;
+      document.body.style.height = height;
+      document.body.style.width = width;
 
-    return () => {
-      overflow = "";
-      height = "";
-      width = "";
-    };
+      return () => {
+        overflow = "";
+        height = "";
+        width = "";
+      };
+    }
   }, [isOpen]);
 
   const props = {
@@ -93,7 +83,6 @@ const ModalProviderCore = ({
     modalStack,
     breakPoint,
     currentModalId,
-    onClearModal,
   };
 
   if (children) {
@@ -113,7 +102,6 @@ interface ModalProviderViewProps {
   modalStack: Modal[];
   breakPoint: number;
   currentModalId: number;
-  onClearModal: () => void;
 }
 
 const ModalProviderView = ({
@@ -121,12 +109,8 @@ const ModalProviderView = ({
   modalStack,
   breakPoint,
   currentModalId,
-  onClearModal,
 }: ModalProviderViewProps) => (
   <div className={`modalProvider_rm ${isOpen ? "open_rm" : ""}`}>
-    <button type="button" className="modalClearBtn_rm" onClick={onClearModal}>
-      {" "}
-    </button>
     {modalStack.map((modal) => (
       <ModalComponentProvider
         key={modal.id}

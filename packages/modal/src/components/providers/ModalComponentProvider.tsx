@@ -1,5 +1,12 @@
-import { KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
-import { Modal } from "../../services/modal";
+import {
+  useState,
+  useRef,
+  KeyboardEvent,
+  MouseEvent,
+  useCallback,
+  useEffect,
+} from "react";
+import { Modal } from "../../services";
 import { ModalState } from "../../types";
 import { ModalComponentPropsContext } from "../../hooks/useModalComponentProps";
 
@@ -29,13 +36,16 @@ const ModalComponentProvider = ({
     isEscKeyActive,
   } = state;
 
-  const closeModal = useCallback(() => {
-    if (modal.options.backCoverConfirm === null) {
-      return;
-    }
+  const actionBackCover = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      if (modal.options.backCoverConfirm === null || event.detail === 0) {
+        return;
+      }
 
-    modal.action(modal.options.backCoverConfirm);
-  }, []);
+      modal.action(modal.options.backCoverConfirm);
+    },
+    []
+  );
 
   const actionToKeyUp = useCallback(
     (event: KeyboardEvent<HTMLButtonElement>) => {
@@ -70,6 +80,8 @@ const ModalComponentProvider = ({
     if (isCurrent && modalBackCoverRef.current) {
       modalBackCoverRef.current.focus();
     }
+
+    modal.updateIsCurrent(isCurrent);
   }, [isCurrent]);
 
   useEffect(() => {
@@ -83,7 +95,7 @@ const ModalComponentProvider = ({
         className={`closeModalCover_rm ${isActive ? "" : "close_rm"}`}
         style={backCoverStyle}
         type="button"
-        onClick={closeModal}
+        onClick={actionBackCover}
         onKeyUp={actionToKeyUp}
       />
       <div className="modalContentContainer_rm">
