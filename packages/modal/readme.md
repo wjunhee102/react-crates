@@ -414,6 +414,7 @@ export const { modalCtrl } = generateModal({
   alert: {
     component: alert.component,
     defaultOptions: {
+      ...alert.defaultOptions,
       title: "알림",
       content: "알림",
       confirmContent: "확인",
@@ -444,9 +445,30 @@ export const { modalCtrl } = generateModal({
 </ModalTemplate>
 
 // Modal Collection 목록
-<ModalCollection.Confirm>
-<ModalCollection.Alert>
-<ModalCollection.Prompt>
+{
+  confirm: {
+    component: Confirm,
+    defaultOptions: {
+      backCoverConfirm: false,
+      escKeyActive: true,
+      enterKeyActive: true,
+    },
+  },
+  alert: {
+    component: Alert,
+    defaultOptions: {
+      escKeyActive: true,
+      enterKeyActive: true,
+    },
+  },
+  prompt: {
+    component: Prompt,
+    defaultOptions: {
+      escKeyActive: false,
+      enterKeyActive: false,
+    },
+  },
+};
 ```
 
 ### Modal 사용

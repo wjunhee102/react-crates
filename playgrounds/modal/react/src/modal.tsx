@@ -44,6 +44,7 @@ export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
     confirm: {
       component: modalCollection.confirm.component,
       defaultOptions: {
+        ...modalCollection.confirm.defaultOptions,
         title: "테스트",
         content: "콘텐트",
         confirmContent: "확인",

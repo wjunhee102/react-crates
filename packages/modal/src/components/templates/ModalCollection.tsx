@@ -133,11 +133,24 @@ Prompt.displayName = "ModalCollection.Prompt";
 export const modalCollection = {
   confirm: {
     component: Confirm,
+    defaultOptions: {
+      backCoverConfirm: false,
+      escKeyActive: true,
+      enterKeyActive: true,
+    },
   },
   alert: {
     component: Alert,
+    defaultOptions: {
+      escKeyActive: true,
+      enterKeyActive: true,
+    },
   },
   prompt: {
     component: Prompt,
+    defaultOptions: {
+      escKeyActive: false,
+      enterKeyActive: false,
+    },
   },
 };
