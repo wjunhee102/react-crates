@@ -146,10 +146,8 @@
   line-height: 1.25rem;
   padding: 0.25rem 0.75rem;
   border: 1px solid #d1d5db;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
 .modal-collection-prompt-input-rm:focus {
-  border-color: rgba(209, 213, 219, 0.8);
-  box-shadow: 0 0 0 1px rgba(3, 7, 18, 0.4);
+  box-shadow: 0 0 0 1px #fff, 0 0 0 2px rgba(3, 7, 18, 0.2);
 }
