@@ -100,6 +100,7 @@ const Prompt = () => {
             ref={inputRef}
             onChange={onChange}
             onKeyUp={actionToKeyUp}
+            onKeyDown={preventEscDefaultKeyDown}
             className="modal-collection-prompt-input-rm"
           />
         </div>
@@ -118,6 +119,13 @@ const Prompt = () => {
       </ModalTemplate.Footer>
     </ModalTemplate>
   );
+};
+
+// safari에서 전체 화면 취소하는 기능 방지하기 위해서 작성
+const preventEscDefaultKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+  if (event.key === "Escape") {
+    event.preventDefault();
+  }
 };
 
 Prompt.displayName = "ModalCollection.Prompt";

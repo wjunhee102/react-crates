@@ -97,6 +97,7 @@ const ModalComponentProvider = ({
         type="button"
         onClick={actionBackCover}
         onKeyUp={actionToKeyUp}
+        onKeyDown={preventEscDefaultKeyDown}
       />
       <div className="modalContentContainer_rm">
         <div
@@ -110,6 +111,13 @@ const ModalComponentProvider = ({
       </div>
     </div>
   );
+};
+
+// safari에서 전체 화면 취소하는 기능 방지하기 위해서 작성
+const preventEscDefaultKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+  if (event.key === "Escape") {
+    event.preventDefault();
+  }
 };
 
 export default ModalComponentProvider;
