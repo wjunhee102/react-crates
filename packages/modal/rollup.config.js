@@ -20,19 +20,24 @@ export default [
       {
         file: packageJson.main,
         format: "cjs",
-        sourcemap: true,
+        sourcemap: process.env.NODE_ENV === "development" ? true : false,
       },
       {
         file: packageJson.module,
         format: "es",
-        sourcemap: true,
+        sourcemap: process.env.NODE_ENV === "development" ? true : false,
       },
     ],
     plugins: [
       PeerDepsExternalPlugin(),
       resolve(),
       commonjs(),
-      typescript({ tsconfig: "./tsconfig.json" }),
+      typescript({
+        tsconfig:
+          process.env.NODE_ENV === "development"
+            ? "./tsconfig.json"
+            : "./tsconfig.prod.json",
+      }),
       postcss(),
       terser(),
       babel({
