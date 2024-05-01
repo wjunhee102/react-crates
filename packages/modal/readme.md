@@ -33,18 +33,10 @@ $ pnpm add @react-crates/modal
 ```javascript
 import React from "react";
 
-import { generateModal, ModalCollection } from "@react-crates/modal";
+import { generateModal, modalCollection } from "@react-crates/modal";
 
 const { modalCtrl, ModalProvider } = generateModal({
-  alert: {
-    component: ModalCollection.Alert,
-  },
-  confirm: {
-    component: ModalCollection.Confirm,
-  },
-  prompt: {
-    component: ModalCollection.Prompt,
-  },
+  ...modalCollection,
 });
 
 function App() {
@@ -408,24 +400,24 @@ type ReservedModalName =
 
 ```tsx
 // modal.ts
-import { generateModal, ModalCollection } from "@react-crates/modal";
+import { generateModal, modalCollection } from "@react-crates/modal";
+
+const {
+  confirm,
+  alert,
+  prompt
+} = modalCollection
 
 export const { modalCtrl } = generateModal({
-  confirm: {
-    component: ModalCollection.Confirm,
-    defaultOptions: {},
-  },
+  confirm,
+  prompt,
   alert: {
-    component: ModalCollection.Alert,
+    component: alert.component,
     defaultOptions: {
       title: "알림",
       content: "알림",
       confirmContent: "확인",
     },
-  },
-  prompt: {
-    component: ModalCollection.Prompt,
-    defaultOptions: {},
   },
 });
 

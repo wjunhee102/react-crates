@@ -130,8 +130,14 @@ const preventEscDefaultKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
 
 Prompt.displayName = "ModalCollection.Prompt";
 
-export const ModalCollection = {
-  Confirm,
-  Alert,
-  Prompt,
+export const modalCollection = {
+  confirm: {
+    component: Confirm,
+  },
+  alert: {
+    component: Alert,
+  },
+  prompt: {
+    component: Prompt,
+  },
 };

@@ -1,4 +1,4 @@
-import { generateModal, Modal, ModalCollection } from "@react-crates/modal";
+import { generateModal, Modal, modalCollection } from "@react-crates/modal";
 
 export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
   {
@@ -42,7 +42,7 @@ export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
       defaultOptions: {},
     },
     confirm: {
-      component: ModalCollection.Confirm,
+      component: modalCollection.confirm.component,
       defaultOptions: {
         title: "테스트",
         content: "콘텐트",
@@ -50,9 +50,7 @@ export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
         cancelContent: "취소",
       },
     },
-    prompt: {
-      component: ModalCollection.Prompt,
-    },
+    prompt: modalCollection.prompt,
   },
   {
     stateResponsiveComponent: true,

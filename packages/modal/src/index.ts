@@ -6,5 +6,5 @@ export type {
   ModalCallback,
 } from "./types";
 
-export { Modal, ModalCollection, ModalTemplate } from "./components";
+export { Modal, modalCollection, ModalTemplate } from "./components";
 export * from "./generate";
