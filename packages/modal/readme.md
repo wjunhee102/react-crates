@@ -451,21 +451,26 @@ export const { modalCtrl } = generateModal({
     defaultOptions: {
       backCoverConfirm: false,
       escKeyActive: true,
-      enterKeyActive: true,
+      role: "dialog",
+      label: "confirm",
     },
   },
   alert: {
     component: Alert,
     defaultOptions: {
+      backCoverConfirm: true,
       escKeyActive: true,
-      enterKeyActive: true,
+      role: "alertdialog",
+      label: "alert",
     },
   },
   prompt: {
     component: Prompt,
     defaultOptions: {
-      escKeyActive: false,
-      enterKeyActive: false,
+      backCoverConfirm: undefined,
+      escKeyActive: true,
+      role: "dialog",
+      label: "prompt",
     },
   },
 };
@@ -568,37 +573,29 @@ function Example() {
 }
 
 // ModalCollection.Prompt Component
-
 const Prompt = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
   const [state, setState] = useState("");
   const { action } = useModalComponentProps();
 
-  const actionToKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
-    switch (event.key) {
-      case "Enter":
+  const { actionToKeyUp, onChange } = useMemo(
+    () => ({
+      actionToKeyUp(event: KeyboardEvent<HTMLInputElement>) {
+        if (event.key !== "Enter") {
+          return;
+        }
+
+        event.preventDefault();
         action(state);
-        return;
-      case "Escape":
-        action(false);
-        return;
-      default:
-        return;
-    }
-  };
-
-  const onChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setState(event.target.value);
-  }, []);
-
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [inputRef.current]);
+      },
+      onChange(event: ChangeEvent<HTMLInputElement>) {
+        setState(event.target.value);
+      },
+    }),
+    []
+  );
 
   return (
-    <ModalTemplate>
+    <ModalTemplate className="modal-template-bg-rm">
       <ModalTemplate.Header>
         <Modal.Title className="modal-collection-title-rm">Prompt</Modal.Title>
         <Modal.Title.Sub className="modal-collection-sub-title-rm" />
@@ -609,7 +606,6 @@ const Prompt = () => {
         <Modal.Content.Sub className="modal-collection-sub-content-rm" />
         <div className="modal-collection-prompt-rm">
           <input
-            ref={inputRef}
             onChange={onChange}
             onKeyUp={actionToKeyUp}
             className="modal-collection-prompt-input-rm"

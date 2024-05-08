@@ -102,7 +102,7 @@ const DynamicModalTrigger = ({
     [dynamicModalManager, onClick]
   );
 
-  return <button onClick={openModal} {...restProps} />;
+  return <button aria-haspopup="dialog" onClick={openModal} {...restProps} />;
 };
 
 export interface DynamicModalElementProps {

@@ -15,8 +15,7 @@ export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
       ),
       defaultOptions: {
         payload: "잘된다!",
-        position: "test-bottom-bottom",
-        enterKeyActive: true,
+        position: "test-center",
         backCoverConfirm: "alert",
       },
     },
@@ -32,7 +31,7 @@ export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
         <div className="bg-gray-400 w-[200px] h-[300px]">로딩</div>
       ),
       defaultOptions: {
-        enterKeyActive: true,
+        escKeyActive: true,
       },
     },
     test: {

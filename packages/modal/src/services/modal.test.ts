@@ -36,7 +36,6 @@ describe("Modal", () => {
         duration: 300,
         stateResponsiveComponent: true,
         escKeyActive: true,
-        enterKeyActive: true,
         action: jest.fn(),
         closeModal: jest.fn(),
         middleware: async () => {

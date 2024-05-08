@@ -1,11 +1,4 @@
-import {
-  ChangeEvent,
-  KeyboardEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { ChangeEvent, KeyboardEvent, useMemo, useState } from "react";
 import { Modal } from "../modal";
 import { ModalTemplate } from "./ModalTemplate";
 import { useModalComponentProps } from "../../hooks/useModalComponentProps";
@@ -58,32 +51,25 @@ const Confirm = () => (
 Confirm.displayName = "ModalCollection.Confirm";
 
 const Prompt = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
   const [state, setState] = useState("");
   const { action } = useModalComponentProps();
 
-  const actionToKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
-    switch (event.key) {
-      case "Enter":
+  const { actionToKeyUp, onChange } = useMemo(
+    () => ({
+      actionToKeyUp(event: KeyboardEvent<HTMLInputElement>) {
+        if (event.key !== "Enter") {
+          return;
+        }
+
+        event.preventDefault();
         action(state);
-        return;
-      case "Escape":
-        action(false);
-        return;
-      default:
-        return;
-    }
-  };
-
-  const onChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setState(event.target.value);
-  }, []);
-
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [inputRef.current]);
+      },
+      onChange(event: ChangeEvent<HTMLInputElement>) {
+        setState(event.target.value);
+      },
+    }),
+    []
+  );
 
   return (
     <ModalTemplate className="modal-template-bg-rm">
@@ -97,10 +83,8 @@ const Prompt = () => {
         <Modal.Content.Sub className="modal-collection-sub-content-rm" />
         <div className="modal-collection-prompt-rm">
           <input
-            ref={inputRef}
             onChange={onChange}
             onKeyUp={actionToKeyUp}
-            onKeyDown={preventEscDefaultKeyDown}
             className="modal-collection-prompt-input-rm"
           />
         </div>
@@ -121,13 +105,6 @@ const Prompt = () => {
   );
 };
 
-// safari에서 전체 화면 취소하는 기능 방지하기 위해서 작성
-const preventEscDefaultKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-  if (event.key === "Escape") {
-    event.preventDefault();
-  }
-};
-
 Prompt.displayName = "ModalCollection.Prompt";
 
 export const modalCollection = {
@@ -136,21 +113,26 @@ export const modalCollection = {
     defaultOptions: {
       backCoverConfirm: false,
       escKeyActive: true,
-      enterKeyActive: true,
+      role: "dialog",
+      label: "confirm",
     },
   },
   alert: {
     component: Alert,
     defaultOptions: {
+      backCoverConfirm: true,
       escKeyActive: true,
-      enterKeyActive: true,
+      role: "alertdialog",
+      label: "alert",
     },
   },
   prompt: {
     component: Prompt,
     defaultOptions: {
-      escKeyActive: false,
-      enterKeyActive: false,
+      backCoverConfirm: undefined,
+      escKeyActive: true,
+      role: "dialog",
+      label: "prompt",
     },
   },
 };

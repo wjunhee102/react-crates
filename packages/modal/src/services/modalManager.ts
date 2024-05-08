@@ -623,6 +623,7 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
     if (!isValidElement(name)) {
       return 0;
     }
+
     this.currentId += 1;
 
     this.pushModal({

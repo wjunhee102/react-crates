@@ -18,6 +18,10 @@
   padding: none;
 }
 
+.modalProvider_rm.open_rm {
+  pointer-events: auto;
+}
+
 .modalProvider_rm .modalClearBtn_rm {
   all: unset;
   position: relative;
