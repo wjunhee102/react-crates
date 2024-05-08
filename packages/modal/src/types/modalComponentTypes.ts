@@ -22,10 +22,12 @@ export type ModalComponent<T = any> = FC<ModalComponentProps<T>>;
 export interface ModalState {
   component: ModalComponent;
   isActive: boolean;
+  actionState: ModalActionState;
   modalClassName?: string;
   modalStyle: CSSProperties;
   backCoverStyle: CSSProperties;
   componentProps: ModalComponentProps;
   isEscKeyActive: boolean;
-  isEnterKeyActive: boolean;
+  label: string;
+  role: string;
 }

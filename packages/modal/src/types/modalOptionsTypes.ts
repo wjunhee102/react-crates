@@ -17,7 +17,6 @@ export interface ModalDispatchOptions<T = any, P extends string = string> extend
   backCoverColor?: string;
   backCoverOpacity?: number;
   escKeyActive?: boolean;
-  enterKeyActive?: boolean;
   payload?: T;
   closeDelay?: number;
   duration?: number;
@@ -25,6 +24,8 @@ export interface ModalDispatchOptions<T = any, P extends string = string> extend
   position?: ModalPosition<P>;
   stateResponsiveComponent?: boolean;
   required?: boolean;
+  role?: string;
+  label?: string;
 }
 
 export type ModalClose = (
@@ -45,7 +46,6 @@ export interface ModalEditOptions<T extends string = string> extends ComponentPr
   backCoverColor?: string;
   backCoverOpacity?: number;
   escKeyActive?: boolean;
-  enterKeyActive?: boolean;
   closeDelay?: number;
   duration?: number;
   transitionOptions?: ModalTransitionOptions;

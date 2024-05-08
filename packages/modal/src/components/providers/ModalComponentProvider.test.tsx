@@ -30,7 +30,6 @@ describe("ModalComponentProvider", () => {
         middleware: async () => {
           return false;
         },
-        enterKeyActive: true,
         escKeyActive: true,
         backCoverConfirm: "test",
         action: () => {},
@@ -39,8 +38,16 @@ describe("ModalComponentProvider", () => {
     modalManager
   );
 
+  afterEach(() => {
+    act(() => {
+      modalManager.remove("clear");
+    });
+  });
+
   it("keyboard option이 활성화 되어있을 때, keyboard action이 실행되는지 확인", async () => {
-    render(<ModalComponentProvider modal={modal} breakPoint={768} isCurrent />);
+    const { container } = render(
+      <ModalComponentProvider modal={modal} breakPoint={768} isCurrent />
+    );
 
     expect(screen.getByText("Modal Content")).toBeInTheDocument();
 
@@ -49,20 +56,16 @@ describe("ModalComponentProvider", () => {
     });
 
     await act(async () => {
-      const backCover = screen.getByRole("button");
+      const modalContent = container.querySelector("div.modalContent_rm");
 
-      fireEvent.keyUp(backCover, { key: "Enter" });
+      if (!modalContent) {
+        throw new Error("not modal content");
+      }
+
+      fireEvent.keyUp(modalContent, { key: "Esc" });
     });
 
-    expect(modal.confirm).toBeTruthy();
-
-    await act(async () => {
-      const backCover = screen.getByRole("button");
-
-      fireEvent.keyUp(backCover, { key: "Esc" });
-    });
-
-    expect(modal.confirm).toBeFalsy();
+    expect(modal.confirm).toBe("test");
   });
 
   it("keyboard option이 비활성화 되어있을 때, keyboard action이 실행되지 않는지 확인", async () => {
@@ -83,14 +86,13 @@ describe("ModalComponentProvider", () => {
           middleware: async () => {
             return false;
           },
-          enterKeyActive: false,
           escKeyActive: false,
         },
       },
       modalManager
     );
 
-    render(
+    const { container } = render(
       <ModalComponentProvider
         modal={disableKeyboardActionModal}
         breakPoint={768}
@@ -105,26 +107,20 @@ describe("ModalComponentProvider", () => {
     });
 
     await act(async () => {
-      const backCover = screen.getByRole("button");
+      const modalContent = container.querySelector("div.modalContent_rm");
 
-      fireEvent.keyUp(backCover, { key: "Enter" });
-    });
+      if (!modalContent) {
+        throw new Error("not modal content");
+      }
 
-    expect(disableKeyboardActionModal.confirm).toBeUndefined();
-
-    await act(async () => {
-      const backCover = screen.getByRole("button");
-
-      fireEvent.keyUp(backCover, { key: "Esc" });
+      fireEvent.keyUp(modalContent, { key: "Esc" });
     });
 
     expect(disableKeyboardActionModal.confirm).toBeUndefined();
   });
 
   it("BackCover를 클릭하면 modal의 action이 실행되는지 확인", async () => {
-    await render(
-      <ModalComponentProvider modal={modal} breakPoint={768} isCurrent />
-    );
+    render(<ModalComponentProvider modal={modal} breakPoint={768} isCurrent />);
 
     await waitFor(() => {
       expect(modalManager.getTransactionState()).toBe("idle");
@@ -132,8 +128,6 @@ describe("ModalComponentProvider", () => {
 
     await act(async () => {
       const backCover = screen.getByRole("button");
-
-      expect(document.activeElement).toBe(backCover);
 
       // keyboard 이벤트를 막았기 때문에 detail에 값을 주어 click임을 알려주기 위함.
       fireEvent.click(backCover, { detail: 1 });
@@ -143,7 +137,7 @@ describe("ModalComponentProvider", () => {
   });
 
   it("모달이 닫혔을 때 다음 모달로 포커스가 맞춰지는지 확인", async () => {
-    const { unmount, getByRole } = render(<ModalProvider />);
+    const { getByRole } = render(<ModalProvider />);
 
     await act(async () => {
       modalManager.open(<div>Modal Content1</div>);
@@ -155,20 +149,47 @@ describe("ModalComponentProvider", () => {
     expect(screen.queryByText("Modal Content2")).toBeNull();
     expect(screen.getByText("Modal Content1")).toBeInTheDocument();
 
-    await act(async () => {
-      const backCover = getByRole("button");
-
-      expect(document.activeElement).toBe(backCover);
+    await waitFor(async () => {
+      expect(document.activeElement).toBe(
+        document.querySelector("div.modalContent_rm")
+      );
     });
 
     await waitFor(() => {
       expect(getByRole("button")).toHaveStyle("cursor: pointer");
     });
+  });
+
+  it("모달이 열렸을 때 모달을 제외하고 모든 요소가 aria-hidden=true로 변경", async () => {
+    const { container } = render(
+      <>
+        <ModalProvider />
+        <div id="test" />
+      </>
+    );
 
     act(() => {
-      modalManager.remove("clear");
+      modalManager.open(<div>Modal Content1</div>);
+      modalManager.open(<div>Modal Content2</div>);
     });
 
-    unmount();
+    const test = container.querySelector("#test");
+    const modals = container.querySelectorAll(".modalWrapper_rm");
+    const modal1 = modals[0];
+    const modal2 = modals[modals.length - 1];
+
+    if (!test || !modal1 || !modal2) {
+      throw new Error("not rendering");
+    }
+
+    expect(test.getAttribute("aria-hidden")).toBe("true");
+    expect(modal1.getAttribute("aria-hidden")).toBe("true");
+    expect(modal2.getAttribute("aria-hidden")).toBe("false");
+
+    await waitFor(() => {
+      modalManager.action();
+      expect(screen.queryByText("Modal Content2")).toBeNull();
+      expect(modal1.getAttribute("aria-hidden")).toBe("false");
+    });
   });
 });

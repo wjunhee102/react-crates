@@ -42,8 +42,9 @@ export class Modal {
   private initialComponent: ModalComponent;
   private currentComponent: ModalComponent;
   private componentProps!: ModalComponentProps;
-  private escKeyActive: boolean = false;
-  private enterKeyActive: boolean = false;
+  private escKeyActive: boolean = true;
+  private role: string = "dialog";
+  private label: string = "dialog";
 
   private _id: number;
   private _modalKey: string | null;
@@ -54,6 +55,8 @@ export class Modal {
   private _isCloseDelay = true;
   private _closeDelayDuration = -1;
   private _confirm: ModalConfirmType | undefined = undefined;
+
+  public contentRef: HTMLDivElement | null = null;
 
   constructor(
     { id, modalKey, name, component, options }: ModalProps,
@@ -68,7 +71,7 @@ export class Modal {
 
     this.bind();
     this.setOption();
-    this.initComponent();
+    this.setComponentProps();
   }
 
   /* 초기화 및 설정 */
@@ -92,7 +95,9 @@ export class Modal {
       action,
       stateResponsiveComponent,
       escKeyActive,
-      enterKeyActive,
+      role,
+      title,
+      label,
     } = this.options;
 
     if (closeDelay) {
@@ -107,12 +112,22 @@ export class Modal {
       this.stateResponsive = stateResponsiveComponent;
     }
 
-    if (escKeyActive) {
-      this.escKeyActive = true;
+    if (escKeyActive === false) {
+      this.escKeyActive = false;
     }
 
-    if (enterKeyActive) {
-      this.enterKeyActive = true;
+    if (typeof role === "string") {
+      this.role = role;
+    }
+
+    if (label) {
+      this.label = label;
+    } else {
+      this.label = typeof title === "string"
+        ? title
+        : this._name === "unknown"
+          ? "dialog"
+          : this._name;
     }
   }
 
@@ -195,9 +210,10 @@ export class Modal {
       confirmContent,
       cancelContent,
       customActionContent,
-      action: this.action,
-      actionState: this.actionState,
+      isEscKeyActive: this.escKeyActive,
       payload,
+      action: this.action,
+      actionState: this.actionState
     };
 
     this.componentProps = { ...componentProps, ...options };
@@ -396,15 +412,24 @@ export class Modal {
   getState(): ModalState {
     const { className, style } = this.getModalStyle();
 
+    const label =
+      typeof this._options.title === "string"
+        ? this._options.title
+        : this._name === "unknown"
+          ? "dialog"
+          : this._name;
+
     return {
-      isActive: this.lifecycleState === "active",
+      isActive: this.lifecycleState === MODAL_LIFECYCLE_STATE.active,
+      actionState: this.actionState,
       component: this.currentComponent,
       componentProps: this.componentProps,
       modalClassName: className,
       modalStyle: style,
       backCoverStyle: this.getBackCoverStyle(),
       isEscKeyActive: this.escKeyActive,
-      isEnterKeyActive: this.enterKeyActive,
+      label,
+      role: this.role,
     };
   }
 

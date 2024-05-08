@@ -30,6 +30,7 @@ function App() {
             Learn React
           </a>
           <button
+            aria-hidden="false"
             onKeyDown={(event) => {
               console.log(event);
             }}
@@ -74,10 +75,11 @@ function App() {
             모달 열기
           </button>
           <button
+            aria-hidden="false"
             onClick={() => {
               modalCtrl.alert(async (confirm, { pending, success }) => {
                 pending();
-                await delay(1000);
+                await delay(10000);
 
                 success(() => {
                   modalCtrl.open(
@@ -139,6 +141,7 @@ function App() {
           </DynamicModal>
           <TestDynamicModal />
           <button
+            aria-hidden="true"
             onClick={() => {
               modalCtrl.confirm({
                 subTitle: "confirm",

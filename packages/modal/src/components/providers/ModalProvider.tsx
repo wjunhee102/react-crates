@@ -1,6 +1,15 @@
-import { ReactNode, useEffect, useState } from "react";
+import {
+  forwardRef,
+  KeyboardEvent,
+  KeyboardEventHandler,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { ModalManager, Modal } from "../../services";
-import { ModalManagerState } from "../../types";
+import { ModalManagerState, ModalTransactionState } from "../../types";
 import ModalComponentProvider from "./ModalComponentProvider";
 
 import "./modalProvider.css";
@@ -8,6 +17,7 @@ import "./modalProvider.css";
 let overflow = "";
 let height = "";
 let width = "";
+let pointerEvents = "";
 
 interface ModalProviderCoreProps extends ModalProviderProps {
   modalManager: ModalManager;
@@ -19,9 +29,11 @@ const ModalProviderCore = ({
   children,
 }: ModalProviderCoreProps) => {
   const [
-    { modalStack, transactionState, isOpen, breakPoint, currentModalId },
+    { modalStack, isOpen, transactionState, breakPoint, currentModalId },
     setModalManagerState,
   ] = useState<ModalManagerState>(modalManager.getState());
+
+  const modalProviderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     modalManager.subscribe(setModalManagerState);
@@ -49,19 +61,23 @@ const ModalProviderCore = ({
       overflow = document.body.style.overflow;
       height = document.body.style.height;
       width = document.body.style.width;
+      pointerEvents = document.body.style.pointerEvents;
 
       document.body.style.overflow = "hidden";
       document.body.style.height = "100vh";
       document.body.style.width = "100vw";
+      document.body.style.pointerEvents = "none";
 
       return () => {
         document.body.style.overflow = overflow;
         document.body.style.height = height;
         document.body.style.width = width;
+        document.body.style.pointerEvents = pointerEvents;
 
         overflow = "";
         height = "";
         width = "";
+        pointerEvents = "";
       };
     }
 
@@ -69,20 +85,55 @@ const ModalProviderCore = ({
       document.body.style.overflow = overflow;
       document.body.style.height = height;
       document.body.style.width = width;
+      document.body.style.pointerEvents = pointerEvents;
 
       return () => {
         overflow = "";
         height = "";
         width = "";
+        pointerEvents = "";
       };
     }
   }, [isOpen]);
+
+  const disableKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (
+        modalProviderRef.current &&
+        modalProviderRef.current.contains(document.activeElement)
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+    },
+    [transactionState]
+  );
+
+  useEffect(() => {
+    if (currentModalId > 0) {
+      const currentModalRef = modalStack[modalStack.length - 1].contentRef;
+
+      if (currentModalRef) {
+        currentModalRef.focus();
+
+        return;
+      }
+
+      if (modalProviderRef.current) {
+        modalProviderRef.current.focus();
+      }
+    }
+  }, [currentModalId]);
 
   const props = {
     isOpen,
     modalStack,
     breakPoint,
+    transactionState,
     currentModalId,
+    onKeyDown: disableKeyDown,
+    ref: modalProviderRef,
   };
 
   if (children) {
@@ -101,25 +152,35 @@ interface ModalProviderViewProps {
   isOpen: boolean;
   modalStack: Modal[];
   breakPoint: number;
+  transactionState: ModalTransactionState;
   currentModalId: number;
+  onKeyDown: KeyboardEventHandler<HTMLDivElement>;
 }
 
-const ModalProviderView = ({
-  isOpen,
-  modalStack,
-  breakPoint,
-  currentModalId,
-}: ModalProviderViewProps) => (
-  <div className={`modalProvider_rm ${isOpen ? "open_rm" : ""}`}>
-    {modalStack.map((modal) => (
-      <ModalComponentProvider
-        key={modal.id}
-        breakPoint={breakPoint}
-        modal={modal}
-        isCurrent={modal.id === currentModalId}
-      />
-    ))}
-  </div>
+const ModalProviderView = forwardRef<HTMLDivElement, ModalProviderViewProps>(
+  ({ isOpen, modalStack, breakPoint, currentModalId, onKeyDown }, ref) => (
+    <div
+      ref={ref}
+      tabIndex={-1}
+      className={`modalProvider_rm ${isOpen ? "open_rm" : ""}`}
+      onKeyDown={onKeyDown}
+    >
+      <div
+        style={{
+          pointerEvents: "none",
+        }}
+      >
+        {modalStack.map((modal) => (
+          <ModalComponentProvider
+            key={modal.id}
+            breakPoint={breakPoint}
+            modal={modal}
+            isCurrent={modal.id === currentModalId}
+          />
+        ))}
+      </div>
+    </div>
+  )
 );
 
 export interface ModalProviderProps {

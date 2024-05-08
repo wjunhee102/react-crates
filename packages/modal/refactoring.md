@@ -214,3 +214,17 @@ componentProps가 아니라 component가 바뀌어야 함.
 - ModalProvider current backcover cursor 문제
   - 모달이 동시에 여러개가 open 됐을 때 그 뒤에 있는 모달의 백커버의 cursor가 `default`에서 `pointer`로 변경되지 않는 문제가 있었음.
   - `current`인지 파악하는 로직은 modal 객체에 없기 때문에 modal에도 `current`를 확인하는 프로퍼티를 만들고 변경시 notifty를 하게 업데이트 하였음.
+
+## 2024년 5월 6일 월요일
+
+- 접근성을 위하여 focus 관리를 하기 위해 기존의 방식에서 수정하려고 함.
+  - 기존에 backCover button에서 키보드 처리를 했던 것을 modal에 하려고 함.
+  - enterActive를 삭제하고 escActive만 남기려고 함.
+
+## 2024년 5월 8일 수요일
+
+- 접근성을 위한 tab키를 모달 요소에서만 동작할 수 있도록 작성함.
+- 사파리에서는 tab키가 잠겨 있을 수 있기 때문에 내부에서 코드로 요소간 이동을 하기로 함.
+- modal과 modalManager의 프로퍼티 명 규칙을 정해서 정리할 필요가 있음.
+- DynamicModal과 전체적인 Modal의 test를 작성해야 함.
+- DynamicModal에 focus 기능을 만들어야 함.
