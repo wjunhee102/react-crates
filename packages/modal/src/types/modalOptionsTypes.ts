@@ -5,6 +5,7 @@ import {
 } from "./commonTypes";
 import { ModalCallback, ModalMiddleware } from "./modalControllerTypes";
 import { ComponentPropsOptions, ModalComponent } from "./modalComponentTypes";
+import { FocusEventHandler } from "react";
 
 /**
  * modalKey는 중복 방지
@@ -23,9 +24,10 @@ export interface ModalDispatchOptions<T = any, P extends string = string> extend
   transitionOptions?: ModalTransitionOptions;
   position?: ModalPosition<P>;
   stateResponsiveComponent?: boolean;
-  required?: boolean;
   role?: string;
   label?: string;
+  onOpenAutoFocus?: FocusEventHandler<HTMLDivElement>;
+  required?: boolean;
 }
 
 export type ModalClose = (
@@ -52,4 +54,5 @@ export interface ModalEditOptions<T extends string = string> extends ComponentPr
   position?: ModalPosition<T>;
   stateResponsiveComponent?: boolean;
   payload?: any;
+  onOpenAutoFocus?: FocusEventHandler<HTMLDivElement>;
 }

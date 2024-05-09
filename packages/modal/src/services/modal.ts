@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties, FocusEventHandler } from "react";
 import {
   MODAL_ACTION_STATE,
   MODAL_LIFECYCLE_STATE,
@@ -55,6 +55,7 @@ export class Modal {
   private _isCloseDelay = true;
   private _closeDelayDuration = -1;
   private _confirm: ModalConfirmType | undefined = undefined;
+  private _onOpenAutoFocus: FocusEventHandler<HTMLDivElement> | undefined = undefined;
 
   public contentRef: HTMLDivElement | null = null;
 
@@ -98,6 +99,7 @@ export class Modal {
       role,
       title,
       label,
+      onOpenAutoFocus
     } = this.options;
 
     if (closeDelay) {
@@ -128,6 +130,10 @@ export class Modal {
         : this._name === "unknown"
           ? "dialog"
           : this._name;
+    }
+
+    if (onOpenAutoFocus) {
+      this._onOpenAutoFocus = onOpenAutoFocus;
     }
   }
 
@@ -181,6 +187,10 @@ export class Modal {
 
   get callback() {
     return this.actionCallback;
+  }
+
+  get onOpenAutoFocus() {
+    return this._onOpenAutoFocus;
   }
 
   /* 컴포넌트 및 상태 관리 */
@@ -412,13 +422,6 @@ export class Modal {
   getState(): ModalState {
     const { className, style } = this.getModalStyle();
 
-    const label =
-      typeof this._options.title === "string"
-        ? this._options.title
-        : this._name === "unknown"
-          ? "dialog"
-          : this._name;
-
     return {
       isActive: this.lifecycleState === MODAL_LIFECYCLE_STATE.active,
       actionState: this.actionState,
@@ -428,7 +431,7 @@ export class Modal {
       modalStyle: style,
       backCoverStyle: this.getBackCoverStyle(),
       isEscKeyActive: this.escKeyActive,
-      label,
+      label: this.label,
       role: this.role,
     };
   }

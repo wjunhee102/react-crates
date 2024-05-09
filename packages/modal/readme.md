@@ -82,8 +82,7 @@ const {
       backCoverConfirm?: boolean | string | null //null 일 경우 동작하지 않습니다.
       backCoverColor?: string;
       backCoverOpacity?: number;
-      escKeyActive?: boolean; // esc 버튼으로 cancel action을 실행시킬 수 있습니다.
-      enterKeyActive?: boolean; // enter 버튼으로 enter action을 실행시킬 수 있습니다.
+      escKeyActive?: boolean; //  esc 버튼으로 cancel action을 실행시킬 수 있습니다.
       closeDelay?: number; // modal이 설정한 delay후 close 됩니다.
       duration?: number; // modal이 생성, 닫힐 때 실행되는 transition의 속도입니다.
       transitionOptions?: { // modal이 생성, 닫힐 때 실행되는 transition의 옵션입니다.
@@ -95,8 +94,11 @@ const {
       position?: string | ((breakPoint: number) => string);
       /* modalActionState에 따라 자동으로 Modal Componet가 변경됩니다. */
       stateResponsiveComponent?: boolean;
-      /* 등록된 modal이 덮혀씌워지지 않거나 지워지지 않습니다. */
-      required?: boolean;
+      /* modal이 focus 될 때 동작하는 로직을 작성할 수 있습니다. */
+      onOpenAutoFocus?: FocusEventHandler<HTMLDivElement>;
+      /* 접근성 관련 property입니다. */
+      label?: string;
+      role?: string;
       /* 동적으로 modal의 내용을 입력할 수 있습니다. */
       title?: React.ReactNode;
       subTitle?: React.ReactNode;
@@ -105,6 +107,8 @@ const {
       confirmContent?: React.ReactNode;
       cancelContent?: React.ReactNode;
       customActionContent?: React.ReactNode;
+      /* 등록된 modal이 덮혀씌워지지 않거나 지워지지 않습니다. */
+      required?: boolean;
     }
   }
 },
@@ -966,7 +970,7 @@ modalCtrl.confirm(async (confirm, { success, error, end }) => {
 
 - `DynamicModal`은 `React 컴포넌트`의 `자연스러운 흐름에 따라 구현`할 수 있는 모달입니다.
 - 기존의 모달 개발 방식을 활용하여 직관적으로 모달을 구성하고 관리할 수 있습니다.
-- `options`을 통해 기존 modal처럼 설정할 수 있습니다.
+- `props`를 통해 기존 modal처럼 설정할 수 있습니다.
 
 ```tsx
 import { generateModal } from "@react-crates/modal";
@@ -977,13 +981,11 @@ function Example() {
   return (
     <div>
       <DynamicModal
-        options={{
-          duration: 250,
-          position: "center",
-          action: (confirm?: boolean | string) => {
-            ...
-            return;
-          }
+        duration={250}
+        position="center"
+        action={(confirm?: boolean | string) => {
+          ...
+          return;
         }}
       >
         {/* trigger는 모달을 open하는 버튼입니다. */}
@@ -1003,8 +1005,8 @@ function Example() {
   );
 }
 
-/** DynamicModal Options **/
-interface DynamicModalOptions {
+/** DynamicModal Props **/
+interface DynamicModalProps {
   backCoverConfirm?: string | boolean | null;
   backCoverColor?: string;
   backCoverOpacity?: number;

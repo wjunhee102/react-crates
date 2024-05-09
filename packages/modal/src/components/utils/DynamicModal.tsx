@@ -8,6 +8,7 @@ import {
   ButtonHTMLAttributes,
   useCallback,
   MouseEvent,
+  useEffect,
 } from "react";
 import { ModalManager } from "../../services";
 import { Modal } from "../../components/modal";
@@ -112,7 +113,10 @@ export interface DynamicModalElementProps {
 const DynamicModalElement = ({ children }: DynamicModalElementProps) => {
   const dynamicModalManager = useDynamicModal();
 
-  dynamicModalManager.setElement(children);
+  // 렌더링이 끝난 후 상태 업데이트를 하기 위함.
+  useEffect(() => {
+    dynamicModalManager.setElement(children);
+  }, [children]);
 
   return null;
 };
@@ -133,7 +137,9 @@ const DynamicModalProvider = ({
     [modalManager]
   );
 
-  dynamicModalManager.setOptions(options);
+  useEffect(() => {
+    dynamicModalManager.setOptions(options);
+  }, [options]);
 
   return (
     <DynamicModalContext.Provider value={dynamicModalManager}>
@@ -142,13 +148,13 @@ const DynamicModalProvider = ({
   );
 };
 
-export interface DynamicModalProps<T extends string> {
-  options?: ModalDispatchOptions<any, T>;
+export interface DynamicModalProps<T extends string>
+  extends ModalDispatchOptions<any, T> {
   children: ReactNode;
 }
 
 const setDynamicModal = <T extends string>(modalManager: ModalManager) => {
-  function DynamicModal({ children, options = {} }: DynamicModalProps<T>) {
+  function DynamicModal({ children, ...options }: DynamicModalProps<T>) {
     return (
       <DynamicModalProvider modalManager={modalManager} options={options}>
         {children}

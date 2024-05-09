@@ -228,3 +228,8 @@ componentProps가 아니라 component가 바뀌어야 함.
 - modal과 modalManager의 프로퍼티 명 규칙을 정해서 정리할 필요가 있음.
 - DynamicModal과 전체적인 Modal의 test를 작성해야 함.
 - DynamicModal에 focus 기능을 만들어야 함.
+
+## 2024년 5월 9일 목요일
+
+- Warning: Cannot update a component (`ModalComponentProvider`) while rendering a different component (`DynamicModal.Element`). To locate the bad setState() call inside `DynamicModal.Element`, follow the stack trace as described in
+- DynamicModal test 코드를 작성하다가 다음 에러를 확인했는데, DynamicElement에서 렌더링이 종료되지 않은 상태에서 상태 업데이트를 진행하려고 해서 발생하는 문제였음. 해당 문제는 useEffect에 감싸서 해결함.

@@ -1,7 +1,7 @@
 import logo from "./logo.svg";
 import "./App.css";
 import { DynamicModal, ModalProvider, modalCtrl } from "./modal";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Modal } from "@react-crates/modal";
 
 export function delay(duration: number = 0) {
@@ -131,7 +131,7 @@ function App() {
           >
             알림2
           </button>
-          <DynamicModal options={{ duration: 1500, position: "center" }}>
+          <DynamicModal duration={1500} position="center">
             <DynamicModal.Trigger>다이나믹 모달</DynamicModal.Trigger>
             <DynamicModal.Element>
               <div className="bg-white w-[200px] h-[300px]">
@@ -178,19 +178,27 @@ function App() {
 
 function TestDynamicModal() {
   const [count, setCount] = useState(1);
+  const targetRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    targetRef.current && targetRef.current.focus();
+  }, []);
 
   return (
     <DynamicModal
-      options={{
-        duration: 250,
-        position: "leftBottom-center-bottom",
-        stateResponsiveComponent: true,
-        action: async (confirm, { pending, end }) => {
-          pending();
-          await delay(1000);
-          end();
-        },
-        closeDelay: 2000,
+      duration={250}
+      position="leftBottom-center-bottom"
+      stateResponsiveComponent={true}
+      action={async (confirm, { pending, end }) => {
+        pending();
+        await delay(1000);
+        end();
+      }}
+      closeDelay={2000}
+      onOpenAutoFocus={(event) => {
+        event.preventDefault();
+        console.log("sadasdasds");
+        targetRef.current && targetRef.current.focus();
       }}
     >
       <DynamicModal.Trigger onClick={() => setCount((state) => state + 1)}>
@@ -207,6 +215,30 @@ function TestDynamicModal() {
           >
             실행
           </DynamicModal.Action>
+          <button
+            className="focus:bg-pink-300"
+            ref={targetRef}
+            onClick={() => {
+              setCount(count + 1);
+            }}
+            onFocus={() => {
+              console.log("focus");
+            }}
+          >
+            안녕.
+          </button>
+          <button
+            className="focus:bg-pink-300"
+            ref={targetRef}
+            onClick={() => {
+              setCount(count + 1);
+            }}
+            onFocus={() => {
+              console.log("focus");
+            }}
+          >
+            안녕.
+          </button>
         </div>
       </DynamicModal.Element>
     </DynamicModal>
