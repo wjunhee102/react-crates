@@ -49,7 +49,7 @@ const ModalComponentProvider = ({
 
   const {
     actionBackCover,
-    actionToKeyUp,
+    actionToEsc,
     disableOutsideFocus,
     focusModalContent,
     focusBackCover,
@@ -62,7 +62,7 @@ const ModalComponentProvider = ({
 
         modal.action(modal.options.backCoverConfirm);
       },
-      actionToKeyUp(event: KeyboardEvent<HTMLDivElement>) {
+      actionToEsc(event: KeyboardEvent<HTMLDivElement>) {
         if (
           event.key !== "Escape" ||
           modal.options.backCoverConfirm === null ||
@@ -140,6 +140,14 @@ const ModalComponentProvider = ({
           return;
         }
 
+        if (modal.onOpenAutoFocus) {
+          modal.onOpenAutoFocus(event);
+
+          return;
+        }
+
+        event.preventDefault();
+
         focusableElements.current.first &&
           focusableElements.current.first.focus();
       },
@@ -174,7 +182,10 @@ const ModalComponentProvider = ({
     }
 
     if (isCurrent && modalRef.current) {
-      if (focusableElements.current.first === null) {
+      if (
+        modalContentRef.current &&
+        !modalContentRef.current.contains(document.activeElement)
+      ) {
         modalContentRef.current && modalContentRef.current.focus();
       }
 
@@ -210,7 +221,7 @@ const ModalComponentProvider = ({
           ref={modalContentRef}
           className={`modalContent_rm ${modalClassName || ""}`}
           style={modalStyle}
-          onKeyUp={actionToKeyUp}
+          onKeyUp={actionToEsc}
           onFocus={focusModalContent}
         >
           <ModalComponentPropsContext.Provider value={componentProps}>
