@@ -51,6 +51,7 @@ const ModalProviderCore = ({
 
     return () => {
       modalManager.unsubscribe(setModalManagerState);
+      modalManager.remove("clear");
       document.documentElement.style.setProperty("--vh", originVh);
       window.removeEventListener("resize", listener);
     };
