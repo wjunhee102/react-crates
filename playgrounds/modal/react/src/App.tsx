@@ -79,7 +79,7 @@ function App() {
             onClick={() => {
               modalCtrl.alert(async (confirm, { pending, success }) => {
                 pending();
-                await delay(10000);
+                await delay(1000);
 
                 success(() => {
                   modalCtrl.open(
@@ -131,7 +131,7 @@ function App() {
           >
             알림2
           </button>
-          <DynamicModal duration={1500} position="center">
+          <DynamicModal duration={1000} position="bottom">
             <DynamicModal.Trigger>다이나믹 모달</DynamicModal.Trigger>
             <DynamicModal.Element>
               <div className="bg-white w-[200px] h-[300px]">
@@ -187,7 +187,7 @@ function TestDynamicModal() {
   return (
     <DynamicModal
       duration={250}
-      position="leftBottom-center-bottom"
+      position="leftBottom"
       stateResponsiveComponent={true}
       action={async (confirm, { pending, end }) => {
         pending();

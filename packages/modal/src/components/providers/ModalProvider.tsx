@@ -51,6 +51,7 @@ const ModalProviderCore = ({
 
     return () => {
       modalManager.unsubscribe(setModalManagerState);
+      modalManager.remove("clear");
       document.documentElement.style.setProperty("--vh", originVh);
       window.removeEventListener("resize", listener);
     };
@@ -112,7 +113,7 @@ const ModalProviderCore = ({
 
   useEffect(() => {
     if (currentModalId > 0) {
-      const currentModalRef = modalStack[modalStack.length - 1].contentRef;
+      const currentModalRef = modalStack[modalStack.length - 1].componentRef;
 
       if (currentModalRef) {
         currentModalRef.focus();
@@ -167,6 +168,9 @@ const ModalProviderView = forwardRef<HTMLDivElement, ModalProviderViewProps>(
     >
       <div
         style={{
+          width: "100%",
+          height: "100%",
+          overflow: "hidden",
           pointerEvents: "none",
         }}
       >

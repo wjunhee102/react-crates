@@ -45,6 +45,7 @@ export class Modal {
   private escKeyActive: boolean = true;
   private role: string = "dialog";
   private label: string = "dialog";
+  private isOpened: boolean = false;
 
   private _id: number;
   private _modalKey: string | null;
@@ -56,8 +57,9 @@ export class Modal {
   private _closeDelayDuration = -1;
   private _confirm: ModalConfirmType | undefined = undefined;
   private _onOpenAutoFocus: FocusEventHandler<HTMLDivElement> | undefined = undefined;
+  private _state: ModalState;
 
-  public contentRef: HTMLDivElement | null = null;
+  public componentRef: HTMLDivElement | null = null;
 
   constructor(
     { id, modalKey, name, component, options }: ModalProps,
@@ -73,6 +75,8 @@ export class Modal {
     this.bind();
     this.setOption();
     this.setComponentProps();
+
+    this._state = this.getState();
   }
 
   /* 초기화 및 설정 */
@@ -191,6 +195,10 @@ export class Modal {
 
   get onOpenAutoFocus() {
     return this._onOpenAutoFocus;
+  }
+
+  get state() {
+    return this._state;
   }
 
   /* 컴포넌트 및 상태 관리 */
@@ -360,15 +368,16 @@ export class Modal {
 
     this.isInitial = true;
 
-    /* 애니메이션을 위한 로직
-     * init 스타일로 렌더하고 난 뒤에 active로 변경함.
-    */
+    // 애니메이션을 위한 로직
+    // init 스타일로 렌더하고 난 뒤에 active로 변경함.
     setTimeout(() => {
       this.active();
     }, 0);
 
     await this.manager.executeAsync(delay, this.options.duration ?? 0);
 
+    // initial - active 애니메이션이 종료됨을 확인하기 위함.
+    this.isOpened = true;
     this.notify();
   }
 
@@ -424,6 +433,7 @@ export class Modal {
 
     return {
       isActive: this.lifecycleState === MODAL_LIFECYCLE_STATE.active,
+      isOpened: this.isOpened,
       actionState: this.actionState,
       component: this.currentComponent,
       componentProps: this.componentProps,
@@ -449,9 +459,11 @@ export class Modal {
   }
 
   notify() {
-    const modalState = this.getState();
+    const state = this.getState();
 
-    this.listeners.forEach((listener) => listener(modalState));
+    this._state = state;
+
+    this.listeners.forEach((listener) => listener(state));
 
     return this;
   }

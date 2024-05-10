@@ -233,3 +233,10 @@ componentProps가 아니라 component가 바뀌어야 함.
 
 - Warning: Cannot update a component (`ModalComponentProvider`) while rendering a different component (`DynamicModal.Element`). To locate the bad setState() call inside `DynamicModal.Element`, follow the stack trace as described in
 - DynamicModal test 코드를 작성하다가 다음 에러를 확인했는데, DynamicElement에서 렌더링이 종료되지 않은 상태에서 상태 업데이트를 진행하려고 해서 발생하는 문제였음. 해당 문제는 useEffect에 감싸서 해결함.
+
+## 2024년 5월 10일 금요일
+
+- position이 `bottom`일때 모달이 아래에서 위로 올라오는 것이 아니라 모달이 고정되어 있고 부모요소가 위에서 아래로 내려오는 현상이 발견됐음.
+- 문제는 focus가 애니메이션이 실행되는 중에 잡히면 해당 문제가 발생하는 것이였음.
+- 해당 문제는 modal 가장 상위 요소에 처음 focus를 잡고 `initial - action`으로 이어지는 애니메이션이 종료되었을 때 modal content 내부로 focus를 이동 시키는 방법으로 해결함.
+- 이 문제 해결을 위해 `isOpened`라는 새로운 property를 추가함.

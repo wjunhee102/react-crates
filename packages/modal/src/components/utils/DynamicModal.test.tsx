@@ -2,7 +2,7 @@ import { render, fireEvent, act, waitFor } from "@testing-library/react";
 import { ModalManager } from "../../services";
 import setModalProvider from "../providers/ModalProvider";
 import setDynamicModal from "./DynamicModal";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 describe("DynamicModal", () => {
   const modalManager = new ModalManager([], {
@@ -96,5 +96,42 @@ describe("DynamicModal", () => {
     });
 
     expect(getByText("1")).toBeInTheDocument();
+  });
+
+  it("원하는 요소에 포커스가 되는지 확인", async () => {
+    function TestComponent() {
+      const targetRef = useRef<HTMLButtonElement>(null);
+
+      return (
+        <div>
+          <ModalProvider />
+          <DynamicModal
+            onOpenAutoFocus={() => {
+              targetRef.current?.focus();
+            }}
+          >
+            <DynamicModal.Trigger>trigger</DynamicModal.Trigger>
+            <DynamicModal.Element>
+              <div>
+                <button>not target</button>
+                <button ref={targetRef}>target</button>
+              </div>
+            </DynamicModal.Element>
+          </DynamicModal>
+        </div>
+      );
+    }
+
+    const { getByRole, getByText } = render(<TestComponent />);
+
+    act(() => {
+      const trigger = getByRole("button");
+
+      fireEvent.click(trigger);
+    });
+
+    await waitFor(() => {
+      expect(getByText("target")).toBe(document.activeElement);
+    });
   });
 });
