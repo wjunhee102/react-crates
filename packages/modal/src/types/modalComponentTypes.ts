@@ -21,6 +21,7 @@ export type ModalComponent<T = any> = FC<ModalComponentProps<T>>;
 
 export interface ModalState {
   component: ModalComponent;
+  isOpened: boolean;
   isActive: boolean;
   actionState: ModalActionState;
   modalClassName?: string;

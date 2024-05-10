@@ -6,6 +6,7 @@ import {
   useEffect,
   FocusEvent,
   useMemo,
+  useCallback,
 } from "react";
 import { Modal } from "../../services";
 import { ModalState } from "../../types";
@@ -23,7 +24,7 @@ const ModalComponentProvider = ({
   modal,
   isCurrent,
 }: ModalComponentProviderProps) => {
-  const [state, setState] = useState(modal.getState());
+  const [state, setState] = useState(modal.state);
 
   const modalRef = useRef<HTMLDivElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
@@ -41,11 +42,26 @@ const ModalComponentProvider = ({
     modalClassName,
     modalStyle,
     isActive,
+    isOpened,
     isEscKeyActive,
     label,
     actionState,
     role,
   } = state;
+
+  const focusModal = useCallback(
+    (event: FocusEvent<HTMLDivElement>) => {
+      if (
+        isOpened &&
+        modalContentRef.current &&
+        !modalContentRef.current.contains(document.activeElement)
+      ) {
+        event.preventDefault();
+        modalContentRef.current && modalContentRef.current.focus();
+      }
+    },
+    [isOpened]
+  );
 
   const {
     actionBackCover,
@@ -165,10 +181,10 @@ const ModalComponentProvider = ({
 
     modal.init();
     modal.subscribe(listener);
-    modal.contentRef = modalContentRef.current;
+    modal.componentRef = modalRef.current;
 
     return () => {
-      modal.contentRef = null;
+      modal.componentRef = null;
       modal.unsubscribe(listener);
     };
   }, []);
@@ -176,22 +192,25 @@ const ModalComponentProvider = ({
   useEffect(() => {
     modal.updateIsCurrent(isCurrent);
 
+    if (isCurrent && modalRef.current) {
+      return hideOthers(modalRef.current);
+    }
+  }, [isCurrent]);
+
+  useEffect(() => {
     if (modalContentRef.current) {
-      modal.contentRef = modalContentRef.current;
       focusableElements.current = setFocusableElements(modalContentRef.current);
     }
 
-    if (isCurrent && modalRef.current) {
-      if (
-        modalContentRef.current &&
-        !modalContentRef.current.contains(document.activeElement)
-      ) {
-        modalContentRef.current && modalContentRef.current.focus();
-      }
-
-      return hideOthers(modalRef.current);
+    if (
+      isCurrent &&
+      isOpened &&
+      modalContentRef.current &&
+      !modalContentRef.current.contains(document.activeElement)
+    ) {
+      modalContentRef.current && modalContentRef.current.focus();
     }
-  }, [isCurrent, Component, actionState]);
+  }, [isOpened, actionState, Component]);
 
   useEffect(() => {
     modal.setBreakPoint(breakPoint);
@@ -199,6 +218,7 @@ const ModalComponentProvider = ({
 
   return (
     <div
+      tabIndex={-1}
       ref={modalRef}
       aria-label={label}
       aria-labelledby={label}
@@ -206,6 +226,7 @@ const ModalComponentProvider = ({
       aria-hidden={isCurrent ? "false" : "true"}
       aria-modal="true"
       className="modalWrapper_rm"
+      onFocus={focusModal}
       onKeyDown={disableOutsideFocus}
     >
       <button
