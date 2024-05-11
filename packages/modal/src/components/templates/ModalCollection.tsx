@@ -1,7 +1,7 @@
-import { ChangeEvent, KeyboardEvent, useMemo, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { Modal } from "../modal";
 import { ModalTemplate } from "./ModalTemplate";
-import { useModalComponentProps } from "../../hooks/useModalComponentProps";
+import { ModalComponentProps } from "../../types";
 
 const Alert = () => (
   <ModalTemplate className="modal-template-bg-rm">
@@ -50,26 +50,21 @@ const Confirm = () => (
 
 Confirm.displayName = "ModalCollection.Confirm";
 
-const Prompt = () => {
+const Prompt = ({ action }: ModalComponentProps) => {
   const [state, setState] = useState("");
-  const { action } = useModalComponentProps();
 
-  const { actionToKeyUp, onChange } = useMemo(
-    () => ({
-      actionToKeyUp(event: KeyboardEvent<HTMLInputElement>) {
-        if (event.key !== "Enter") {
-          return;
-        }
+  const actionToKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== "Enter") {
+      return;
+    }
 
-        event.preventDefault();
-        action(state);
-      },
-      onChange(event: ChangeEvent<HTMLInputElement>) {
-        setState(event.target.value);
-      },
-    }),
-    []
-  );
+    event.preventDefault();
+    action(state);
+  };
+
+  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setState(event.target.value);
+  };
 
   return (
     <ModalTemplate className="modal-template-bg-rm">
