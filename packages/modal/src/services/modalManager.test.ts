@@ -3,12 +3,14 @@ import { delay } from "../utils";
 import { ModalManager } from "./modalManager";
 
 describe("ModalManager", () => {
-  let modalManager: ModalManager = new ModalManager();;
+  let modalManager: ModalManager = new ModalManager();
+  const testComponent = jest.fn();
+  const anotherComponent = jest.fn();
 
   beforeEach(() => {
     modalManager = new ModalManager([
-      { name: "test", component: () => null },
-      { name: "another", component: () => null }
+      { name: "test", component: testComponent },
+      { name: "another", component: anotherComponent }
     ], {
       stateResponsiveComponent: false
     });
@@ -18,15 +20,27 @@ describe("ModalManager", () => {
     modalManager.clearModalStack();
   });
 
+  it("name에 따라 modal component를 정확하게 호출하는 지 확인", () => {
+    const testModalOptions = { duration: 300 }
+
+    modalManager.open("test", testModalOptions);
+
+    const testModal = modalManager.getModalStack()[0];
+
+    expect(testModal.name).toBe("test");
+    expect(testModal.component).toBe(testComponent);
+    expect(testModal.options.duration).toBe(testModalOptions.duration);
+    expect(testModal.component).not.toBe(anotherComponent);
+  });
+
   it("modal component seed를 추가하고 정확하게 검색하는지 확인", () => {
-
     modalManager.open("test");
-
     const modalId = modalManager.open("another");
 
+    expect(modalId).toBe(2);
     expect(modalManager.getModalStack().length).toBe(2);
     expect(modalManager.getModalComponentSeed("another")).toBeDefined();
-    expect(modalId).toBe(2);
+
   });
 
   it("modal을 정확하게 제거하는지 확인", () => {
