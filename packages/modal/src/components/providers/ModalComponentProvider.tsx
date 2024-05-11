@@ -144,9 +144,20 @@ const ModalComponentProvider = ({
           index: focusableElements.current.index + 1,
         };
 
-        focusableElements.current.elements[
-          focusableElements.current.index
-        ].focus();
+        const targetElement =
+          focusableElements.current.elements[focusableElements.current.index];
+
+        if (!targetElement) {
+          focusableElements.current = {
+            ...focusableElements.current,
+            index: 0,
+          };
+          modalContentRef.current.focus();
+
+          return;
+        }
+
+        targetElement.focus();
       },
       focusModalContent(event: FocusEvent<HTMLDivElement>) {
         if (

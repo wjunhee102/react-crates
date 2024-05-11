@@ -540,7 +540,7 @@ export class Modal {
   end(
     message?:
       | string
-      | StateControllerOptions
+      | Omit<StateControllerOptions, "component">
       | ((confirm?: ModalConfirmType) => void)
   ) {
     this.actionState = MODAL_ACTION_STATE.initial;
