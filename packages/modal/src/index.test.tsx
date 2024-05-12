@@ -1,11 +1,12 @@
 import { fireEvent, render, waitFor } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
+import { useEffect } from "react";
 import { modalCollection } from "./components";
 import { generateModal } from "./generate";
-import { act } from "react-dom/test-utils";
 import { ModalComponentProps } from "./types";
 import { ModalFC } from ".";
-import { useEffect } from "react";
 import { useModalComponentProps } from "./hooks/useModalComponentProps";
+import { MODAL_TRANSACTION_STATE } from "./contants";
 
 describe("modal", () => {
   const pendingComponent = jest.fn();
@@ -17,18 +18,23 @@ describe("modal", () => {
     modalManager,
     DynamicModal,
     useIsOpenModal,
-  } = generateModal({
-    ...modalCollection,
-    pending: {
-      component: pendingComponent,
+  } = generateModal(
+    {
+      ...modalCollection,
+      pending: {
+        component: pendingComponent,
+      },
+      success: {
+        component: successComponent,
+      },
+      error: {
+        component: errorComponent,
+      },
     },
-    success: {
-      component: successComponent,
-    },
-    error: {
-      component: errorComponent,
-    },
-  });
+    {
+      duration: 10,
+    }
+  );
 
   afterEach(() => {
     act(() => {
@@ -117,7 +123,9 @@ describe("modal", () => {
     });
 
     await waitFor(() => {
-      expect(modalManager.getTransactionState()).toBe("idle");
+      expect(modalManager.getTransactionState()).toBe(
+        MODAL_TRANSACTION_STATE.idle
+      );
     });
 
     act(() => {
@@ -137,7 +145,9 @@ describe("modal", () => {
     });
 
     await waitFor(() => {
-      expect(modalManager.getTransactionState()).toBe("idle");
+      expect(modalManager.getTransactionState()).toBe(
+        MODAL_TRANSACTION_STATE.idle
+      );
     });
 
     act(() => {
@@ -246,7 +256,9 @@ describe("modal", () => {
     });
 
     await waitFor(() => {
-      expect(testModalManager.getTransactionState()).toBe("idle");
+      expect(testModalManager.getTransactionState()).toBe(
+        MODAL_TRANSACTION_STATE.idle
+      );
     });
 
     expect(
@@ -272,5 +284,50 @@ describe("modal", () => {
           modalProps2[key as keyof typeof modalProps2]
       )
     ).toBeTruthy();
+  });
+
+  it("modal의 생성 애니메이션이 작동될 때 modal action이 동작하지 않는 지 확인", async () => {
+    const { getByText } = render(<ModalProvider />);
+
+    const action = jest.fn();
+
+    act(() => {
+      modalCtrl.alert({ action, duration: 100 });
+    });
+
+    expect(getByText("Alert")).toBeInTheDocument();
+    expect(modalManager.getTransactionState()).toBe(
+      MODAL_TRANSACTION_STATE.active
+    );
+
+    act(() => {
+      const confirm = getByText("Confirm");
+
+      // 무시 됨.
+      fireEvent.click(confirm);
+      fireEvent.click(confirm);
+      fireEvent.click(confirm);
+    });
+
+    expect(action).toHaveBeenCalledTimes(0);
+
+    await waitFor(() => {
+      expect(modalManager.getTransactionState()).toBe(
+        MODAL_TRANSACTION_STATE.idle
+      );
+    });
+
+    act(() => {
+      const confirm = getByText("Confirm");
+
+      fireEvent.click(confirm);
+      // 무시 됨.
+      fireEvent.click(confirm);
+      fireEvent.click(confirm);
+    });
+
+    expect(action).toHaveBeenCalledTimes(1);
+    // alert modal의 confirm 버튼의 confirmType은 true
+    expect(action.mock.results[0]).toBeTruthy();
   });
 });
