@@ -2,8 +2,12 @@ import { fireEvent, render, waitFor } from "@testing-library/react";
 import { modalCollection } from "./components";
 import { generateModal } from "./generate";
 import { act } from "react-dom/test-utils";
+import { ModalComponentProps } from "./types";
+import { ModalFC } from ".";
+import { useEffect } from "react";
+import { useModalComponentProps } from "./hooks/useModalComponentProps";
 
-describe("modal test", () => {
+describe("modal", () => {
   const pendingComponent = jest.fn();
   const successComponent = jest.fn();
   const errorComponent = jest.fn();
@@ -143,11 +147,11 @@ describe("modal test", () => {
   });
 
   it("useIsOpenModal를 사용하여 modal이 open 됐을 때를 감지할 수 있는지 확인", () => {
-    function TestComponent() {
+    const TestComponent = () => {
       const isOpen = useIsOpenModal();
 
       return <div>{isOpen ? "open" : "close"}</div>;
-    }
+    };
 
     const { getByText } = render(
       <ModalProvider>
@@ -168,5 +172,105 @@ describe("modal test", () => {
     });
 
     expect(getByText("close")).toBeInTheDocument();
+  });
+
+  it("ModalFC와 useModalComponent를 이용하여 modal을 만들수 있는지 확인", async () => {
+    const mockDispatchOptions: Omit<
+      ModalComponentProps,
+      "actionState" | "action"
+    > = {
+      title: "title",
+      subTitle: "subTitle",
+      content: "content",
+      subContent: "subContent",
+      confirmContent: "confirmContent",
+      cancelContent: "cancelContent",
+      customActionContent: "customActionContent",
+      payload: "payload",
+    };
+    const notMockDispatchOptions: Omit<ModalComponentProps, "action"> = {
+      title: "nottitle",
+      subTitle: "notsubTitle",
+      content: "notcontent",
+      subContent: "notsubContent",
+      confirmContent: "notconfirmContent",
+      cancelContent: "notcancelContent",
+      customActionContent: "notcustomActionContent",
+      payload: "notpayload",
+      actionState: "error",
+    };
+
+    let modalProps1: Omit<ModalComponentProps, "action"> =
+      notMockDispatchOptions;
+    let modalProps2: Omit<ModalComponentProps, "action"> =
+      notMockDispatchOptions;
+
+    // props의 action은 modal의 메소드이기 때문에 다를 수 밖에 없어 제거
+    const modal1: ModalFC = ({ action, ...props }) => {
+      useEffect(() => {
+        modalProps1 = props;
+      }, []);
+      return null;
+    };
+
+    // props의 action은 modal의 메소드이기 때문에 다를 수 밖에 없어 제거
+    const modal2 = () => {
+      const { action, ...props } = useModalComponentProps();
+
+      useEffect(() => {
+        modalProps2 = props;
+      }, []);
+
+      return null;
+    };
+    const {
+      modalCtrl: testModalCtrl,
+      ModalProvider: TestModalProvider,
+      modalManager: testModalManager,
+    } = generateModal({
+      modal1: {
+        component: modal1,
+        defaultOptions: mockDispatchOptions,
+      },
+      modal2: {
+        component: modal2,
+        defaultOptions: mockDispatchOptions,
+      },
+    });
+
+    render(<TestModalProvider />);
+
+    act(() => {
+      testModalCtrl.modal1();
+      testModalCtrl.modal2();
+    });
+
+    await waitFor(() => {
+      expect(testModalManager.getTransactionState()).toBe("idle");
+    });
+
+    expect(
+      Object.keys(mockDispatchOptions).every(
+        (key) =>
+          notMockDispatchOptions[key as keyof typeof notMockDispatchOptions] !==
+          mockDispatchOptions[key as keyof typeof mockDispatchOptions]
+      )
+    ).toBeTruthy();
+
+    expect(
+      Object.keys(mockDispatchOptions).every(
+        (key) =>
+          modalProps1[key as keyof typeof modalProps1] ===
+          mockDispatchOptions[key as keyof typeof mockDispatchOptions]
+      )
+    ).toBeTruthy();
+
+    expect(
+      Object.keys(modalProps2).every(
+        (key) =>
+          modalProps1[key as keyof typeof modalProps1] ===
+          modalProps2[key as keyof typeof modalProps2]
+      )
+    ).toBeTruthy();
   });
 });
