@@ -2,6 +2,7 @@ import { waitFor } from "@testing-library/react";
 import { delay } from "../utils";
 import { ModalManager } from "./modalManager";
 import { createElement } from "react";
+import { ModalDispatchOptions, ModalManagerOptionsProps } from "../types";
 
 describe("ModalManager", () => {
   let modalManager: ModalManager = new ModalManager();
@@ -174,6 +175,62 @@ describe("ModalManager", () => {
       payload: "payload"
     });
     expect(modalManager.getModalStack()[2].options.payload).toBe("payload");
+  });
+
+  it("dispatchOptions이 올바르게 적용되는지 확인", () => {
+    const mockManagerOptions: ModalManagerOptionsProps = {
+      transition: {
+        transitionProperty: "notTransitionProperty",
+        transitionTimingFunction: "notTransitionTimingFunction",
+        transitionDelay: "notTransitionDelay"
+      },
+      duration: 200,
+      backCoverColor: "notBackColor",
+      backCoverOpacity: 0,
+      stateResponsiveComponent: false
+    }
+    const mockDispatchOptions: ModalDispatchOptions<string> = {
+      modalKey: "modalKey",
+      action: jest.fn(),
+      middleware: jest.fn(),
+      backCoverConfirm: false,
+      backCoverColor: "backCoverColor",
+      backCoverOpacity: 0.9,
+      escKeyActive: false,
+      payload: "payload",
+      closeDelay: 100,
+      duration: 100,
+      transitionOptions: {
+        transitionProperty: "transitionProperty",
+        transitionTimingFunction: "transitionTimingFunction",
+        transitionDelay: "transitionDelay"
+      },
+      position: "position",
+      stateResponsiveComponent: true,
+      role: "role",
+      label: "label",
+      onOpenAutoFocus: jest.fn(),
+      required: true
+    }
+    const testModalManager = new ModalManager([], mockManagerOptions);
+
+    testModalManager.open(createElement("div", null));
+
+    const modal1 = testModalManager.getModalStack()[0];
+
+    expect(Object.keys(mockDispatchOptions).every(key =>
+      modal1.options[key as keyof typeof modal1.options] !== mockDispatchOptions[key as keyof typeof mockDispatchOptions]
+    )).toBeTruthy();
+
+    testModalManager.remove();
+
+    testModalManager.open(createElement("div", null), mockDispatchOptions);
+
+    const modal2 = testModalManager.getModalStack()[0];
+
+    expect(Object.keys(mockDispatchOptions).every(key =>
+      modal2.options[key as keyof typeof modal2.options] === mockDispatchOptions[key as keyof typeof mockDispatchOptions]
+    )).toBeTruthy();
   });
 
 });

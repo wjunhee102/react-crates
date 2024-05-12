@@ -20,12 +20,12 @@ export default [
       {
         file: packageJson.main,
         format: "cjs",
-        sourcemap: process.env.NODE_ENV === "development" ? true : false,
+        sourcemap: process.env.NODE_ENV === "development",
       },
       {
         file: packageJson.module,
         format: "es",
-        sourcemap: process.env.NODE_ENV === "development" ? true : false,
+        sourcemap: process.env.NODE_ENV === "development",
       },
     ],
     plugins: [
