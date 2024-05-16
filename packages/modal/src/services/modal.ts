@@ -53,7 +53,7 @@ export class Modal {
   private _options: ModalOptions<any>;
   private _isCurrent: boolean = false;
   private _isAwaitingConfirm = false;
-  private _isCloseDelay = true;
+  private _isCloseDelay = false;
   private _closeDelayDuration = -1;
   private _confirm: ModalConfirmType | undefined = undefined;
   private _onOpenAutoFocus: FocusEventHandler<HTMLDivElement> | undefined = undefined;
@@ -106,9 +106,7 @@ export class Modal {
       onOpenAutoFocus
     } = this.options;
 
-    if (closeDelay) {
-      this._closeDelayDuration = closeDelay;
-    }
+    this.setCloseDelay(closeDelay)
 
     if (action) {
       this.actionCallback = action;
@@ -401,7 +399,7 @@ export class Modal {
     return this;
   }
 
-  setCloseDelay(duration: number) {
+  setCloseDelay(duration: number = -1) {
     if (duration < 1) {
       this._isCloseDelay = false;
 
@@ -516,7 +514,6 @@ export class Modal {
       | ((confirm?: ModalConfirmType) => void)
   ) {
     this.actionState = MODAL_ACTION_STATE.success;
-    this._isCloseDelay = true;
 
     this.changeState(message);
 
@@ -530,7 +527,6 @@ export class Modal {
       | ((confirm?: ModalConfirmType) => void)
   ) {
     this.actionState = MODAL_ACTION_STATE.error;
-    this._isCloseDelay = true;
 
     this.changeState(message);
 
