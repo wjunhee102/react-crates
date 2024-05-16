@@ -10,8 +10,6 @@ export async function defaultMiddleware({ modalState }: ModalMiddlewareProps) {
 
   if (modalState.isCloseDelay) {
     await delay(modalState.closeDelayDuration);
-
-    return modalState.close();
   }
 
   if (modalState.isAwaitingConfirm) {

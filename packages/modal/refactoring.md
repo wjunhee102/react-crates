@@ -240,3 +240,9 @@ componentProps가 아니라 component가 바뀌어야 함.
 - 문제는 focus가 애니메이션이 실행되는 중에 잡히면 해당 문제가 발생하는 것이였음.
 - 해당 문제는 modal 가장 상위 요소에 처음 focus를 잡고 `initial - action`으로 이어지는 애니메이션이 종료되었을 때 modal content 내부로 focus를 이동 시키는 방법으로 해결함.
 - 이 문제 해결을 위해 `isOpened`라는 새로운 property를 추가함.
+
+## version 0.5.4
+
+- isAwaitConfirm이 작동하지 않았음.
+- 보니까 closeDelay가 항상 true의 상태였고 middleware에서는 closeDelay가 true일때는 항상 close를 진행하게 되어 있었음.
+- 그래서 modal.ts와 defaultMiddleware의 로직을 변경해서 이걸 수정함.

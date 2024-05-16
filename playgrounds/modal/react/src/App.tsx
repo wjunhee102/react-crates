@@ -169,6 +169,18 @@ function App() {
           >
             confirm2
           </button>
+
+          <button
+            onClick={() => {
+              modalCtrl.pending({
+                action(_, { success }) {
+                  success({ isAwaitingConfirm: true });
+                },
+              });
+            }}
+          >
+            로딩
+          </button>
         </header>
         <div className="w-full h-[500px]"></div>
       </ModalProvider>
