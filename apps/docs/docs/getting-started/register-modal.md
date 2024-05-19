@@ -33,7 +33,7 @@ export const {
     }
   }
 }, {
-	...defaultOptions
+  ...defaultOptions
 });
 
 ```

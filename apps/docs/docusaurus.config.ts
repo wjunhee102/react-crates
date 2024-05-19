@@ -5,17 +5,17 @@ import type * as Preset from "@docusaurus/preset-classic";
 const config: Config = {
   title: "@react-crates/modal",
   tagline: "@react-crates/modal are cool",
-  favicon: "img/favicon.ico",
+  favicon: undefined,
 
   // Set the production url of your site here
-  url: "https://your-docusaurus-site.example.com",
+  url: "https://wjunhee102.github.io",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often "/<projectName>/"
-  baseUrl: "/",
+  baseUrl: "/react-crates/",
 
   // GitHub pages deployment config.
   // If you aren"t using GitHub pages, you don"t need these.
-  organizationName: "react-crates", // Usually your GitHub org/user name.
+  organizationName: "wjunhee102", // Usually your GitHub org/user name.
   projectName: "react-crates", // Usually your repo name.
 
   onBrokenLinks: "throw",
@@ -28,7 +28,7 @@ const config: Config = {
     defaultLocale: "kr",
     locales: ["kr"],
   },
-
+  trailingSlash: false,
   presets: [
     [
       "classic",
@@ -121,7 +121,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} @react-crates, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} @react-crates, Inc.`,
     },
     prism: {
       theme: prismThemes.github,
