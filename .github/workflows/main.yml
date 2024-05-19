@@ -26,15 +26,8 @@ jobs:
         with:
           version: "7.15.0"
 
-      - name: Build modal
+      - name: Build workspace
         run: |
-          cd packages/modal
-          pnpm install
-          pnpm build
-
-      - name: Build website
-        run: |
-          cd apps/docs
           pnpm install
           pnpm build
 
