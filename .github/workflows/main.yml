@@ -28,7 +28,7 @@ jobs:
 
       - name: Build modal
         run: |
-          cd pakages/modal
+          cd packages/modal
           pnpm install
           pnpm build
 
