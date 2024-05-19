@@ -30,7 +30,10 @@ export default [
     ],
     plugins: [
       PeerDepsExternalPlugin(),
-      resolve(),
+      resolve({
+        browser: true,
+        preferBuiltins: false,
+      }),
       commonjs(),
       typescript({
         tsconfig:
