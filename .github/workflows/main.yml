@@ -21,9 +21,11 @@ jobs:
         with:
           node-version: 18
           cache: "pnpm"
-          pnpm-version: "7.15.0"
+
       - uses: pnpm/action-setup@v4
         name: Install pnpm
+        with:
+          version: "7.15.0"
 
       - name: Install dependencies
         run: |
