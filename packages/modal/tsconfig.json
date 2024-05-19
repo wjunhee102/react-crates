@@ -13,11 +13,7 @@
     "outDir": "dist",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "emitDeclarationOnly": true,
-    "baseUrl": "./",
-    "paths": {
-      "*": ["types/*"]
-    }
+    "emitDeclarationOnly": true
   },
   "exclude": ["**/*.stories.tsx", "stories/**/*"]
 }
