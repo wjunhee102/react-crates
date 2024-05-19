@@ -4,6 +4,7 @@ sidebar_position: 2
 
 # Modal Action 활용
 
+- Modal Action은 @react-crates/modal의 가장 핵심적인 기능입니다.
 - Modal Action 함수는 모달을 조작하는 사용자가 상태 변경과 실행 결과를 지정할 수 있게 `confirm`과 `stateController` 인자를 제공합니다.
 
 ## Modal Action Confirm
