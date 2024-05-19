@@ -26,18 +26,20 @@ jobs:
         with:
           version: "7.15.0"
 
-      - name: Install dependencies
+      - name: Build website
         run: |
           cd apps/docs
           pnpm install
 
       - name: Build website
-        run: pnpm build
+        run: |
+          cd apps/docs
+          pnpm build
 
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: build
+          path: apps/docs/build
 
   deploy:
     name: Deploy to GitHub Pages
