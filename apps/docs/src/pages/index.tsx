@@ -17,7 +17,7 @@ function HomepageHeader() {
           as="h1"
           className="hero__title"
           onClick={() => {
-            modalCtrl.alert("안녕하세요.");
+            modalCtrl.alert("반갑습니다.");
           }}
         >
           {siteConfig.title}
