@@ -33,6 +33,7 @@ export default [
       resolve({
         browser: true,
         preferBuiltins: false,
+        extensions: [".mjs", ".js", ".json", ".node", ".ts", ".d.ts"],
       }),
       commonjs(),
       typescript({
