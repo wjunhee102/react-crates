@@ -28,7 +28,7 @@ const config: Config = {
     defaultLocale: "kr",
     locales: ["kr"],
   },
-  trailingSlash: false,
+  // trailingSlash: false,
   presets: [
     [
       "classic",
@@ -86,7 +86,7 @@ const config: Config = {
           items: [
             {
               label: "docs",
-              to: "/docs/getting-started",
+              to: "/docs/getting-started/introduction",
             },
           ],
         },
