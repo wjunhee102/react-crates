@@ -28,7 +28,7 @@ const config: Config = {
     defaultLocale: "kr",
     locales: ["kr"],
   },
-  // trailingSlash: false,
+  trailingSlash: false,
   presets: [
     [
       "classic",
