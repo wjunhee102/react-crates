@@ -29,6 +29,7 @@ jobs:
       - name: Build workspace
         run: |
           pnpm install
+          cd apps/docs
           pnpm build
 
       - name: Upload Build Artifact
