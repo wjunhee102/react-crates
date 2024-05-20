@@ -94,7 +94,9 @@ describe("modal", () => {
         >
           <DynamicModal.Trigger>trigger</DynamicModal.Trigger>
           <DynamicModal.Element>
-            <DynamicModal.Action>Confirm</DynamicModal.Action>
+            <div>
+              <DynamicModal.Action>Confirm</DynamicModal.Action>
+            </div>
           </DynamicModal.Element>
         </DynamicModal>
       </div>
@@ -150,7 +152,7 @@ describe("modal", () => {
       );
     });
 
-    act(() => {
+    await act(async () => {
       const confirm = getByText("Confirm");
       fireEvent.click(confirm);
     });
@@ -317,7 +319,7 @@ describe("modal", () => {
       );
     });
 
-    act(() => {
+    await act(async () => {
       const confirm = getByText("Confirm");
 
       fireEvent.click(confirm);
