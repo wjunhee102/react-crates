@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "ESNext",
+    "lib": ["ES2015", "DOM"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
