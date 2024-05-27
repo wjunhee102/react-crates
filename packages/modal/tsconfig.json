@@ -15,5 +15,8 @@
     "allowSyntheticDefaultImports": true,
     "emitDeclarationOnly": true
   },
-  "exclude": ["**/*.stories.tsx", "stories/**/*"]
+  "exclude": ["**/*.stories.tsx", "stories/**/*"],
+  "paths": {
+    "*": ["*", "../dist/types/*"]
+  }
 }

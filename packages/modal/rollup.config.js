@@ -58,13 +58,14 @@ export default [
         format: "es",
       },
     ],
-    plugins: [dts.default()],
+    plugins: [
+      resolve({
+        extensions: [".mjs", ".js", ".json", ".node", ".ts", ".tsx", ".d.ts"],
+        preferBuiltins: true,
+        modulesOnly: true,
+      }),
+      dts.default(),
+    ],
     external: [/\.css$/, /\.scss$/],
-    onwarn(warning, warn) {
-      // 모든 경고를 출력
-      console.log("Warning:", warning);
-      // 기본 경고 처리기 호출
-      warn(warning);
-    },
   },
 ];
