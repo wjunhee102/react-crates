@@ -29,6 +29,9 @@ jobs:
       - name: Build workspace
         run: |
           pnpm install
+          cd packages/modal
+          pnpm build
+          cd ../../apps/docs
           pnpm build
 
       - name: Upload Build Artifact
