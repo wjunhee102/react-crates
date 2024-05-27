@@ -58,12 +58,7 @@ export default [
         format: "es",
       },
     ],
-    plugins: [
-      resolve({
-        extensions: [".js", ".jsx", ".ts", ".tsx", ".d.ts"],
-      }),
-      dts.default(),
-    ],
+    plugins: [dts()],
     external: [/\.css$/, /\.scss$/],
   },
 ];
