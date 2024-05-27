@@ -1,5 +1,5 @@
 import { CSSProperties, ReactNode, FC } from "react";
-import { ModalActionState } from "./common";
+import { ModalActionState } from "./commonTypes";
 
 export interface ComponentPropsOptions {
   title?: ReactNode;

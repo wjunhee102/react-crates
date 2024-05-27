@@ -5,7 +5,7 @@ import {
   ModalTransition,
   ModalTransitionOptions,
   PositionStyle,
-} from "./common";
+} from "./commonTypes";
 import { ModalComponent } from "./modalComponentTypes";
 import {
   ModalCallback,

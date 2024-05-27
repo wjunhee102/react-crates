@@ -3,7 +3,7 @@ import {
   ModalActionState,
   ModalConfirmType,
   ModalLifecycleState,
-} from "./common";
+} from "./commonTypes";
 import { ComponentPropsOptions, ModalComponent } from "./modalComponentTypes";
 
 export interface StateControllerOptions {

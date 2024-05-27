@@ -1,7 +1,7 @@
 import React from "react";
 import { ModalComponent, ModalComponentProps } from "./modalComponentTypes";
 import { ModalDispatchOptions, ModalOptions } from "./modalOptionsTypes";
-import { DefaultModalPosition } from "./common";
+import { DefaultModalPosition } from "./commonTypes";
 
 export interface ModalComponentSeed<
   T extends any = any,
