@@ -26,6 +26,6 @@ jobs:
 
       - name: Build workspace
         run: |
-          pnpm install
           cd packages/modal
+          pnpm install
           pnpm build
