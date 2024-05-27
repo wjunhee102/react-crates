@@ -4,7 +4,7 @@
   "description": "리액트 모달을 쉽게 등록하고 사용가능한 라이브러리입니다.",
   "scripts": {
     "prebuild": "rimraf ./dist",
-    "build": "cross-env NODE_ENV=production rollup -c --bundleConfigAsCjs",
+    "build": "cross-env NODE_ENV=production rollup -c --debug --bundleConfigAsCjs",
     "watch": "cross-env NODE_ENV=development rollup -c --bundleConfigAsCjs --watch",
     "test": "jest",
     "prerelease": "pnpm test && pnpm build",
