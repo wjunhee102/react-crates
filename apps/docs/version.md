@@ -11,3 +11,4 @@
 
 - github-actions으로 github-pages를 배포하는데 자꾸 실패한 이유는 "'Branch "dev" is not allowed to deploy to github-pages due to environment protection rules"로 dev 브랜치로 배포할 수 없기 때문이다.
 - main 브랜치로 변경하니 해결되었다.
+- [!] RollupError: Could not resolve "./commonTypes" from "dist/esm/types/types/index.d.ts" 이 문제는 tsconfig에 lib로 es2017을 추가하지 않아서 제대로 빌드되지 않아서 생긴 문제였음.
