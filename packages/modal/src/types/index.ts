@@ -1,4 +1,4 @@
-export * from "./commonTypes";
+export * from "./common";
 export * from "./modalComponentTypes";
 export * from "./modalControllerTypes";
 export * from "./modalInterfaces";

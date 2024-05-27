@@ -1,7 +1,7 @@
 import React from "react";
 import { ModalComponent, ModalComponentProps } from "./modalComponentTypes";
 import { ModalDispatchOptions, ModalOptions } from "./modalOptionsTypes";
-import { DefaultModalPosition } from "./commonTypes";
+import { DefaultModalPosition } from "./common";
 
 export interface ModalComponentSeed<
   T extends any = any,
@@ -29,5 +29,5 @@ export type ModalComponentSeedTable<
   T extends string = string,
   P extends string = string
 > = {
-  [name in T]: ModalMeta<any, P>;
-};
+    [name in T]: ModalMeta<any, P>;
+  };

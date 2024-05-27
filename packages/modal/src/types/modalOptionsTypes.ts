@@ -2,7 +2,7 @@ import {
   ModalConfirmType,
   ModalPosition,
   ModalTransitionOptions,
-} from "./commonTypes";
+} from "./common";
 import { ModalCallback, ModalMiddleware } from "./modalControllerTypes";
 import { ComponentPropsOptions, ModalComponent } from "./modalComponentTypes";
 import { FocusEventHandler } from "react";

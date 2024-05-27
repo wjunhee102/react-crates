@@ -1,5 +1,5 @@
 import { Modal } from "../services/modal";
-import { ModalPositionTable, ModalTransitionOptions } from "./commonTypes";
+import { ModalPositionTable, ModalTransitionOptions } from "./common";
 
 export type ModalTransactionState = "idle" | "standby" | "active";
 
