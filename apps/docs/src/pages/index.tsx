@@ -6,7 +6,7 @@ import HomepageFeatures from "@site/src/components/HomepageFeatures";
 import Heading from "@theme/Heading";
 
 import styles from "./index.module.css";
-import { modalCtrl } from "@site/src/libs/modal";
+// import { modalCtrl } from "@site/src/libs/modal";
 
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
@@ -17,7 +17,7 @@ function HomepageHeader() {
           as="h1"
           className="hero__title"
           onClick={() => {
-            modalCtrl.alert("alert....");
+            // modalCtrl.alert("alert");
           }}
         >
           {siteConfig.title}
@@ -26,7 +26,7 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/getting-started"
+            to="/docs/getting-started/introduction"
           >
             @react-crates/modal Tutorial - 5min ⏱️
           </Link>
