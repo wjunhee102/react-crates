@@ -6,3 +6,8 @@
 - It looks like some of the broken links we found appear in many pages of your site.
 - 이 문제를 해결하니 빌드 성공.
 - 그런데 github-page 에러가 발생함.
+
+# 2024-05-27
+
+- github-actions으로 github-pages를 배포하는데 자꾸 실패한 이유는 "'Branch "dev" is not allowed to deploy to github-pages due to environment protection rules"로 dev 브랜치로 배포할 수 없기 때문이다.
+- main 브랜치로 변경하니 해결되었다.
