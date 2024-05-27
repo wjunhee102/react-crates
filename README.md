@@ -30,7 +30,7 @@ pnpm watch  // @react-crates를 빌드하고 playground를 실행합니다.
 
 ### Packages
 
-- `modal`: react modal 라이브러리로, 쉽게 모달을 등록하고 사용할 수 있습니다.[이동하기](/tree/main/packages/modal)
+- `modal`: react modal 라이브러리로, 쉽게 모달을 등록하고 사용할 수 있습니다.[이동하기](https://github.com/wjunhee102/react-crates/tree/main/packages/modal)
 
 ### Playgrounds
 
