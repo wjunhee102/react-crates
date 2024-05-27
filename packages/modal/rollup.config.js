@@ -50,22 +50,22 @@ export default [
       }),
     ],
   },
-  {
-    input: "dist/esm/types/index.d.ts",
-    output: [
-      {
-        file: "dist/index.d.ts",
-        format: "es",
-      },
-    ],
-    plugins: [
-      resolve({
-        extensions: [".mjs", ".js", ".json", ".node", ".ts", ".tsx", ".d.ts"],
-        preferBuiltins: true,
-        modulesOnly: true,
-      }),
-      dts.default(),
-    ],
-    external: [/\.css$/, /\.scss$/],
-  },
+  // {
+  //   input: "dist/esm/types/index.d.ts",
+  //   output: [
+  //     {
+  //       file: "dist/index.d.ts",
+  //       format: "es",
+  //     },
+  //   ],
+  //   plugins: [
+  //     resolve({
+  //       extensions: [".mjs", ".js", ".json", ".node", ".ts", ".tsx", ".d.ts"],
+  //       preferBuiltins: true,
+  //       modulesOnly: true,
+  //     }),
+  //     dts.default(),
+  //   ],
+  //   external: [/\.css$/, /\.scss$/],
+  // },
 ];
