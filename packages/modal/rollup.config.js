@@ -7,30 +7,6 @@ import postcss from "rollup-plugin-postcss";
 import terser from "@rollup/plugin-terser";
 import babel from "@rollup/plugin-babel";
 
-function myLogger() {
-  return {
-    name: "my-logger", // 이 플러그인의 이름
-    buildStart() {
-      console.log("Build starting...");
-    },
-    load(id) {
-      console.log(`Loading ${id}`);
-      return null; // 다른 로드 처리를 방해하지 않도록 null 반환
-    },
-    transform(code, id) {
-      console.log(`Transforming ${id}`);
-      return null; // 코드를 변형하지 않고 원본 그대로 반환
-    },
-    buildEnd(error) {
-      if (error) {
-        console.log("Build failed:", error);
-      } else {
-        console.log("Build finished successfully.");
-      }
-    },
-  };
-}
-
 const packageJson = require("./package.json");
 
 export default [
@@ -82,7 +58,13 @@ export default [
         format: "es",
       },
     ],
-    plugins: [dts.default(), myLogger],
+    plugins: [dts.default()],
     external: [/\.css$/, /\.scss$/],
+    onwarn(warning, warn) {
+      // 모든 경고를 출력
+      console.log("Warning:", warning);
+      // 기본 경고 처리기 호출
+      warn(warning);
+    },
   },
 ];
