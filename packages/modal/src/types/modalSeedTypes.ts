@@ -29,5 +29,5 @@ export type ModalComponentSeedTable<
   T extends string = string,
   P extends string = string
 > = {
-  [name in T]: ModalMeta<any, P>;
-};
+    [name in T]: ModalMeta<any, P>;
+  };
