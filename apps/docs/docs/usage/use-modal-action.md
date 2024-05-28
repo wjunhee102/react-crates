@@ -61,7 +61,7 @@ modalCtrl.confirm((confirm?: boolean | string) => {
 - `null`을 설정하여 backCover의 action이 실행되지 않게 할 수 있습니다.
 - `backCoverCofirm`의 기본값은 `undefined`입니다.
 
-```tsx title="modal.ts"
+```tsx
 import ExampleModal from "./component/ExampleModal";
 
 ...
@@ -82,7 +82,6 @@ export const { modalCtrl } = generateModal({
 ### Modal Action State 활용
 
 ```tsx
-// modal.ts
 import { generateModal } from "@react-crates/modal";
 
 const { modalCtrl } = generateModal({
