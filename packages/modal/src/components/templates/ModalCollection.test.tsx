@@ -1,9 +1,8 @@
-import { act } from "react-dom/test-utils";
 import { ModalManager } from "../../services";
 import { ModalComponentSeed, ModalConfirmType } from "../../types";
 import setModalProvider from "../providers/ModalProvider";
 import { modalCollection } from "./ModalCollection";
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, waitFor } from "@testing-library/react";
 
 describe("ModalCollection", () => {
   const modalManager = new ModalManager(

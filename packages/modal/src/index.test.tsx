@@ -1,5 +1,4 @@
-import { fireEvent, render, waitFor } from "@testing-library/react";
-import { act } from "react-dom/test-utils";
+import { act, fireEvent, render, waitFor } from "@testing-library/react";
 import { useEffect } from "react";
 import { modalCollection } from "./components";
 import { generateModal } from "./generate";
