@@ -2,6 +2,10 @@
 
 이 Repository는 React 애플리케이션의 기능을 향상시키고 확장하는 데 필요한 라이브러리를 포함하고 있습니다.
 
+## Packages
+
+- `modal`: react modal 라이브러리로, 쉽게 모달을 등록하고 사용할 수 있습니다. [이동하기](https://github.com/wjunhee102/react-crates/tree/main/packages/modal)
+
 ## 실행 방법
 
 ```sh
@@ -27,10 +31,6 @@ pnpm watch  // @react-crates를 빌드하고 playground를 실행합니다.
 ### Apps
 
 개발된 라이브러리의 문서화를 담당하는 앱입니다.
-
-### Packages
-
-- `modal`: react modal 라이브러리로, 쉽게 모달을 등록하고 사용할 수 있습니다.[이동하기](https://github.com/wjunhee102/react-crates/tree/main/packages/modal)
 
 ### Playgrounds
 
