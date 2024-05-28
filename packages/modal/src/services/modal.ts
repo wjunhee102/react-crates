@@ -566,7 +566,7 @@ export class Modal {
     return {
       className,
       style: {
-        pointerEvents: isAciveState ? "auto" : "none",
+        pointerEvents: (isAciveState && this.isOpened) ? "auto" : "none",
         ...transition,
         ...modalPosition,
       }
@@ -611,6 +611,7 @@ export class Modal {
       ...backCoverPosition,
       background: (isAciveState && backCoverColor) || background,
       opacity: (isAciveState && backCoverOpacity) || opacity,
+      pointerEvents: (isAciveState && this.isOpened) ? "auto" : "none"
     };
   }
 
