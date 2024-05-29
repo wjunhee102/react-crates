@@ -7,7 +7,7 @@ sidebar_position: 7
 - `DynamicModal`은 `React 컴포넌트`의 `자연스러운 흐름에 따라 구현`할 수 있는 모달입니다.
 - 기존의 모달 개발 방식을 활용하여 직관적으로 모달을 구성하고 관리할 수 있습니다.
 - `props`를 통해 기존 modal처럼 설정할 수 있습니다.
-- [`DynamicModal API`](/docs/api/DynamicModal)
+- [`DynamicModal API Reference`](/docs/api/DynamicModal)
 
 ```tsx
 import { generateModal } from "@react-crates/modal";
