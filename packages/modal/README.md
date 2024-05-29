@@ -321,9 +321,9 @@ const ExampleModal = () => {
 // Modal Util Component 목록
 
 <Modal.Title />
-<Modal.SubTitle />
+<Modal.Title.Sub />
 <Modal.Content />
-<Modal.SubContent />
+<Modal.Content.Sub />
 <Modal.Action />
 <Modal.Action.Confirm />
 <Modal.Action.Cancel />
@@ -1008,11 +1008,11 @@ function Example() {
 
 /** DynamicModal Props **/
 interface DynamicModalProps {
+  action?: ModalCallback;
   backCoverConfirm?: string | boolean | null;
   backCoverColor?: string;
   backCoverOpacity?: number;
   escKeyActive?: boolean;
-  enterKeyActive?: boolean;
   closeDelay?: number;
   duration?: number;
   transitionOptions?: {
@@ -1022,6 +1022,7 @@ interface DynamicModalProps {
   };
   position?: string;
   stateResponsiveComponent?: boolean;
+  onOpenAutoFocus?: FocusEventHandler<HTMLDivElement>;
 }
 ```
 

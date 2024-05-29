@@ -18,7 +18,7 @@ import {
   ModalEditOptions,
 } from "../../types";
 
-type DynamicModalOptions = Omit<ModalEditOptions, "payload">;
+type DynamicModalOptions = Omit<ModalEditOptions, "payload" | "component">;
 
 class DynamicModalManager {
   private modalId: number | null = null;
