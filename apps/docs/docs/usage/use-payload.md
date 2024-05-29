@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# Modal Payload
+# Modal Payload 활용하기
 
 - Modal과 통신이 필요한 경우 `payload` option을 사용할 수 있습니다.
 - payload는 항상 `undefined`일 수 있습니다.

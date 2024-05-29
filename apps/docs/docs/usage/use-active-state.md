@@ -19,7 +19,9 @@ function Example() {
 
   const confirm = () => {
 
-    modalCtrl.confirm(async (confirm, { pending, success, error }) => {
+    modalCtrl.confirm(async (confirm, {
+      pending, success, error
+    }) => {
       // 기본 actionState는 "initial"입니다.
       if (!confirm) {
         return;

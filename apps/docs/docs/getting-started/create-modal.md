@@ -28,9 +28,11 @@ const ExampleModal: ModalFC = ({
     </div>
   );
 };
+```
 
-// ModalComponentProps은 아래와 같이 구성되어 있습니다.
+- ModalComponentProps
 
+```ts
 interface ModalComponentProps<T> {
   title?: ReactNode;
   subTitle?: ReactNode;
@@ -82,9 +84,11 @@ const ExampleModal = () => {
     </div>
   );
 };
+```
 
-// Modal Util Component 목록
+- Modal Util Component 목록
 
+```tsx
 <Modal.Title />
 <Modal.SubTitle />
 <Modal.Content />
@@ -121,9 +125,11 @@ const ExampleModal = () => {
     </ModalTemplate>
   );
 };
+```
 
-// Modal Template 목록
+- Modal Template 목록
 
+```tsx
 <ModalTemplate>
 <ModalTemplate.Header>
 <ModalTemplate.Main>
