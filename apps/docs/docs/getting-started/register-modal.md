@@ -2,16 +2,16 @@
 sidebar_position: 4
 ---
 
-# Modal 등록하기
+# Modal 설정하기
 
 - Modal Component를 만들었으면 Modal을 등록해야 합니다.
-- Modal를 불러올 name과 defaultOptions을 설정하여 등록할 수 있습니다.
+- Modal를 불러올 name과 defaultOptions을 설정할 수 있습니다.
 
 ### generateModal을 이용한 modal 등록
 
 - generateModal을 위한 파일을 생성해주세요.
 - modal 개별 default options을 설정하거나 전체 modal에 적용될 options을 설정해주세요.
-- 자세한 설명은 [`generateModal - API`](/docs/api/generateModal)을 참고해주세요.
+- [`generateModal API Reference`](/docs/api/generateModal)
 
 ```tsx title="modal.ts"
 "use client" // CRA를 이용하여 개발하실 경우 제거하셔도 됩니다.
@@ -49,6 +49,7 @@ export const {
 
 - ModalProvider를 application 트리에 배치에 해주세요.
 - root component에 배치하는 것을 추천합니다.
+- [`ModalProvider API Reference`](/docs/api/ModalProvider)
 
 #### CRA
 
