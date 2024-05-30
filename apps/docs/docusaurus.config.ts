@@ -38,14 +38,14 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+            "https://github.com/wjunhee102/react-crates/tree/main/apps/docs/",
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+            "https://github.com/wjunhee102/react-crates/tree/main/apps/docs/",
         },
         theme: {
           customCss: "./src/css/custom.css",
@@ -91,29 +91,18 @@ const config: Config = {
           ],
         },
         {
-          title: "Community",
-          items: [
-            {
-              label: "Stack Overflow",
-              href: "https://stackoverflow.com/questions/tagged/docusaurus",
-            },
-            {
-              label: "Discord",
-              href: "https://discordapp.com/invite/docusaurus",
-            },
-            {
-              label: "Twitter",
-              href: "https://twitter.com/docusaurus",
-            },
-          ],
-        },
-        {
-          title: "More",
+
+          title: "Blog",
           items: [
             {
               label: "Blog",
               to: "/blog",
             },
+          ]
+        },
+        {
+          title: "More",
+          items: [
             {
               label: "GitHub",
               href: "https://github.com/wjunhee102/react-crates",
