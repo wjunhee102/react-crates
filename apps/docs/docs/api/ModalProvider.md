@@ -23,7 +23,7 @@ function App() {
   return (
     <div>
       <div>main</div>
-      <ModalProvider disableScroll />
+      <ModalProvider disableInteraction />
     </div>
   );
 }
