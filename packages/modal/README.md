@@ -173,7 +173,6 @@ modalCtrl.open("alert", {
   backCoverColor?: string;
   backCoverOpacity?: number;
   escKeyActive?: boolean; // esc 버튼으로 cancel action을 실행시킬 수 있습니다.
-  enterKeyActive?: boolean; // enter 버튼으로 enter action을 실행시킬 수 있습니다.
   closeDelay?: number; // modal이 설정한 delay후 close 됩니다.
   duration?: number; // modal이 생성, 닫힐 때 실행되는 애니메이션 속도입니다.
   transitionOptions?: {
