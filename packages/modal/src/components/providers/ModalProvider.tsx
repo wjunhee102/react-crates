@@ -25,7 +25,7 @@ interface ModalProviderCoreProps extends ModalProviderProps {
 
 const ModalProviderCore = ({
   modalManager,
-  disableScroll = true,
+  disableInteraction = true,
   children,
 }: ModalProviderCoreProps) => {
   const [
@@ -58,7 +58,7 @@ const ModalProviderCore = ({
   }, []);
 
   useEffect(() => {
-    if (isOpen && disableScroll) {
+    if (isOpen && disableInteraction) {
       overflow = document.body.style.overflow;
       height = document.body.style.height;
       width = document.body.style.width;
@@ -82,7 +82,7 @@ const ModalProviderCore = ({
       };
     }
 
-    if (disableScroll) {
+    if (disableInteraction) {
       document.body.style.overflow = overflow;
       document.body.style.height = height;
       document.body.style.width = width;
@@ -188,7 +188,7 @@ const ModalProviderView = forwardRef<HTMLDivElement, ModalProviderViewProps>(
 );
 
 export interface ModalProviderProps {
-  disableScroll?: boolean;
+  disableInteraction?: boolean;
   children?: ReactNode;
 }
 

@@ -77,12 +77,12 @@ describe("ModalProvider", () => {
   });
 });
 
-describe("ModalProvider scrolling block", () => {
+describe("ModalProvider interaction block", () => {
   const modalManager = new ModalManager();
   const ModalProvider = setModalProvider(modalManager);
 
-  it("disableScroll을 활성화 했을 때 scroll이 막히는지 확인", () => {
-    const { unmount } = render(<ModalProvider disableScroll={true} />);
+  it("disableInteraction을 활성화 했을 때 interaction이 막히는지 확인", () => {
+    const { unmount } = render(<ModalProvider disableInteraction={true} />);
 
     expect(document.body.style.width).toBe("");
     expect(document.body.style.height).toBe("");
@@ -115,8 +115,8 @@ describe("ModalProvider scrolling block", () => {
     expect(document.body.style.overflow).toBe("");
   });
 
-  it("disableScroll을 활성화 했을 때 scroll이 되는지 확인", () => {
-    render(<ModalProvider disableScroll={false} />);
+  it("disableInteraction을 활성화 했을 때 interaction이 되는지 확인", () => {
+    render(<ModalProvider disableInteraction={false} />);
 
     act(() => {
       modalManager.open(<div>Test Modal</div>);

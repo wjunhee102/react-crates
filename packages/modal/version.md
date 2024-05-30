@@ -247,7 +247,11 @@ componentProps가 아니라 component가 바뀌어야 함.
 - 보니까 closeDelay가 항상 true의 상태였고 middleware에서는 closeDelay가 true일때는 항상 close를 진행하게 되어 있었음.
 - 그래서 modal.ts와 defaultMiddleware의 로직을 변경해서 이걸 수정함.
 
-## verstion 0.5.5
+## version 0.5.5
 
 - modal이 bottom position일때 모달 오픈/클로스 애니메이션 실행시 클릭을 하면 modal에 포커스가 되면서 깜박깜박거리는 증상이 있었음.
 - 그래서 애니메이션 실행 중일때 point-events:none으로 처리하여 포커스 자체를 막아버림.
+
+## version 0.5.7
+
+- ModalProvider의 disableScroll이 scroll만 방지하는 것이 아니라 pointer까지 방지하기 때문에 직관적인 이름으로 disableInteraction으로 변경
