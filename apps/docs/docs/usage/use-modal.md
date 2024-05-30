@@ -2,7 +2,9 @@
 sidebar_position: 1
 ---
 
-# Modal 사용하기
+# Modal Open
+
+[`modalCtrl API Reference`](/docs/api/modalCtrl)
 
 ```tsx
 import { modalCtrl } from "./modal";

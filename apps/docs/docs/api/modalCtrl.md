@@ -6,10 +6,11 @@ sidebar_position: 3
 
 - `modalCtrl`은 modal을 `open`하거나 `remove` 또는 원격으로 특정 modal의 `action`을 실행시키는 역할을 가진 객체입니다.
 - modal을 등록하면 `modal의 name`을 가진 method가 추가되어 해당 `modal을 open`시킬 수 있습니다.
+- [`modalCtrl을 통해 modal open 하기`](/docs/usage/use-modal)
 
 ## modalCtrl methods
 
-| method                  | Description                                   |
+| Method                  | Description                                   |
 | :---------------------- | :-------------------------------------------- |
 | open                    | modal를 open 시킵니다.                        |
 | remove                  | open 되어 있는 modal을 제거합니다.            |
@@ -22,9 +23,9 @@ sidebar_position: 3
 
 ### Props
 
-| Property | Type                   | Default      | Description                                      |
-| :------- | :--------------------- | :----------- | :----------------------------------------------- |
-| name     | `string` \| `function` | - `required` | modal의 name 또는 `ModalFC<T = any, P = string>` |
+| Property | Type                   | Default      | Description                                                         |
+| :------- | :--------------------- | :----------- | :------------------------------------------------------------------ |
+| name     | `string` \| `function` | - `required` | modal의 name 또는 [`ModalFC<T = any, P = string>`](/docs/api/Modal) |
 
 ### 예제
 

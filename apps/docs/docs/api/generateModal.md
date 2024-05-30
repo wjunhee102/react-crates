@@ -4,6 +4,9 @@ sidebar_position: 1
 
 # generateModal
 
+- `generateModal`은 modal의 기본 설정을 위한 함수입니다.
+- [`generateModal를 이용해 설정하기`](/docs/getting-started/register-modal)
+
 ```tsx
 import { generateModal } from "@react-crates/modal";
 
@@ -83,15 +86,27 @@ modal component가 렌더되는 곳입니다. [링크](/docs/api/ModalProvider)
 
 ### modalCtrl
 
-modal을 실행시키기 위한 ctrl입니다. [링크](/docs/api/modalCtrl)
+modal을 `open`, `remove`, `action`등을 위한 controller입니다. [링크](/docs/api/modalCtrl)
 
 ### DynamicModal
 
-React Component내에 사용가능한 Modal입니다. [링크](/docs/api/DynamicModal)
+일반 modal 라이브러리처럼 React Component내에 선언적으로 작성하는 Modal입니다. [링크](/docs/api/DynamicModal)
 
 ### useInOpenModal
 
-modal이 open 유무를 확인할 수 있는 hook입니다. [링크](/docs/api/useInOpenModal)
+modal이 open 유무를 확인할 수 있는 hook입니다.
+
+#### 예제
+
+```tsx
+const { useIsOpenModal } = generateModal();
+
+function Example() {
+  const isOpenModal = useIsOpenModal();
+
+  return <div>{isOpenModal ? "modal이 열림" : "modal이 닫힘"}</div>;
+}
+```
 
 ## API Reference
 
@@ -104,10 +119,10 @@ modal이 open 유무를 확인할 수 있는 hook입니다. [링크](/docs/api/u
 
 ### ModalComponentSeed
 
-| Property       | Type       | Default      | Description                    |
-| :------------- | :--------- | :----------- | :----------------------------- |
-| component      | `function` | - `required` | `ModalFC<T = any, P = string>` |
-| defaultOptions | `object`   | -            | `ModalDefaultOptions<T>`       |
+| Property       | Type       | Default      | Description                                       |
+| :------------- | :--------- | :----------- | :------------------------------------------------ |
+| component      | `function` | - `required` | [`ModalFC<T = any, P = string>`](/docs/api/Modal) |
+| defaultOptions | `object`   | -            | `ModalDefaultOptions<T>`                          |
 
 ### ModalDefaultOptions `<T = any>`
 

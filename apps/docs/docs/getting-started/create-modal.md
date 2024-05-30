@@ -6,6 +6,7 @@ sidebar_position: 3
 
 - 해당 라이브러리를 사용하기 위해선 `Modal Component`를 만들어야 합니다.
 - `Modal Component`는 3가지 방법으로 만들 수 있습니다.
+- [`Modal API Reference`](/docs/api/Modal)
 
 ### ModalFC를 이용하여 Modal Component 만들기
 
