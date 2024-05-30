@@ -4,7 +4,7 @@ sidebar_position: 6
 
 # AfterCloseCallback
 
-- `modal이 close`되고 나서 실행되는 함수입니다.
+- 모달이 사리지고 나서 실행되는 함수입니다.
 - `AfterCloseCallback`은 `success`, `error`, `end` 메소드만 등록할 수 있습니다.
 
 ```tsx
