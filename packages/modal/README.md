@@ -1,5 +1,7 @@
 # @react-crates/modal
 
+![react-crates-modal-demo](https://github.com/wjunhee102/react-crates/assets/59816563/46c6fe41-7daa-45ba-8a4f-fd079894c0aa)
+
 **@react-crates/modal**은 React 프로젝트에서 기본 JavaScript modal을 효과적으로 대체하고, 사용자의 요구에 맞춰 모달의 위치, 애니메이션, 및 실행 결과를 맞춤 설정할 수 있는 강력한 라이브러리입니다.
 
 ## Installation
