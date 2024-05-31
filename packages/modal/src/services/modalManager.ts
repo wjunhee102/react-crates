@@ -433,7 +433,7 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
       middleware,
     };
 
-    return new Modal(
+    const modal = new Modal(
       {
         id,
         name,
@@ -443,6 +443,10 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
       },
       this
     );
+
+    modal.setBreakPoint(this.breakPoint);
+
+    return modal;
   }
 
   filterModalByName(name: string | string[]) {
