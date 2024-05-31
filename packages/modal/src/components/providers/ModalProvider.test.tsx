@@ -1,10 +1,25 @@
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import { ModalManager } from "../../services";
 import setModalProvider from "./ModalProvider";
 import { delay } from "../../utils";
 
 describe("ModalProvider", () => {
-  const modalManager = new ModalManager([], { duration: 0 });
+  const modalManager = new ModalManager([], {
+    duration: 0,
+    position: {
+      test: {
+        open: {
+          className: "test",
+        },
+        active: {
+          className: "test",
+        },
+        close: {
+          className: "test",
+        },
+      },
+    },
+  });
   const ModalProvider = setModalProvider(modalManager);
 
   beforeEach(() => {
@@ -78,7 +93,18 @@ describe("ModalProvider", () => {
 });
 
 describe("ModalProvider interaction block", () => {
-  const modalManager = new ModalManager();
+  const modalManager = new ModalManager([], {
+    duration: 0,
+    position: {
+      test: {
+        open: {},
+        active: {
+          className: "test",
+        },
+        close: {},
+      },
+    },
+  });
   const ModalProvider = setModalProvider(modalManager);
 
   it("disableInteraction을 활성화 했을 때 interaction이 막히는지 확인", () => {
@@ -125,5 +151,39 @@ describe("ModalProvider interaction block", () => {
     expect(document.body.style.width).toBe("");
     expect(document.body.style.height).toBe("");
     expect(document.body.style.overflow).toBe("");
+  });
+
+  it("resize시 modal의 position이 변경되는 지 확인", async () => {
+    act(() => {
+      global.innerWidth = 1000;
+      global.dispatchEvent(new Event("resize"));
+    });
+
+    const { getByText } = render(<ModalProvider />);
+
+    act(() => {
+      modalManager.open(<div>Test Modal</div>, {
+        position: (breakPoint) => (breakPoint > 480 ? "center" : "test"),
+      });
+    });
+
+    await waitFor(() => {
+      expect(modalManager.getTransactionState()).toBe("idle");
+    });
+
+    await waitFor(() => {
+      const modalContent = getByText("Test Modal").parentElement;
+      expect(modalContent?.className.includes("test")).toBeFalsy();
+    });
+
+    act(() => {
+      global.innerWidth = 480;
+      global.dispatchEvent(new Event("resize"));
+    });
+
+    await waitFor(() => {
+      const modalContent = getByText("Test Modal").parentElement;
+      expect(modalContent?.className.includes("test")).toBeTruthy();
+    });
   });
 });

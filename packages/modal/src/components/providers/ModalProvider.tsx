@@ -47,6 +47,7 @@ const ModalProviderCore = ({
       document.documentElement.style.setProperty("--vh", `${vh}px`);
     };
 
+    modalManager.setBreakPoint(window.innerWidth);
     window.addEventListener("resize", listener);
 
     return () => {
