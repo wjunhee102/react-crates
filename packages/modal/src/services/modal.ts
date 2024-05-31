@@ -609,8 +609,8 @@ export class Modal {
       cursor,
       ...transition,
       ...backCoverPosition,
-      background: (isAciveState && backCoverColor) || background,
-      opacity: (isAciveState && backCoverOpacity) || opacity,
+      background: (backCoverColor === undefined || !isAciveState) ? background : backCoverColor,
+      opacity: (backCoverOpacity === undefined || !isAciveState) ? opacity : backCoverOpacity,
       pointerEvents: (isAciveState && this.isOpened) ? "auto" : "none"
     };
   }
