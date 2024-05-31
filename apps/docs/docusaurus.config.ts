@@ -5,7 +5,7 @@ import tailwindPlugin from "./tailwind-config.cjs";
 
 const config: Config = {
   title: "@react-crates/modal",
-  tagline: "@react-crates/modal are cool",
+  tagline: "@react-crates/modal을 이용하여 modal을 쉽게 관리하세요",
   favicon: undefined,
 
   // Set the production url of your site here

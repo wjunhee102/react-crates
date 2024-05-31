@@ -28,7 +28,7 @@ function HomepageHeader() {
             className="button button--secondary button--lg"
             to="/docs/getting-started/introduction"
           >
-            @react-crates/modal Tutorial - 5min ⏱️
+            @react-crates/modal 시작하기
           </Link>
         </div>
       </div>
