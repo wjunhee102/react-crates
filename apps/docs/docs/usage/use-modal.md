@@ -78,3 +78,14 @@ export default function Example() {
   </div>
 */
 ```
+
+## Modal Key
+
+- modal key를 활용해 modal의 중복 open을 방지할 수 있습니다.
+- modal을 등록할 때 defaultOption으로 설정할 수 있습니다.
+
+```ts
+modal.open("confirm", {
+  modalKey: "someModal",
+});
+```
