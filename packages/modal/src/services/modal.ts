@@ -58,6 +58,7 @@ export class Modal {
   private _confirm: ModalConfirmType | undefined = undefined;
   private _onOpenAutoFocus: FocusEventHandler<HTMLDivElement> | undefined = undefined;
   private _state: ModalState;
+  private _currentPosition: string = MODAL_POSITION.center;
 
   public componentRef: HTMLDivElement | null = null;
 
@@ -199,6 +200,10 @@ export class Modal {
     return this._state;
   }
 
+  get currentPosition() {
+    return this._currentPosition;
+  }
+
   /* 컴포넌트 및 상태 관리 */
 
   private setComponentProps(
@@ -229,7 +234,9 @@ export class Modal {
       isEscKeyActive: this.escKeyActive,
       payload,
       action: this.action,
-      actionState: this.actionState
+      actionState: this.actionState,
+      currentPosition: this._currentPosition,
+      lifecycleState: this.lifecycleState
     };
 
     this.componentProps = { ...componentProps, ...options };
@@ -428,6 +435,7 @@ export class Modal {
 
   getState(): ModalState {
     const { className, style } = this.getModalStyle();
+    const backCoverStyle = this.getBackCoverStyle();
 
     return {
       isActive: this.lifecycleState === MODAL_LIFECYCLE_STATE.active,
@@ -437,7 +445,7 @@ export class Modal {
       componentProps: this.componentProps,
       modalClassName: className,
       modalStyle: style,
-      backCoverStyle: this.getBackCoverStyle(),
+      backCoverStyle,
       isEscKeyActive: this.escKeyActive,
       label: this.label,
       role: this.role,
@@ -554,7 +562,7 @@ export class Modal {
     const mergedPosition =
       typeof position === "function" ? position(this.breakPoint) : position;
     const isAciveState = this.lifecycleState === MODAL_LIFECYCLE_STATE.active;
-    const { className, ...modalPosition } = this.manager.getCurrentModalPosition(
+    const [{ className, ...modalPosition }, currentPosition] = this.manager.getCurrentModalPosition(
       this.lifecycleState,
       mergedPosition
     );
@@ -562,6 +570,11 @@ export class Modal {
       duration,
       transitionOptions
     );
+
+    if (this._currentPosition !== currentPosition) {
+      this._currentPosition = currentPosition;
+      this.setComponentProps();
+    }
 
     return {
       className,
@@ -587,7 +600,7 @@ export class Modal {
       this.manager.getCurrentModalPosition(
         this.lifecycleState,
         MODAL_POSITION.backCover
-      );
+      )[0];
     const transition = this.manager.getModalTransition(
       duration,
       transitionOptions
