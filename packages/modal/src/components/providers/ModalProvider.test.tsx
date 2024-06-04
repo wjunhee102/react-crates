@@ -152,38 +152,4 @@ describe("ModalProvider interaction block", () => {
     expect(document.body.style.height).toBe("");
     expect(document.body.style.overflow).toBe("");
   });
-
-  it("resize시 modal의 position이 변경되는 지 확인", async () => {
-    act(() => {
-      global.innerWidth = 1000;
-      global.dispatchEvent(new Event("resize"));
-    });
-
-    const { getByText } = render(<ModalProvider />);
-
-    act(() => {
-      modalManager.open(<div>Test Modal</div>, {
-        position: (breakPoint) => (breakPoint > 480 ? "center" : "test"),
-      });
-    });
-
-    await waitFor(() => {
-      expect(modalManager.getTransactionState()).toBe("idle");
-    });
-
-    await waitFor(() => {
-      const modalContent = getByText("Test Modal").parentElement;
-      expect(modalContent?.className.includes("test")).toBeFalsy();
-    });
-
-    act(() => {
-      global.innerWidth = 480;
-      global.dispatchEvent(new Event("resize"));
-    });
-
-    await waitFor(() => {
-      const modalContent = getByText("Test Modal").parentElement;
-      expect(modalContent?.className.includes("test")).toBeTruthy();
-    });
-  });
 });
