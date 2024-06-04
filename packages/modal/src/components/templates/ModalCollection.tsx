@@ -1,10 +1,14 @@
 import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { Modal } from "../modal";
 import { ModalTemplate } from "./ModalTemplate";
-import { ModalComponentProps } from "../../types";
+import { ModalComponent, ModalComponentProps } from "../../types";
 
-const Alert = () => (
-  <ModalTemplate className="modal-template-bg-rm">
+const Alert: ModalComponent = ({ currentPosition }) => (
+  <ModalTemplate
+    className={`modal-template-bg-rm ${
+      currentPosition === "bottom" ? "bottom" : ""
+    }`}
+  >
     <ModalTemplate.Header>
       <Modal.Title className="modal-collection-title-rm">Alert</Modal.Title>
       <Modal.Title.Sub className="modal-collection-sub-title-rm" />
@@ -25,8 +29,12 @@ const Alert = () => (
 
 Alert.displayName = "ModalCollection.Alert";
 
-const Confirm = () => (
-  <ModalTemplate className="modal-template-bg-rm">
+const Confirm: ModalComponent = ({ currentPosition }) => (
+  <ModalTemplate
+    className={`modal-template-bg-rm ${
+      currentPosition === "bottom" ? "bottom" : ""
+    }`}
+  >
     <ModalTemplate.Header>
       <Modal.Title className="modal-collection-title-rm">Confirm</Modal.Title>
       <Modal.Title.Sub className="modal-collection-sub-title-rm" />
@@ -50,7 +58,7 @@ const Confirm = () => (
 
 Confirm.displayName = "ModalCollection.Confirm";
 
-const Prompt = ({ action }: ModalComponentProps) => {
+const Prompt: ModalComponent = ({ action, currentPosition }) => {
   const [state, setState] = useState("");
 
   const actionToKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -67,7 +75,11 @@ const Prompt = ({ action }: ModalComponentProps) => {
   };
 
   return (
-    <ModalTemplate className="modal-template-bg-rm">
+    <ModalTemplate
+      className={`modal-template-bg-rm ${
+        currentPosition === "bottom" ? "bottom" : ""
+      }`}
+    >
       <ModalTemplate.Header>
         <Modal.Title className="modal-collection-title-rm">Prompt</Modal.Title>
         <Modal.Title.Sub className="modal-collection-sub-title-rm" />
