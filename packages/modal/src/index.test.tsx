@@ -32,6 +32,19 @@ describe("modal", () => {
     },
     {
       duration: 10,
+      position: {
+        test: {
+          open: {
+            className: "test",
+          },
+          active: {
+            className: "test",
+          },
+          close: {
+            className: "test",
+          },
+        },
+      },
     }
   );
 
@@ -198,6 +211,8 @@ describe("modal", () => {
       cancelContent: "cancelContent",
       customActionContent: "customActionContent",
       payload: "payload",
+      currentPosition: "center",
+      lifecycleState: "open",
     };
     const notMockDispatchOptions: Omit<ModalComponentProps, "action"> = {
       title: "nottitle",
@@ -209,6 +224,8 @@ describe("modal", () => {
       customActionContent: "notcustomActionContent",
       payload: "notpayload",
       actionState: "error",
+      currentPosition: "notcenter",
+      lifecycleState: "close",
     };
 
     let modalProps1: Omit<ModalComponentProps, "action"> =
@@ -288,7 +305,7 @@ describe("modal", () => {
   });
 
   it("modal의 생성 애니메이션이 작동될 때 modal action이 동작하지 않는 지 확인", async () => {
-    const { getByText } = render(<ModalProvider />);
+    const { getByText, queryByText } = render(<ModalProvider />);
 
     const action = jest.fn();
 
@@ -330,5 +347,50 @@ describe("modal", () => {
     expect(action).toHaveBeenCalledTimes(1);
     // alert modal의 confirm 버튼의 confirmType은 true
     expect(action.mock.results[0]).toBeTruthy();
+
+    await waitFor(() => {
+      expect(queryByText("Confirm")).toBeNull();
+    });
+  });
+
+  it("resize시 modal의 position이 변경되는 지 확인", async () => {
+    act(() => {
+      global.innerWidth = 1000;
+      global.dispatchEvent(new Event("resize"));
+    });
+
+    const { getByText } = render(<ModalProvider />);
+
+    act(() => {
+      modalCtrl.open(<div>TestModal</div>, {
+        position: (breakPoint) => (breakPoint > 480 ? "center" : "test"),
+        duration: 0,
+      });
+    });
+
+    await waitFor(() => {
+      expect(modalManager.getTransactionState()).toBe(
+        MODAL_TRANSACTION_STATE.idle
+      );
+    });
+
+    const modal = modalManager.getModalStack()[0];
+
+    await waitFor(() => {
+      const modalContent = getByText("TestModal").parentElement;
+      expect(modalContent?.className.includes("test")).toBeFalsy();
+      expect(modal.state.componentProps.currentPosition).toBe("center");
+    });
+
+    act(() => {
+      global.innerWidth = 480;
+      global.dispatchEvent(new Event("resize"));
+    });
+
+    await waitFor(() => {
+      const modalContent = getByText("TestModal").parentElement;
+      expect(modalContent?.className.includes("test")).toBeTruthy();
+      expect(modal.state.componentProps.currentPosition).toBe("test");
+    });
   });
 });

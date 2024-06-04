@@ -3,16 +3,18 @@ import { generateModal, Modal, modalCollection } from "@react-crates/modal";
 export const { modalCtrl, DynamicModal, ModalProvider } = generateModal(
   {
     alert: {
-      component: ({ payload }) => (
-        <div className="w-[200px] h-[200px] bg-white">
-          안녕하세요 {payload}
-          <Modal.Content />
-          <div>
-            <Modal.Action.Confirm>반가워요</Modal.Action.Confirm>
-            <Modal.Action.Cancel>취소</Modal.Action.Cancel>
+      component: ({ payload }) => {
+        return (
+          <div className="w-[200px] h-[200px] bg-white">
+            안녕하세요 {payload}
+            <Modal.Content />
+            <div>
+              <Modal.Action.Confirm>반가워요</Modal.Action.Confirm>
+              <Modal.Action.Cancel>취소</Modal.Action.Cancel>
+            </div>
           </div>
-        </div>
-      ),
+        );
+      },
       defaultOptions: {
         payload: "잘된다!",
         position: "test-center",

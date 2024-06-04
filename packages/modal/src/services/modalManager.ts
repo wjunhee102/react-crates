@@ -33,7 +33,8 @@ import {
   ModalEditOptions,
   ModalManagerInterface,
   ModalClose,
-  ModalConfirmType
+  ModalConfirmType,
+  PositionStyle
 } from "../types";
 
 export class ModalManager<T extends ModalPositionTable = ModalPositionTable> implements ModalManagerInterface {
@@ -281,7 +282,7 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
   getCurrentModalPosition(
     positionState: ModalLifecycleState,
     position: string = MODAL_POSITION.center
-  ) {
+  ): [PositionStyle, string] {
     const positionKey = getPositionKey(position, positionState);
     const {
       open: defaultInitial,
@@ -292,23 +293,23 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
     const { open, active, close } = this.getModalPosition(positionKey);
 
     if (positionState === MODAL_LIFECYCLE_STATE.open) {
-      return {
+      return [{
         ...defaultInitial,
         ...open,
-      };
+      }, positionKey];
     }
 
     if (positionState === MODAL_LIFECYCLE_STATE.active) {
-      return {
+      return [{
         ...defaultActive,
         ...active,
-      };
+      }, positionKey];
     }
 
-    return {
+    return [{
       ...defautFinal,
       ...close,
-    };
+    }, positionKey];
   }
 
   /* 트랜잭션 관리 

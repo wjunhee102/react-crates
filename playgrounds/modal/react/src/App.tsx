@@ -151,6 +151,9 @@ function App() {
                 action: (confirm) => {
                   console.log(confirm);
                 },
+                position(breakPoint) {
+                  return breakPoint > 480 ? "center" : "bottom";
+                },
               });
             }}
           >

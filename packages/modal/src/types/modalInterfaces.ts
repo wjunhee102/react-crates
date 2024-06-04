@@ -19,7 +19,7 @@ export interface ModalManagerInterface {
   getCurrentModalPosition: (
     positionState: ModalLifecycleState,
     position?: string
-  ) => PositionStyle;
+  ) => [PositionStyle, string];
   getModalTransition: (
     duration?: number,
     options?: ModalTransitionOptions

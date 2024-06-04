@@ -139,11 +139,16 @@ describe("ModalManager", () => {
       }
     });
 
-    expect(modalManager.getCurrentModalPosition("open", "test").background).toBe("white");
-    expect(modalManager.getCurrentModalPosition("active", "test").background).toBe("black");
-    expect(modalManager.getCurrentModalPosition("close", "test").background).toBe("pink");
-    expect(modalManager.getCurrentModalPosition("active", "test-another").background).toBe("blue");
-    expect(modalManager.getCurrentModalPosition("close", "test-test-another").background).toBe("red");
+    const [testStyle1, currentPosition1] = modalManager.getCurrentModalPosition("active", "test-another");
+    const [testStyle2, currentPosition2] = modalManager.getCurrentModalPosition("close", "test-test-another");
+
+    expect(modalManager.getCurrentModalPosition("open", "test")[0].background).toBe("white");
+    expect(modalManager.getCurrentModalPosition("active", "test")[0].background).toBe("black");
+    expect(modalManager.getCurrentModalPosition("close", "test")[0].background).toBe("pink");
+    expect(testStyle1.background).toBe("blue");
+    expect(currentPosition1).toBe("another");
+    expect(testStyle2.background).toBe("red");
+    expect(currentPosition2).toBe("another");
   });
 
   it("open의 첫번째 인수가 ModalComponent | modalName을 올바르게 적용하는지 확인", () => {

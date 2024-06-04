@@ -8,6 +8,14 @@
   padding: 1.5rem;
 }
 
+.modal-template-rm.bottom {
+  width: 100vw;
+  max-width: 100vw;
+  box-sizing: border-box;
+  border-bottom-right-radius: 0rem; /* 8px */
+  border-bottom-left-radius: 0rem;
+}
+
 .modal-template-bg-rm {
   background-color: #fff;
   border: 1px solid #e5e7eb;
