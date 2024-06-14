@@ -66,7 +66,7 @@ const ModalProviderCore = ({
       pointerEvents = document.body.style.pointerEvents;
 
       document.body.style.overflow = "hidden";
-      document.body.style.height = "100vh";
+      document.body.style.height = "100%";
       document.body.style.width = "100vw";
       document.body.style.pointerEvents = "none";
 

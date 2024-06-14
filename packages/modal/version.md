@@ -255,3 +255,10 @@ componentProps가 아니라 component가 바뀌어야 함.
 ## version 0.5.7
 
 - ModalProvider의 disableScroll이 scroll만 방지하는 것이 아니라 pointer까지 방지하기 때문에 직관적인 이름으로 disableInteraction으로 변경
+
+## version 0.6.5
+
+- iPad 사파리에서 modal을 open되면 body와 ModalProvider가 100vh가 되면서 화면이 늘어나는 현상이 발견됨.
+- ModalProvider에서 body.style.height를 기존의 100vh에서 100%로 변경
+- "const vh = window.innerHeight \* 0.01; document.documentElement.style.setProperty("--vh", `${vh}px`);"
+- 위의 코드가 왜 들어가있는지 확인할 것.

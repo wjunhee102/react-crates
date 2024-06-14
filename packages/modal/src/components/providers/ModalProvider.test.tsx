@@ -113,14 +113,16 @@ describe("ModalProvider interaction block", () => {
     expect(document.body.style.width).toBe("");
     expect(document.body.style.height).toBe("");
     expect(document.body.style.overflow).toBe("");
+    expect(document.body.style.pointerEvents).toBe("");
 
     act(() => {
       modalManager.open(<div>Test Modal</div>);
     });
 
     expect(document.body.style.width).toBe("100vw");
-    expect(document.body.style.height).toBe("100vh");
+    expect(document.body.style.height).toBe("100%");
     expect(document.body.style.overflow).toBe("hidden");
+    expect(document.body.style.pointerEvents).toBe("none");
 
     act(() => {
       modalManager.remove();
@@ -129,6 +131,7 @@ describe("ModalProvider interaction block", () => {
     expect(document.body.style.width).toBe("");
     expect(document.body.style.height).toBe("");
     expect(document.body.style.overflow).toBe("");
+    expect(document.body.style.pointerEvents).toBe("");
 
     act(() => {
       modalManager.open(<div>Test Modal</div>);
