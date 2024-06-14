@@ -15,7 +15,7 @@ function HomepageHeader() {
       <div className="container">
         <Heading
           as="h1"
-          className="hero__title"
+          className="cursor-pointer hero__title"
           onClick={() => {
             modalCtrl.alert("Hello world!");
           }}
