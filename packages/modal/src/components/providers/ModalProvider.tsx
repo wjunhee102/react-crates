@@ -40,21 +40,23 @@ const ModalProviderCore = ({
 
     const originVh = document.documentElement.style.getPropertyValue("--vh");
 
-    const listener = () => {
+    const syncViewportAndBreakpoints = () => {
       modalManager.setBreakPoint(window.innerWidth);
+      // TO-DO
+      // 테스트를 확인해야 함.
       // 주소 표시줄이 보이거나 숨겨질 때 뷰포트 높이 조정
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty("--vh", `${vh}px`);
     };
 
-    modalManager.setBreakPoint(window.innerWidth);
-    window.addEventListener("resize", listener);
+    syncViewportAndBreakpoints();
+    window.addEventListener("resize", syncViewportAndBreakpoints);
 
     return () => {
       modalManager.unsubscribe(setModalManagerState);
       modalManager.remove("clear");
       document.documentElement.style.setProperty("--vh", originVh);
-      window.removeEventListener("resize", listener);
+      window.removeEventListener("resize", syncViewportAndBreakpoints);
     };
   }, []);
 
@@ -66,7 +68,7 @@ const ModalProviderCore = ({
       pointerEvents = document.body.style.pointerEvents;
 
       document.body.style.overflow = "hidden";
-      document.body.style.height = "100%";
+      document.body.style.height = "calc(var(--vh, 1vh) * 100)";
       document.body.style.width = "100vw";
       document.body.style.pointerEvents = "none";
 

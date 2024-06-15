@@ -262,3 +262,10 @@ componentProps가 아니라 component가 바뀌어야 함.
 - ModalProvider에서 body.style.height를 기존의 100vh에서 100%로 변경
 - "const vh = window.innerHeight \* 0.01; document.documentElement.style.setProperty("--vh", `${vh}px`);"
 - 위의 코드가 왜 들어가있는지 확인할 것.
+
+## version 0.6.6
+
+- "const vh = window.innerHeight \* 0.01; document.documentElement.style.setProperty("--vh", `${vh}px`);"
+- 이 코드는 iOS의 상태바가 동적으로 생성되면서 그것에 따라 모달을 조정하기 위함이였음.
+- 그러나 iPad에서 상시 상태바가 생성되어 있는 상태에서는 저 코드가 실행되지 않아서 조정이 되지 않는 문제가 있었음.
+- 해당 코드는 화면이 resize가 되지 않아도 ModalProvider가 render됐을 때 실행하게 조정

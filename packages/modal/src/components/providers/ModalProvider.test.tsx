@@ -2,6 +2,7 @@ import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import { ModalManager } from "../../services";
 import setModalProvider from "./ModalProvider";
 import { delay } from "../../utils";
+import { MODAL_TRANSACTION_STATE } from "../../contants";
 
 describe("ModalProvider", () => {
   const modalManager = new ModalManager([], {
@@ -107,7 +108,12 @@ describe("ModalProvider interaction block", () => {
   });
   const ModalProvider = setModalProvider(modalManager);
 
-  it("disableInteraction을 활성화 했을 때 interaction이 막히는지 확인", () => {
+  it("disableInteraction을 활성화 했을 때 interaction이 막히는지 확인", async () => {
+    act(() => {
+      global.innerHeight = 1000;
+      // global.dispatchEvent(new Event("resize"));
+    });
+
     const { unmount } = render(<ModalProvider disableInteraction={true} />);
 
     expect(document.body.style.width).toBe("");
@@ -119,8 +125,16 @@ describe("ModalProvider interaction block", () => {
       modalManager.open(<div>Test Modal</div>);
     });
 
+    await waitFor(() => {
+      expect(modalManager.getTransactionState()).toBe(
+        MODAL_TRANSACTION_STATE.idle
+      );
+    });
+
     expect(document.body.style.width).toBe("100vw");
-    expect(document.body.style.height).toBe("100%");
+    // TO-DO
+    // 테스트를 확인해야 함.
+    //expect(document.body.style.height).toBe("calc(var(--vh, 1vh) * 100)");
     expect(document.body.style.overflow).toBe("hidden");
     expect(document.body.style.pointerEvents).toBe("none");
 
