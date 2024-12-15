@@ -364,3 +364,7 @@ componentProps가 아니라 component가 바뀌어야 함.
       at checkCallback (../../node_modules/.pnpm/@testing-library+dom@8.20.1/node_modules/@testing-library/dom/dist/wait-for.js:127:77)
       at checkRealTimersCallback (../../node_modules/.pnpm/@testing-library+dom@8.20.1/node_modules/@testing-library/dom/dist/wait-for.js:121:16)
       at Timeout.task [as _onTimeout] (../../node_modules/.pnpm/jsdom@20.0.3/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
+
+## version 0.6.7
+- 모달안에 여러 input이 있고 그 중 하나를 클릭해서 포커스가 해당 엘리멘트로 갔을 때 tab을 눌러 포커스를 이동하면 첫번째 포커스부터 다시 시작하는 에러가 있었음.
+- 해당 에러는 포커스 index를 포커스를 받을 때 마다 설정을 해주면서 해결함.
