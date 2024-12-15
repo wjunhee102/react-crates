@@ -269,3 +269,98 @@ componentProps가 아니라 component가 바뀌어야 함.
 - 이 코드는 iOS의 상태바가 동적으로 생성되면서 그것에 따라 모달을 조정하기 위함이였음.
 - 그러나 iPad에서 상시 상태바가 생성되어 있는 상태에서는 저 코드가 실행되지 않아서 조정이 되지 않는 문제가 있었음.
 - 해당 코드는 화면이 resize가 되지 않아도 ModalProvider가 render됐을 때 실행하게 조정
+- FAIL src/components/templates/ModalCollection.test.tsx
+  ● ModalCollection › ModalCollection.Alert action 확인
+
+  expect(received).toBeNull()
+
+  Received: <h2 class="modal-collection-title-rm">Alert</h2>
+
+  Ignored nodes: comments, script, style
+    <html
+      style="--vh: 7.68px;"
+    >
+      <head />
+      <body
+        style="overflow: hidden; width: 100vw; pointer-events: none;"
+      >
+        <div>
+          <div
+            class="modalProvider_rm open_rm"
+            tabindex="-1"
+          >
+            <div
+              style="width: 100%; height: 100%; overflow: hidden; pointer-events: none;"
+            >
+              <div
+                aria-hidden="false"
+                aria-label="alert"
+                aria-labelledby="alert"
+                aria-modal="true"
+                class="modalWrapper_rm"
+                role="alertdialog"
+                tabindex="-1"
+              >
+                <button
+                  class="closeModalCover_rm "
+                  style="cursor: pointer; transition-property: opacity, transform, left, top, bottom, right, background, background-color; transition-duration: 200ms; transition-delay: 0ms; transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1); top: 0px; left: 0px; background: rgb(0, 0, 0); opacity: 0.5; pointer-events: auto;"
+                  type="button"
+                />
+                <div
+                  class="modalContentContainer_rm"
+                >
+                  <div
+                    class="modalContent_rm "
+                    style="pointer-events: auto; transition-property: opacity, transform, left, top, bottom, right, background, background-color; transition-duration: 200ms; transition-delay: 0ms; transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1); opacity: 1; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(1);"
+                    tabindex="-1"
+                  >
+                    <div
+                      class="modal-template-rm modal-template-bg-rm "
+                    >
+                      <div
+                        class="modal-template-header-rm"
+                      >
+                        <h2
+                          class="modal-collection-title-rm"
+                        >
+                          Alert
+                        </h2>
+                      </div>
+                      <div
+                        class="modal-template-main-rm"
+                      />
+                      <div
+                        class="modal-template-footer-rm"
+                      >
+                        <button
+                          class="modal-collection-action-rm modal-collection-confirm-rm"
+                          type="button"
+                        >
+                          Confirm
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
+
+      79 |
+      80 |     await waitFor(() => {
+
+  > 81 | expect(queryByText("Alert")).toBeNull();
+
+         |                                    ^
+      82 |     });
+      83 |
+      84 |     expect(action).toHaveBeenCalledTimes(2);
+
+      at toBeNull (src/components/templates/ModalCollection.test.tsx:81:36)
+      at runWithExpensiveErrorDiagnosticsDisabled (../../node_modules/.pnpm/@testing-library+dom@8.20.1/node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (../../node_modules/.pnpm/@testing-library+dom@8.20.1/node_modules/@testing-library/dom/dist/wait-for.js:127:77)
+      at checkRealTimersCallback (../../node_modules/.pnpm/@testing-library+dom@8.20.1/node_modules/@testing-library/dom/dist/wait-for.js:121:16)
+      at Timeout.task [as _onTimeout] (../../node_modules/.pnpm/jsdom@20.0.3/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)
