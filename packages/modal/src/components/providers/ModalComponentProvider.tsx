@@ -174,7 +174,18 @@ const ModalComponentProvider = ({
         event.currentTarget.contains(event.target) &&
         event.currentTarget !== event.target
       ) {
-        return;
+        const focusableElementIndex = focusableElements
+          .current
+          .elements
+          .findIndex((element) => element === event.target);
+
+        if (focusableElementIndex !== -1) {
+          if (focusableElementIndex !== focusableElements.current.index) {
+            focusableElements.current.index = focusableElementIndex;
+          }
+
+          return;
+        }
       }
 
       if (modal.onOpenAutoFocus) {

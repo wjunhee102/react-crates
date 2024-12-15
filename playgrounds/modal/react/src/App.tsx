@@ -184,6 +184,12 @@ function App() {
           >
             로딩
           </button>
+
+          <button onClick={() => {
+            modalCtrl.open(FoucsModal);
+          }}>
+            포커스 관련 모달
+          </button>
         </header>
         <div className="w-full h-[500px]"></div>
       </ModalProvider>
@@ -258,6 +264,19 @@ function TestDynamicModal() {
       </DynamicModal.Element>
     </DynamicModal>
   );
+}
+
+
+function FoucsModal() {
+  return (
+    <div>
+      <input />
+      <input />
+      <input />
+      <input />
+      <input />
+    </div>
+  )
 }
 
 export default App;
