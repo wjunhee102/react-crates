@@ -33,6 +33,7 @@ const ModalComponentProvider = ({
     last: null,
     elements: [],
     index: 0,
+    isComposing: false,
   });
 
   const {
@@ -63,7 +64,14 @@ const ModalComponentProvider = ({
     [isOpened]
   );
 
-  const { actionBackCover, actionToEsc, disableOutsideFocus, focusBackCover } =
+  const { 
+    actionBackCover, 
+    actionToEsc, 
+    disableOutsideFocus, 
+    focusBackCover,
+    startComposition,
+    endComposition,
+  } =
     useMemo(
       () => ({
         actionBackCover(event: MouseEvent<HTMLButtonElement>) {
@@ -90,6 +98,10 @@ const ModalComponentProvider = ({
           }
 
           if (event.key !== "Tab") {
+            return;
+          }
+
+          if (focusableElements.current.isComposing) {
             return;
           }
 
@@ -151,11 +163,17 @@ const ModalComponentProvider = ({
 
             return;
           }
-
+   
           targetElement.focus();
         },
         focusBackCover() {
           modalContentRef.current && modalContentRef.current.focus();
+        },
+        startComposition() {
+          focusableElements.current.isComposing = true;
+        },
+        endComposition() {
+          focusableElements.current.isComposing = false;
         },
       }),
       []
@@ -272,6 +290,8 @@ const ModalComponentProvider = ({
           style={modalStyle}
           onKeyUp={actionToEsc}
           onFocus={focusModalContent}
+          onCompositionStart={startComposition}
+          onCompositionEnd={endComposition}
         >
           <ModalComponentPropsContext.Provider value={componentProps}>
             <Component {...componentProps} />
@@ -287,6 +307,7 @@ interface FocusableElements {
   last: HTMLElement | null;
   elements: HTMLElement[];
   index: number;
+  isComposing: boolean;
 }
 
 function setFocusableElements(targetDom: HTMLDivElement): FocusableElements {
@@ -295,6 +316,7 @@ function setFocusableElements(targetDom: HTMLDivElement): FocusableElements {
     last: null,
     elements: [],
     index: 0,
+    isComposing: false,
   };
   const elements = targetDom.querySelectorAll(
     'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
