@@ -46,6 +46,7 @@ export class Modal {
   private role: string = "dialog";
   private label: string = "dialog";
   private isOpened: boolean = false;
+  private isPostOpened: boolean = false;
 
   private _id: number;
   private _modalKey: string | null;
@@ -93,6 +94,7 @@ export class Modal {
     this.end = this.end.bind(this);
     this.active = this.active.bind(this);
     this.close = this.close.bind(this);
+    this.postOpen = this.postOpen.bind(this);
   }
 
   private setOption() {
@@ -384,6 +386,18 @@ export class Modal {
     // initial - active 애니메이션이 종료됨을 확인하기 위함.
     this.isOpened = true;
     this.notify();
+  }
+
+  postOpen(callback?: () => void) {
+    if (this.isPostOpened) {
+      return;
+    }
+
+    this.isPostOpened = true;
+
+    if (typeof callback === 'function') {
+      callback();
+    }
   }
 
   active() {

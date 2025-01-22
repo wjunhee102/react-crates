@@ -100,7 +100,7 @@ const ModalComponentProvider = ({
           if (event.key !== "Tab") {
             return;
           }
-
+   
           if (focusableElements.current.isComposing) {
             return;
           }
@@ -212,10 +212,11 @@ const ModalComponentProvider = ({
         return;
       }
 
-      event.preventDefault();
-
-      focusableElements.current.first &&
-        focusableElements.current.first.focus();
+      modal.postOpen(() => {
+        if (focusableElements.current.first) {
+          focusableElements.current.first.focus();
+        }
+      })
     },
     [isOpened]
   );
