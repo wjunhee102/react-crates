@@ -377,3 +377,6 @@ componentProps가 아니라 component가 바뀌어야 함.
 ## version 0.6.9
 - 모달안에 포커스할 수 있는 대상이 있으면 포커스 대상이 아닌 요소에 드래그 하는 것이 동작하지 않는 문제가 발생
 - 최초 한번만 포커스 위치를 강제할 수 있도록 post open 개념을 설정
+
+## version 0.7.0
+- React 19버전 peerDependency에 추가
