@@ -169,4 +169,72 @@ describe("ModalProvider interaction block", () => {
     expect(document.body.style.height).toBe("");
     expect(document.body.style.overflow).toBe("");
   });
+
+  it("ModalProvider z-index 확인", () => {
+    render(<ModalProvider disableInteraction={false} />);
+
+    expect((() => {
+      const modalProvider = document.querySelector(".modalProvider_rm");
+
+      if (!modalProvider) {
+        return null;
+      }
+
+      const style = getComputedStyle(modalProvider);
+
+      return style.zIndex;
+    })()).toBe("50");
+
+    act(() => {
+      modalManager.open(<div>Test Modal</div>, {
+        zIndex: 100
+      });
+    });
+
+    expect((() => {
+      const modalProvider = document.querySelector(".modalProvider_rm");
+
+      if (!modalProvider) {
+        return null;
+      }
+
+      const style = getComputedStyle(modalProvider);
+
+      return style.zIndex;
+    })()).toBe("100");
+
+    act(() => {
+      modalManager.open(<div>Test Modal</div>);
+    });
+
+
+    expect((() => {
+      const modalProvider = document.querySelector(".modalProvider_rm");
+
+      if (!modalProvider) {
+        return null;
+      }
+
+      const style = getComputedStyle(modalProvider);
+
+      return style.zIndex;
+    })()).toBe("100");
+
+    act(() => {
+      modalManager.remove();
+      modalManager.remove();
+    });
+
+    expect((() => {
+      const modalProvider = document.querySelector(".modalProvider_rm");
+
+      if (!modalProvider) {
+        return null;
+      }
+
+      const style = getComputedStyle(modalProvider);
+
+      return style.zIndex;
+    })()).toBe("50");
+  });
 });
