@@ -380,3 +380,7 @@ componentProps가 아니라 component가 바뀌어야 함.
 
 ## version 0.7.0
 - React 19버전 peerDependency에 추가
+
+## version 0.7.1
+- z-index가 너무 높고 변경이 되지않아 다른 ui 컴포넌트와 맞지 않는 상황 발생 해당 부분 수정
+- z-index를 기본 50으로 바꾸고 모달마다 동적으로 바뀔 수 있게 처리

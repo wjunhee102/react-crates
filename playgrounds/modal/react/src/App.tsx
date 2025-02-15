@@ -58,6 +58,7 @@ function App() {
                       ))
                     );
                   },
+                  zIndex: 12200,
                   duration: 1500,
                   position: "bottom-center",
                 }
