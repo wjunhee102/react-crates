@@ -61,6 +61,7 @@ function App() {
                   zIndex: 12200,
                   duration: 1500,
                   position: "bottom-center",
+                  disableFocusHandling: true,
                 }
               );
 
@@ -187,7 +188,9 @@ function App() {
           </button>
 
           <button onClick={() => {
-            modalCtrl.open(FoucsModal);
+            modalCtrl.open(FoucsModal, {
+              disableFocusHandling: false,
+            });
           }}>
             포커스 관련 모달
           </button>
