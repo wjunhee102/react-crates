@@ -27,6 +27,7 @@ export interface ModalDispatchOptions<T = any, P extends string = string> extend
   role?: string;
   label?: string;
   onOpenAutoFocus?: FocusEventHandler<HTMLDivElement>;
+  zIndex?: number;
   required?: boolean;
 }
 
@@ -55,4 +56,5 @@ export interface ModalEditOptions<T extends string = string> extends ComponentPr
   stateResponsiveComponent?: boolean;
   payload?: any;
   onOpenAutoFocus?: FocusEventHandler<HTMLDivElement>;
+  zIndex?: number;
 }

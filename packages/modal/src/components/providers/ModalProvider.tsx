@@ -29,7 +29,7 @@ const ModalProviderCore = ({
   children,
 }: ModalProviderCoreProps) => {
   const [
-    { modalStack, isOpen, transactionState, breakPoint, currentModalId },
+    { modalStack, isOpen, transactionState, breakPoint, currentModalId, zIndex },
     setModalManagerState,
   ] = useState<ModalManagerState>(modalManager.getState());
 
@@ -132,6 +132,7 @@ const ModalProviderCore = ({
 
   const props = {
     isOpen,
+    zIndex,
     modalStack,
     breakPoint,
     transactionState,
@@ -154,6 +155,7 @@ const ModalProviderCore = ({
 
 interface ModalProviderViewProps {
   isOpen: boolean;
+  zIndex: number;
   modalStack: Modal[];
   breakPoint: number;
   transactionState: ModalTransactionState;
@@ -162,11 +164,14 @@ interface ModalProviderViewProps {
 }
 
 const ModalProviderView = forwardRef<HTMLDivElement, ModalProviderViewProps>(
-  ({ isOpen, modalStack, breakPoint, currentModalId, onKeyDown }, ref) => (
+  ({ isOpen, zIndex, modalStack, breakPoint, currentModalId, onKeyDown }, ref) => (
     <div
       ref={ref}
       tabIndex={-1}
       className={`modalProvider_rm ${isOpen ? "open_rm" : ""}`}
+      style={{
+        zIndex
+      }}
       onKeyDown={onKeyDown}
     >
       <div

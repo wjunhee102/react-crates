@@ -9,6 +9,7 @@ export interface ModalManagerState {
   isOpen: boolean;
   transactionState: ModalTransactionState;
   currentModalId: number;
+  zIndex: number;
 }
 
 export interface ModalListenerProps {
@@ -38,6 +39,7 @@ export interface ModalManagerOptionsProps<
   backCoverColor?: string;
   backCoverOpacity?: number;
   stateResponsiveComponent?: boolean;
+  zIndex?: number;
 }
 
 export type ModalAsyncCall<T = any, P = any> = (

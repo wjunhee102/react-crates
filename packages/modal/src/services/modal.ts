@@ -341,7 +341,7 @@ export class Modal {
     this.changeStateResponsiveComponent({ component, options });
   }
 
-  edit({ component, ...contents }: ModalEditOptions) {
+  edit({ component, ...contents }: Omit<ModalEditOptions, 'zIndex'>) {
     if (component) {
       this.initialComponent = component;
 

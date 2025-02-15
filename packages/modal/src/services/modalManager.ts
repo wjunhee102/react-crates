@@ -50,6 +50,8 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
   private modalDuration: number = DEFAULT_DURATION;
   private stateResponsiveComponent = false;
   private breakPoint = 0;
+  private originZindex = 50;
+  private zIndex = 50;
   private modalManagerState!: ModalManagerState;
 
   constructor(
@@ -72,6 +74,8 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
   private bind() {
     this.setModalComponentSeedMap = this.setModalComponentSeedMap.bind(this);
     this.createModalCloser = this.createModalCloser.bind(this);
+    this.setZIndex = this.setZIndex.bind(this);
+    this.resetZIndex = this.resetZIndex.bind(this);
 
     this.executeAsync = this.executeAsync.bind(this);
     this.open = this.open.bind(this);
@@ -86,7 +90,7 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
   }
 
   initModalOptions(optionsProps: ModalManagerOptionsProps<T>) {
-    const { position, transition, duration, stateResponsiveComponent } =
+    const { position, transition, duration, stateResponsiveComponent, zIndex } =
       optionsProps;
 
     const initialPosition: ModalPositionTable = {
@@ -98,6 +102,10 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
     this.setModalPosition(initialPosition);
     this.setModalTransition(transition);
     this.setModalDuration(duration);
+    if (zIndex) {
+      this.originZindex = zIndex;
+      this.zIndex = zIndex;
+    }
   }
 
   private setModalManagerState() {
@@ -107,6 +115,7 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
       isOpen: this.modalStack.length > 0 ? true : false,
       breakPoint: this.breakPoint,
       currentModalId: this.getCurrentModalId(),
+      zIndex: this.zIndex,
     };
   }
 
@@ -140,6 +149,18 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
     };
 
     this.modalComponentSeedMap.set(name, modalComponentSeed);
+  }
+
+  setZIndex(zIndex?: number) {
+    if (zIndex === undefined) {
+      return;
+    }
+
+    this.zIndex = zIndex;
+  }
+
+  resetZIndex() {
+    this.zIndex = this.originZindex;
   }
 
   setModalComponent(componentSeed: ModalComponentSeed | ModalComponentSeed[]) {
@@ -602,6 +623,7 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
         },
       };
 
+      this.setZIndex(options.zIndex);
       this.pushModal(modalSeed);
 
       return this.currentId;
@@ -610,6 +632,8 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
     if (typeof name === "function") {
       this.currentId += 1;
 
+      
+      this.setZIndex(options.zIndex);
       this.pushModal({
         id: this.currentId,
         modalKey,
@@ -631,6 +655,8 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
 
     this.currentId += 1;
 
+
+    this.setZIndex(options.zIndex);
     this.pushModal({
       id: this.currentId,
       modalKey,
@@ -655,6 +681,7 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
       this.modalStack = this.modalStack.filter(
         (modal) => modal.id !== closeTarget
       );
+      this.resetZIndex();
       this.notify();
 
       return this.getCurrentModalId();
@@ -666,24 +693,33 @@ export class ModalManager<T extends ModalPositionTable = ModalPositionTable> imp
       );
 
       this.popModal(closeTarget[1]);
+      this.resetZIndex();
+      this.notify();
 
       return this.getCurrentModalId();
     }
 
     this.popModal(closeTarget);
+    this.resetZIndex();
     this.notify();
 
     return this.getCurrentModalId();
   }
 
   edit(id: number, options: ModalEditOptions<Extract<keyof T, string>>) {
+    const { zIndex, ...restOptions } = options;
+
     const targetModal = this.modalStack.filter(modal => modal.id === id)[0];
 
     if (!targetModal) {
       return false;
     }
 
-    targetModal.edit(options);
+    targetModal.edit(restOptions);
+
+    if (zIndex) {
+      this.setZIndex(zIndex);
+    }
 
     return true;
   }
