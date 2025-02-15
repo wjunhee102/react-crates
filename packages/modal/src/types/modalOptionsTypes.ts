@@ -28,6 +28,7 @@ export interface ModalDispatchOptions<T = any, P extends string = string> extend
   label?: string;
   onOpenAutoFocus?: FocusEventHandler<HTMLDivElement>;
   zIndex?: number;
+  disableFocusHandling?: boolean;
   required?: boolean;
 }
 

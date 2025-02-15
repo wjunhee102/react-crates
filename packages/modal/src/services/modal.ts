@@ -60,6 +60,7 @@ export class Modal {
   private _onOpenAutoFocus: FocusEventHandler<HTMLDivElement> | undefined = undefined;
   private _state: ModalState;
   private _currentPosition: string = MODAL_POSITION.center;
+  private _disableFocusHandling: boolean = false;
 
   public componentRef: HTMLDivElement | null = null;
 
@@ -106,7 +107,8 @@ export class Modal {
       role,
       title,
       label,
-      onOpenAutoFocus
+      onOpenAutoFocus,
+      disableFocusHandling,
     } = this.options;
 
     this.setCloseDelay(closeDelay)
@@ -139,6 +141,10 @@ export class Modal {
 
     if (onOpenAutoFocus) {
       this._onOpenAutoFocus = onOpenAutoFocus;
+    }
+
+    if (disableFocusHandling) {
+      this._disableFocusHandling = disableFocusHandling;
     }
   }
 
@@ -463,6 +469,7 @@ export class Modal {
       isEscKeyActive: this.escKeyActive,
       label: this.label,
       role: this.role,
+      disableFocusHandling: this._disableFocusHandling,
     };
   }
 

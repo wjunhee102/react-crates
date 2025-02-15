@@ -33,4 +33,5 @@ export interface ModalState {
   isEscKeyActive: boolean;
   label: string;
   role: string;
+  disableFocusHandling: boolean;
 }

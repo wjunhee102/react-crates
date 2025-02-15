@@ -48,6 +48,7 @@ const ModalComponentProvider = ({
     label,
     actionState,
     role,
+    disableFocusHandling,
   } = state;
 
   const focusModal = useCallback(
@@ -93,6 +94,10 @@ const ModalComponentProvider = ({
           isEscKeyActive && modal.action(modal.options.backCoverConfirm);
         },
         disableOutsideFocus(event: KeyboardEvent<HTMLDivElement>) {
+          if (disableFocusHandling) {
+            return;
+          }
+
           if (event.key === "Escape") {
             event.preventDefault();
           }
@@ -185,6 +190,10 @@ const ModalComponentProvider = ({
         event.preventDefault();
         modalRef.current && modalRef.current.focus();
 
+        return;
+      }
+
+      if (disableFocusHandling) {
         return;
       }
 
